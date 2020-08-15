@@ -1,9 +1,21 @@
-// App.tsx test
-import React from 'react';
-import {SafeAreaView} from 'react-native';
-// import TestExample from './NativeModule/TestExample';
+// App.tsx
+import * as React from 'react';
+import {StyleSheet} from 'react-native';
 
-const App = () => {
-  return <SafeAreaView>{/* <TestExample /> */}</SafeAreaView>;
-};
-export default App;
+// for navigator
+import 'react-native-gesture-handler';
+
+// import pages
+import MainPageNavigator from '~/Pages/MainPage';
+
+// 화면 구성
+export default function App() {
+  return <MainPageNavigator />;
+}
+
+// 스타일 지정
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
