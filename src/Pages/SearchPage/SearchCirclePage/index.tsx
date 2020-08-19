@@ -1,12 +1,11 @@
-// NotificationPage index.tsx
-// 메인3
+// SearchCirclePage index.tsx
 import React from 'react';
 import {Text, View, Button} from 'react-native';
 
-function NotificationPage({navigation}) {
+function SearchCirclePage({navigation}) {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>NotificationPage 메인3</Text>
+      <Text>SearchCirclePage( 카테고리 선택 후)</Text>
       <Button
         title="Go to Main"
         onPress={() => navigation.navigate('MainPage')}
@@ -16,4 +15,4 @@ function NotificationPage({navigation}) {
   );
 }
 
-export default NotificationPage;
+export default SearchCirclePage;

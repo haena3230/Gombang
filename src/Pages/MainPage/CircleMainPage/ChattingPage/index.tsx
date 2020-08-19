@@ -1,12 +1,12 @@
-// MyCirclePage index.tsx
+// ChattingPage index.tsx
 import React from 'react';
 import {View, Text, Button} from 'react-native';
 
-// 내 동아리
-function MyCirclePage({navigation}) {
+// 동아리 채팅 동아리메인2
+function ChattingPage({navigation}) {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>MyCircles</Text>
+      <Text>Chatting 동아리메인2</Text>
       <Button
         title="Go to Main"
         onPress={() => navigation.navigate('MainPage')}
@@ -16,4 +16,4 @@ function MyCirclePage({navigation}) {
   );
 }
 
-export default MyCirclePage;
+export default ChattingPage;
