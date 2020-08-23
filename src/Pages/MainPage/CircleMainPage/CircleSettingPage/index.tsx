@@ -2,11 +2,21 @@
 import React from 'react';
 import {View, Text, Button} from 'react-native';
 
-// 동아리 설정 페이지 동아리메인5
-function CircleSettingPage({navigation}) {
+// stack navi를 위한 prop
+import {StackNavigationProp} from '@react-navigation/stack';
+type NavigationProp = StackNavigationProp<
+  CircleSettingPageParamList,
+  'CircleSettingPage'
+>;
+interface Props {
+  navigation: NavigationProp;
+}
+
+// 동아리 설정 페이지 동아리메인4
+const CircleSettingPage = ({navigation}: Props) => {
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>동아리 설정 페이지 동아리메인5</Text>
+      <Text>동아리 설정 페이지 동아리메인4</Text>
       <Button
         title="Go to Main"
         onPress={() => navigation.navigate('MainPage')}
@@ -14,6 +24,6 @@ function CircleSettingPage({navigation}) {
       <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
-}
+};
 
 export default CircleSettingPage;

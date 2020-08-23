@@ -3,7 +3,14 @@
 import React from 'react';
 import {Text, View, Button} from 'react-native';
 
-function SearchPage({navigation}) {
+// stack navi를 위한 prop
+import {StackNavigationProp} from '@react-navigation/stack';
+type NavigationProp = StackNavigationProp<SearchPageParamList, 'SearchPage'>;
+interface Props {
+  navigation: NavigationProp;
+}
+
+const SearchPage = ({navigation}: Props) => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>SearchPage 카테고리 선택 메인2</Text>
@@ -18,6 +25,6 @@ function SearchPage({navigation}) {
       <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
   );
-}
+};
 
 export default SearchPage;
