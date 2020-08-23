@@ -1,39 +1,41 @@
-// MainPage.tsx
+// MainPage index.tsx
+// 메인1
+
 import React from 'react';
 import {View, Text, Button} from 'react-native';
 
-// for navigator
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-
-//import pages
-import MyCirclePage from './MyCirclePage';
+// stack navi를 위한 prop
+import {StackNavigationProp} from '@react-navigation/stack';
+type NavigationProp = StackNavigationProp<MainPageParamList, 'MainPage'>;
+interface Props {
+  navigation: NavigationProp;
+}
 
 // main 페이지 구성
-function MainPage({navigation}) {
+const MainPage = ({navigation}: Props) => {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>MainPage</Text>
-      <Button
-        title="Go to My Circles"
-        onPress={() => navigation.navigate('MyCirclePage')}></Button>
+    <View style={{flex: 1}}>
+      <Text>MainPage 메인1</Text>
+      <View style={{flex: 1}}>
+        <Button
+          title="이벤트 배너/ 이벤트페이지로"
+          onPress={() => navigation.navigate('EventPage')}
+        />
+      </View>
+      <View style={{flex: 1}}>
+        <Button
+          title="동아리 리스트/ 동아리메인으로"
+          onPress={() => navigation.navigate('CircleMainPage')}
+        />
+      </View>
+      <View style={{flex: 1}}>
+        <Button
+          title="일정 / 캘린더로"
+          onPress={() => navigation.navigate('CalendarPage')}
+        />
+      </View>
     </View>
   );
-}
+};
 
-// stack navi 생성
-const Stack = createStackNavigator();
-
-// main에서 클릭하면 stack으로 이동
-function MainPageNavigator() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen name="MainPage" component={MainPage} />
-        <Stack.Screen name="MyCirclePage" component={MyCirclePage} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-export default MainPageNavigator;
+export default MainPage;

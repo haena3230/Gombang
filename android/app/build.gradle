@@ -1,6 +1,8 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services' //문서 보고 새로 추가
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle" // for design
 import com.android.build.OutputFile
+
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
