@@ -3,37 +3,38 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // for navigator
-import {
-  createStackNavigator,
-  StackHeaderLeftButtonProps,
-  getFocusedRouteNameFromRoute,
-} from '@react-navigation/stack';
+import {DrawerActions} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+// interface
 import {
-  createDrawerNavigator,
-  DrawerNavigationProp,
-} from '@react-navigation/drawer';
+  MainPageParamList,
+  SearchPageParamList,
+  PortfolioPageParamList,
+} from '~/@types';
 
 // import Main pages
 import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
+import FavoritesPage from './MainPage/FavoritesPage';
 // search
 import SearchPage from './SearchPage';
-import SearchCirclePage from './SearchPage/SearchCirclePage';
+import SearchClubPage from './SearchPage/SearchClubPage';
 import SearchPopupPage from './SearchPage/SearchPopupPage';
 // calendar
 import CalendarPage from './CalendarPage';
-// notification
-import NotificationPage from './NotificationPage';
+// alarm
+import AlarmsPage from './AlarmsPage';
 // portfolio
 import PortfolioPage from './PortfolioPage';
 import PortfolioInPage from './PortfolioPage/PortfolioInPage';
 
-// import CircleMainPage pages
-import CircleMainList from './MainPage/CircleMainPage';
-import ChattingPage from './MainPage/CircleMainPage/ChattingPage';
-import MemberListPage from './MainPage/CircleMainPage/MemberListPage';
-import CircleSettingPage from './MainPage/CircleMainPage/CircleSettingPage';
+// import ClubMainPage pages
+import ClubMainList from './MainPage/ClubMainPage';
+import ChattingPage from './MainPage/ClubMainPage/ChattingPage';
+import MemberListPage from './MainPage/ClubMainPage/MemberListPage';
+import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
 
 //import Drawer Page
 import MyPage from './Drawer/MyPage';
@@ -42,8 +43,9 @@ import AppNoticePage from './Drawer/AppNoticePage';
 // Navigator 생성
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
-
+const Stack = createStackNavigator<MainPageParamList>();
+const SearchStack = createStackNavigator<SearchPageParamList>();
+const PortStack = createStackNavigator<PortfolioPageParamList>();
 // Tab Navigator 작성
 
 // MainPage Bottom_tab navi
@@ -91,10 +93,10 @@ function MainTabNavi() {
             ),
         }}
       />
-      {/* NotificationPage 탭 메인4*/}
+      {/* AlarmsPage 탭 메인4*/}
       <Tab.Screen
         name="    "
-        component={NotificationPage}
+        component={AlarmsPage}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -121,14 +123,14 @@ function MainTabNavi() {
   );
 }
 
-// CircleMainPage BottomTab navi 작성
-function CircleMainTabNavi() {
+// ClubMainPage BottomTab navi 작성
+function ClubMainTabNavi() {
   return (
-    <Tab.Navigator initialRouteName="CircleMainPage">
+    <Tab.Navigator initialRouteName="ClubMainPage">
       {/* 동아리메인1 */}
       <Tab.Screen
         name=" "
-        component={CircleMainList}
+        component={ClubMainList}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -167,7 +169,7 @@ function CircleMainTabNavi() {
       {/* 동아리메인4 */}
       <Tab.Screen
         name="    "
-        component={CircleSettingPage}
+        component={ClubSettingPage}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -184,14 +186,14 @@ function CircleMainTabNavi() {
 // Stack Navigator 작성
 
 // MainTab Stack으로 감싸서 topbar제공
-const MainTapStack = ({navigation}) => {
+const MainTapStack = ({navigation}: any) => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerRight: () => (
           <Icon
             name="menu"
-            onPress={() => navigation.openDrawer()}
+            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             size={25}
             color="black"
           />
@@ -205,11 +207,12 @@ const MainTapStack = ({navigation}) => {
 // MainPage 메인 1번 내부 Stack Navi
 function MainStackNavi() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="MainPage">
       <Stack.Screen name="MainPage" component={MainPage} />
       <Stack.Screen name="EventPage" component={EventPage} />
+      <Stack.Screen name="ClubMainPage" component={ClubMainTabNavi} />
       <Stack.Screen name="CalendarPage" component={CalendarPage} />
-      <Stack.Screen name="CircleMainPage" component={CircleMainTabNavi} />
+      <Stack.Screen name="FavoritesPage" component={FavoritesPage} />
     </Stack.Navigator>
   );
 }
@@ -217,28 +220,28 @@ function MainStackNavi() {
 // SearchPage 메인 2번 내부 Stack Navi
 function SearchStackNavi() {
   return (
-    <Stack.Navigator initialRouteName="SearchPage">
-      <Stack.Screen name="SearchPage" component={SearchPage} />
-      <Stack.Screen name="SearchCirclePage" component={SearchCirclePage} />
-      <Stack.Screen name="SearchPopupPage" component={SearchPopupPage} />
-    </Stack.Navigator>
+    <SearchStack.Navigator initialRouteName="SearchPage">
+      <SearchStack.Screen name="SearchPage" component={SearchPage} />
+      <SearchStack.Screen name="SearchClubPage" component={SearchClubPage} />
+      <SearchStack.Screen name="SearchPopupPage" component={SearchPopupPage} />
+    </SearchStack.Navigator>
   );
 }
 
 // PortfolioPage 메인 5번 내부 Stack
 function PortfolioStackNavi() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="PortfolioPage" component={PortfolioPage} />
-      <Stack.Screen name="PortfolioInPage" component={PortfolioInPage} />
-    </Stack.Navigator>
+    <PortStack.Navigator>
+      <PortStack.Screen name="PortfolioPage" component={PortfolioPage} />
+      <PortStack.Screen name="PortfolioInPage" component={PortfolioInPage} />
+    </PortStack.Navigator>
   );
 }
 
 //drawer navi
 function DrawerNavi() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator drawerPosition={'right'} drawerStyle={{width: 300}}>
       <Drawer.Screen name="ExExExEx" component={MainTapStack} />
       <Drawer.Screen name="MyPage" component={MyPage} />
       <Drawer.Screen name="AppNoticePage" component={AppNoticePage} />

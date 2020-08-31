@@ -1,22 +1,19 @@
-// NotificationPage index.tsx
+// AlarmsPage index.tsx
 // 메인3
 import React from 'react';
 import {Text, View, Button} from 'react-native';
 
 // stack navi를 위한 prop
 import {StackNavigationProp} from '@react-navigation/stack';
-type NavigationProp = StackNavigationProp<
-  NotificationPageParamList,
-  'NotificationPage'
->;
+type NavigationProp = StackNavigationProp<AlarmsPageParamList, 'AlarmsPage'>;
 interface Props {
   navigation: NavigationProp;
 }
 
-const NotificationPage = ({navigation}: Props) => {
+const AlarmsPage = ({navigation}: Props) => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>NotificationPage 메인4</Text>
+      <Text>AlarmsPage 메인4</Text>
       <Button
         title="Go to Main"
         onPress={() => navigation.navigate('MainPage')}
@@ -26,4 +23,4 @@ const NotificationPage = ({navigation}: Props) => {
   );
 };
 
-export default NotificationPage;
+export default AlarmsPage;
