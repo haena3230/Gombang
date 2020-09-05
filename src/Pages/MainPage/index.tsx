@@ -10,6 +10,9 @@ type NavigationProp = StackNavigationProp<MainPageParamList, 'MainPage'>;
 interface Props {
   navigation: NavigationProp;
 }
+//카카오 로그인
+//const kakaoLogin=require('./KakaoHelper');
+//kakaoLogin.login();
 
 // main 페이지 구성
 const MainPage = ({navigation}: Props) => {
