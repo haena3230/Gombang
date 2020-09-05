@@ -19,6 +19,9 @@ import FavoritesPage from './FavoritesPage';
 interface TextProp {
   color: string;
 }
+//카카오 로그인
+//const kakaoLogin=require('./KakaoHelper');
+//kakaoLogin.login();
 
 // main 페이지 구성
 const MainPage = ({navigation}: MainProps) => {
