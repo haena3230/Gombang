@@ -1,31 +1,35 @@
 // SearchPage index.tsx
 // 메인2
-import React from 'react';
-import {Text, View, Button} from 'react-native';
-import {SearchPageParamList} from '~/@types';
+import React, {useState} from 'react';
+import {View} from 'react-native';
+import {Picker} from '@react-native-community/picker';
+import Styled from 'styled-components/native';
+import {SearchProps} from '~/@types/navigation';
 
-// stack navi를 위한 prop
-import {StackNavigationProp} from '@react-navigation/stack';
-type NavigationProp = StackNavigationProp<SearchPageParamList, 'SearchPage'>;
-interface Props {
-  navigation: NavigationProp;
-}
-
-const SearchPage = ({navigation}: Props) => {
+const SearchPage = ({navigation}: SearchProps) => {
+  const [select, setSelect] = useState('java');
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>SearchPage 카테고리 선택 메인2</Text>
-      <Button
-        title="카테고리 선택 메뉴"
-        onPress={() => navigation.navigate('SearchClubPage')}
-      />
-      <Button
-        title="Go to Main"
-        onPress={() => navigation.navigate('MainPage')}
-      />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+    <View>
+      <View style={{alignItems: 'center', marginHorizontal: 10}}>
+        <BigImg
+          source={{
+            uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
+          }}
+        />
+      </View>
+      <Picker
+        selectedValue={select}
+        style={{height: 50, width: 150}}
+        onValueChange={(itemValue, itemIndex) => setSelect(itemValue)}>
+        <Picker.Item label="Java" value="java" />
+        <Picker.Item label="JavaScript" value="js" />
+      </Picker>
     </View>
   );
 };
-
 export default SearchPage;
+
+const BigImg = Styled.Image`
+  width: 100%;
+  height:150px;
+`;

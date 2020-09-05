@@ -1,13 +1,11 @@
 // MainPage index.tsx
 // 메인1
 
-import React from 'react';
-import {MainProps} from '~/@types';
-import FavoritesPage from '~/Pages/MainPage/FavoritesPage';
+import React, {useEffect, useState} from 'react';
+import {MainProps} from '~/@types/navigation';
 import {
   ScrollView,
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -16,6 +14,8 @@ import Styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 
 // interface
+import {ClubInterface} from '~/@types/Club';
+import FavoritesPage from './FavoritesPage';
 interface TextProp {
   color: string;
 }
@@ -25,6 +25,7 @@ const MainPage = ({navigation}: MainProps) => {
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
       <View>
+        {/* 이벤트 슬라이드 */}
         <Swiper style={styles.wrapper}>
           <View style={styles.slide}>
             <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
@@ -54,7 +55,7 @@ const MainPage = ({navigation}: MainProps) => {
             </TouchableOpacity>
           </View>
         </Swiper>
-
+        {/* 동아리 리스트 */}
         <View style={{margin: 5}}>
           <WrapTitle>
             <Title>내 동아리 리스트</Title>
@@ -62,19 +63,14 @@ const MainPage = ({navigation}: MainProps) => {
               <SmallTitle color="">목록편집</SmallTitle>
             </TouchableOpacity>
           </WrapTitle>
-          <ScrollView horizontal={true} style={{margin: 5}}>
-            <UsersClubList />
-            <UsersClubList />
-            <UsersClubList />
-            <UsersClubList />
-          </ScrollView>
+          <UsersClubList />
         </View>
-
+        {/* 일정 */}
         <View style={{margin: 5}}>
           <Title>일정</Title>
           <CalendarSchedule />
         </View>
-
+        {/* 즐겨찾기 */}
         <View style={{margin: 5}}>
           <WrapTitle>
             <Title>즐겨찾기 </Title>
@@ -83,6 +79,7 @@ const MainPage = ({navigation}: MainProps) => {
               <SmallTitle color="">모두보기</SmallTitle>
             </TouchableOpacity>
           </WrapTitle>
+          <FavoritesPage />
         </View>
       </View>
     </ScrollView>
@@ -95,18 +92,38 @@ export default MainPage;
 
 // 내 동아리 리스트
 const UsersClubList = () => {
+  const [clubs, setClubs] = useState<ClubInterface[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetch('http://49.50.174.166:3000/club', {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json',
+        },
+      });
+
+      const clubs = await response.json();
+      setClubs(clubs);
+    })();
+  }, []);
+
   return (
-    <View>
-      <View style={{padding: 4}}>
-        <Image
-          style={{width: 100, height: 100}}
-          source={{
-            uri: 'https://via.placeholder.com/100/ABB2B9/ffffff.png',
-          }}
-        />
-        <SmallTitle color="black">oo동아리</SmallTitle>
-      </View>
-    </View>
+    <ScrollView horizontal={true}>
+      {clubs.map((club) => {
+        return (
+          <View style={{margin: 7}}>
+            <Image
+              style={{width: 80, height: 80}}
+              key={club._id}
+              source={{
+                uri: `http://49.50.174.166:3000/image/${club.image}`,
+              }}></Image>
+            <SmallTitle color="black">{club.name}</SmallTitle>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 };
 

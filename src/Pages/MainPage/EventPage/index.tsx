@@ -1,14 +1,12 @@
 // EventPage index.tsx
+// 메인 -> 이벤트 슬라이드 -> 이벤트 페이지
 import React from 'react';
-import {View, Text, Button} from 'react-native';
-import {MainProps} from '~/@types';
+import {View, Text} from 'react-native';
 
-// 메인 -> eventPage
-const EventPage = ({navigation}: MainProps) => {
+const EventPage = () => {
   return (
-    <View style={{flex: 1, justifyContent: 'center'}}>
+    <View>
       <Text>이벤트 페이지</Text>
-      <Button title="Go back" onPress={() => navigation?.goBack()} />
     </View>
   );
 };

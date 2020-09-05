@@ -4,7 +4,7 @@ import {View, Text, Button} from 'react-native';
 
 // stack navi를 위한 prop
 import {StackNavigationProp} from '@react-navigation/stack';
-import {ClubMainPageParamList} from '~/@types';
+import {ClubMainPageParamList} from '~/@types/navigation';
 type NavigationProp = StackNavigationProp<
   ClubMainPageParamList,
   'ClubMainList'

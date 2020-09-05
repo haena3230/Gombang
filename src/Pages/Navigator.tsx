@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 // for navigator
 import {DrawerActions} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 // interface
@@ -12,7 +12,9 @@ import {
   MainPageParamList,
   SearchPageParamList,
   PortfolioPageParamList,
-} from '~/@types';
+  MainTabParamList,
+  ClubMainTabParamList,
+} from '~/@types/navigation';
 
 // import Main pages
 import MainPage from './MainPage';
@@ -41,7 +43,8 @@ import MyPage from './Drawer/MyPage';
 import AppNoticePage from './Drawer/AppNoticePage';
 
 // Navigator 생성
-const Tab = createBottomTabNavigator();
+const MainTab = createBottomTabNavigator<MainTabParamList>();
+const ClubMainTab = createBottomTabNavigator<ClubMainTabParamList>();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator<MainPageParamList>();
 const SearchStack = createStackNavigator<SearchPageParamList>();
@@ -51,11 +54,11 @@ const PortStack = createStackNavigator<PortfolioPageParamList>();
 // MainPage Bottom_tab navi
 function MainTabNavi() {
   return (
-    <Tab.Navigator>
+    <MainTab.Navigator>
       {/* 탭 메뉴 */}
       {/* MainPage 탭 메인1*/}
-      <Tab.Screen
-        name=" "
+      <MainTab.Screen
+        name="MainPage"
         component={MainStackNavi}
         options={{
           // 아이콘 추가 및 탭 옵션
@@ -68,8 +71,8 @@ function MainTabNavi() {
         }}
       />
       {/* SearchPage 탭 메인2*/}
-      <Tab.Screen
-        name="  "
+      <MainTab.Screen
+        name="SearchPage"
         component={SearchStackNavi}
         options={{
           tabBarIcon: ({focused}) =>
@@ -81,8 +84,8 @@ function MainTabNavi() {
         }}
       />
       {/* CalenderPage 탭 메인3*/}
-      <Tab.Screen
-        name="   "
+      <MainTab.Screen
+        name="CalendarPage"
         component={CalendarPage}
         options={{
           tabBarIcon: ({focused}) =>
@@ -94,8 +97,8 @@ function MainTabNavi() {
         }}
       />
       {/* AlarmsPage 탭 메인4*/}
-      <Tab.Screen
-        name="    "
+      <MainTab.Screen
+        name="AlarmsPage"
         component={AlarmsPage}
         options={{
           tabBarIcon: ({focused}) =>
@@ -107,8 +110,8 @@ function MainTabNavi() {
         }}
       />
       {/* PortfolioPage 탭 메인5*/}
-      <Tab.Screen
-        name="     "
+      <MainTab.Screen
+        name="PortfolioPage"
         component={PortfolioStackNavi}
         options={{
           tabBarIcon: ({focused}) =>
@@ -119,17 +122,17 @@ function MainTabNavi() {
             ),
         }}
       />
-    </Tab.Navigator>
+    </MainTab.Navigator>
   );
 }
 
 // ClubMainPage BottomTab navi 작성
 function ClubMainTabNavi() {
   return (
-    <Tab.Navigator initialRouteName="ClubMainPage">
+    <ClubMainTab.Navigator initialRouteName="ClubMainPage">
       {/* 동아리메인1 */}
-      <Tab.Screen
-        name=" "
+      <ClubMainTab.Screen
+        name="ClubMainPage"
         component={ClubMainList}
         options={{
           tabBarIcon: ({focused}) =>
@@ -141,8 +144,8 @@ function ClubMainTabNavi() {
         }}
       />
       {/* 동아리메인2 */}
-      <Tab.Screen
-        name="  "
+      <ClubMainTab.Screen
+        name="ChattingPage"
         component={ChattingPage}
         options={{
           tabBarIcon: ({focused}) =>
@@ -154,8 +157,8 @@ function ClubMainTabNavi() {
         }}
       />
       {/* 동아리메인3 */}
-      <Tab.Screen
-        name="   "
+      <ClubMainTab.Screen
+        name="MemberListPage"
         component={MemberListPage}
         options={{
           tabBarIcon: ({focused}) =>
@@ -167,8 +170,8 @@ function ClubMainTabNavi() {
         }}
       />
       {/* 동아리메인4 */}
-      <Tab.Screen
-        name="    "
+      <ClubMainTab.Screen
+        name="ClubSettingPage"
         component={ClubSettingPage}
         options={{
           tabBarIcon: ({focused}) =>
@@ -179,30 +182,30 @@ function ClubMainTabNavi() {
             ),
         }}
       />
-    </Tab.Navigator>
+    </ClubMainTab.Navigator>
   );
 }
 
 // Stack Navigator 작성
 
 // MainTab Stack으로 감싸서 topbar제공
-const MainTapStack = ({navigation}: any) => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerRight: () => (
-          <Icon
-            name="menu"
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-            size={25}
-            color="black"
-          />
-        ),
-      }}>
-      <Stack.Screen name="MainTabNavi" component={MainTabNavi} />
-    </Stack.Navigator>
-  );
-};
+// const MainTabStack = ({navigation}: any) => {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerRight: () => (
+//           <Icon
+//             name="menu"
+//             onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+//             size={25}
+//             color="black"
+//           />
+//         ),
+//       }}>
+//       <Stack.Screen name="MainTabNavi" component={MainTabNavi} options={{}} />
+//     </Stack.Navigator>
+//   );
+// };
 
 // MainPage 메인 1번 내부 Stack Navi
 function MainStackNavi() {
@@ -210,7 +213,7 @@ function MainStackNavi() {
     <Stack.Navigator initialRouteName="MainPage">
       <Stack.Screen name="MainPage" component={MainPage} />
       <Stack.Screen name="EventPage" component={EventPage} />
-      <Stack.Screen name="ClubMainPage" component={ClubMainTabNavi} />
+      <Stack.Screen name="ClubMainTabNavi" component={ClubMainTabNavi} />
       <Stack.Screen name="CalendarPage" component={CalendarPage} />
       <Stack.Screen name="FavoritesPage" component={FavoritesPage} />
     </Stack.Navigator>
@@ -242,10 +245,20 @@ function PortfolioStackNavi() {
 function DrawerNavi() {
   return (
     <Drawer.Navigator drawerPosition={'right'} drawerStyle={{width: 300}}>
-      <Drawer.Screen name="ExExExEx" component={MainTapStack} />
+      <Drawer.Screen name="ExExExEx" component={MainTabNavi} />
       <Drawer.Screen name="MyPage" component={MyPage} />
       <Drawer.Screen name="AppNoticePage" component={AppNoticePage} />
     </Drawer.Navigator>
   );
 }
 export default DrawerNavi;
+
+// screenOptions = {{
+//   headerRight: () => (
+//     <Icon
+//       name="ellipsis-vertical-outline"
+//       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+//       size={25}
+//       color="black"></Icon>
+//   ),
+// }}

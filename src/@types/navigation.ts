@@ -1,69 +1,91 @@
 // type 지정
 
-// main1
+// tab
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 
-// navigation
+// 메인탭
+export interface MainTabProps {
+  navigation: BottomTabNavigationProp<MainTabParamList, 'MainPage'>;
+}
+export type MainTabParamList = {
+  MainPage: undefined;
+  SearchPage: undefined;
+  CalendarPage: undefined;
+  AlarmsPage: undefined;
+  PortfolioPage: undefined;
+};
+
+// ClubMainTab
+export interface ClubMainTabProps {
+  navigation: BottomTabNavigationProp<ClubMainTabParamList, 'ClubMainPage'>;
+}
+export type ClubMainTabParamList = {
+  ClubMainPage: undefined;
+  ChattingPage: undefined;
+  MemberListPage: undefined;
+  ClubSettingPage: undefined;
+};
+
+// main1
 import {StackNavigationProp} from '@react-navigation/stack';
 export interface MainProps {
   navigation: StackNavigationProp<MainPageParamList, 'MainPage'>;
 }
-
 export type MainPageParamList = {
   MainPage: undefined;
-  MainTabNavi: undefined;
   EventPage: undefined;
-  ClubMainPage: undefined;
+  ClubMainTabNavi: undefined;
   CalendarPage: undefined;
   FavoritesPage: undefined;
 };
-
-// 내 동아리 리스트
-export interface users_club {
-  my_club_name: string;
-  my_club_image_path: string;
-}
-// 즐겨찾기
-export interface users_fav_club {
-  my_fav_club_name: string;
-  my_fav_club_image_path: string;
-}
-
 // main2
+export interface SearchProps {
+  navigation: StackNavigationProp<SearchPageParamList, 'MainPage'>;
+}
 export type SearchPageParamList = {
   SearchPage: undefined;
   SearchClubPage: undefined;
   MainPage: undefined;
   SearchPopupPage: undefined;
 };
-type SearchClubPageParamList = {
+export type SearchClubPageParamList = {
   SearchClubPage: undefined;
   SearchPopupPage: undefined;
   MainPage: undefined;
 };
-type SearchPopupPageParamList = {
+export type SearchPopupPageParamList = {
   SearchPopupPage: undefined;
   MainPage: undefined;
 };
 
 // main3
-type CalendarPageParamList = {
+export interface CalendarProps {
+  navigation: StackNavigationProp<CalendarPageParamList, 'MainPage'>;
+}
+export type CalendarPageParamList = {
   CalendarPage: undefined;
   MainPage: undefined;
 };
 
 // main4
-type AlarmsPageParamList = {
+export interface AlarmsProps {
+  navigation: StackNavigationProp<AlarmsPageParamList, 'MainPage'>;
+}
+export type AlarmsPageParamList = {
   AlarmsPage: undefined;
   MainPage: undefined;
 };
 
 // main5
+export interface PortfolioProps {
+  navigation: StackNavigationProp<PortfolioPageParamList, 'MainPage'>;
+}
 export type PortfolioPageParamList = {
   MainPage: undefined;
   PortfolioPage: undefined;
   PortfolioInPage: undefined;
 };
-type PortfolioInPageParamList = {
+export type PortfolioInPageParamList = {
   PortfolioPage: undefined;
   PortfolioInPage: undefined;
 };
