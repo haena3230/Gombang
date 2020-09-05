@@ -1192,6 +1192,13 @@
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
+"@react-native-seoul/kakao-login@2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@react-native-seoul/kakao-login/-/kakao-login-2.10.1.tgz#46f510cc0cd51895acc02415591c35fa4ddb524b"
+  integrity sha512-cviMHZ4I9BA/zYaDZdBK+paKvHl4sg43aoVwLkfriiaxH9Xc49942SO6v1IjnQISZX1SYbWw1f4uvNhHb9/XXA==
+  dependencies:
+    dooboolab-welcome "^1.1.0"
+
 "@react-navigation/bottom-tabs@5.8.0":
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.8.0.tgz#d7386809bceeead0adcaacf61b6563be9cefd5cb"
@@ -2796,6 +2803,11 @@ domexception@^2.0.1:
   integrity sha512-yxJ2mFy/sibVQlu5qHjOkf9J3K6zgmCxgJ94u2EdvDOV09H+32LtRswEcUsmUWN72pVLOEnTSRaIVVzVQgS0dg==
   dependencies:
     webidl-conversions "^5.0.0"
+
+dooboolab-welcome@^1.1.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/dooboolab-welcome/-/dooboolab-welcome-1.2.0.tgz#295818ce85a8e97dc90c0ec0510b4008e2d722dc"
+  integrity sha512-XgEbjJHAsKLge/e8jtuHsv84Ovg1Gx0GvnOTOmOlVGV1643nduTAkT3fyo/mxKbzvyXBr47RHaJAY4R2toI0UA==
 
 dot-prop@^4.2.1:
   version "4.2.1"
