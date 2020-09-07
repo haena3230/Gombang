@@ -15,13 +15,9 @@ import Swiper from 'react-native-swiper';
 
 // interface
 import {ClubInterface} from '~/@types/Club';
-import FavoritesPage from './FavoritesPage';
 interface TextProp {
   color: string;
 }
-//카카오 로그인
-//const kakaoLogin=require('./KakaoHelper');
-//kakaoLogin.login();
 
 // main 페이지 구성
 const MainPage = ({navigation}: MainProps) => {
@@ -31,7 +27,7 @@ const MainPage = ({navigation}: MainProps) => {
         {/* 이벤트 슬라이드 */}
         <Swiper style={styles.wrapper}>
           <View style={styles.slide}>
-            <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+            <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
               <BannerImage
                 source={{
                   uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
@@ -66,7 +62,7 @@ const MainPage = ({navigation}: MainProps) => {
               <SmallTitle color="">목록편집</SmallTitle>
             </TouchableOpacity>
           </WrapTitle>
-          <UsersClubList />
+          {/* <UsersClubList /> */}
         </View>
         {/* 일정 */}
         <View style={{margin: 5}}>
@@ -82,7 +78,7 @@ const MainPage = ({navigation}: MainProps) => {
               <SmallTitle color="">모두보기</SmallTitle>
             </TouchableOpacity>
           </WrapTitle>
-          <FavoritesPage />
+          {/* <FavoritesPage /> */}
         </View>
       </View>
     </ScrollView>
@@ -93,7 +89,7 @@ export default MainPage;
 
 //구성요소
 
-// 내 동아리 리스트
+// // 내 동아리 리스트
 const UsersClubList = () => {
   const [clubs, setClubs] = useState<ClubInterface[]>([]);
 

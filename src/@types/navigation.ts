@@ -1,7 +1,15 @@
-// type 지정
-
-// tab
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+// 로그인/ 인증 스택
+export interface AuthStackProps {
+  navigation: StackNavigationProp<AuthStackParamList, 'LoginPage'>;
+}
+
+export type AuthStackParamList = {
+  LoginPage: undefined;
+  DrawerNavi: undefined;
+};
 
 // 메인탭
 export interface MainTabProps {
@@ -27,11 +35,11 @@ export type ClubMainTabParamList = {
 };
 
 // main1
-import {StackNavigationProp} from '@react-navigation/stack';
 export interface MainProps {
   navigation: StackNavigationProp<MainPageParamList, 'MainPage'>;
 }
 export type MainPageParamList = {
+  LoginPage: undefined;
   MainPage: undefined;
   EventPage: undefined;
   ClubMainTabNavi: undefined;
