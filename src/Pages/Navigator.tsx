@@ -1,12 +1,17 @@
 // Navigator.tsx 내비게이션 모음
 import React from 'react';
+import {Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // for navigator
-import {DrawerActions} from '@react-navigation/native';
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 // interface
 import {
   MainPageParamList,
@@ -14,9 +19,11 @@ import {
   PortfolioPageParamList,
   MainTabParamList,
   ClubMainTabParamList,
+  AuthStackParamList,
 } from '~/@types/navigation';
 
 // import Main pages
+import LoginPage from './LoginPage';
 import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
 import FavoritesPage from './MainPage/FavoritesPage';
@@ -39,16 +46,21 @@ import MemberListPage from './MainPage/ClubMainPage/MemberListPage';
 import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
 
 //import Drawer Page
+import DrawerPage from '~/Pages/Drawer';
 import MyPage from './Drawer/MyPage';
 import AppNoticePage from './Drawer/AppNoticePage';
 
 // Navigator 생성
+const AuthStack = createStackNavigator<AuthStackParamList>();
 const MainTab = createBottomTabNavigator<MainTabParamList>();
 const ClubMainTab = createBottomTabNavigator<ClubMainTabParamList>();
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator<MainPageParamList>();
 const SearchStack = createStackNavigator<SearchPageParamList>();
 const PortStack = createStackNavigator<PortfolioPageParamList>();
+
+// 로그인 네비게이터
+
 // Tab Navigator 작성
 
 // MainPage Bottom_tab navi
@@ -212,6 +224,7 @@ function MainStackNavi() {
   return (
     <Stack.Navigator initialRouteName="MainPage">
       <Stack.Screen name="MainPage" component={MainPage} />
+      <Stack.Screen name="LoginPage" component={LoginPage} />
       <Stack.Screen name="EventPage" component={EventPage} />
       <Stack.Screen name="ClubMainTabNavi" component={ClubMainTabNavi} />
       <Stack.Screen name="CalendarPage" component={CalendarPage} />
@@ -241,17 +254,89 @@ function PortfolioStackNavi() {
   );
 }
 
-//drawer navi
+//Drawer 페이지
 function DrawerNavi() {
   return (
-    <Drawer.Navigator drawerPosition={'right'} drawerStyle={{width: 300}}>
-      <Drawer.Screen name="ExExExEx" component={MainTabNavi} />
-      <Drawer.Screen name="MyPage" component={MyPage} />
+    <Drawer.Navigator
+      initialRouteName="MainTabNavi"
+      drawerPosition={'right'}
+      drawerStyle={{width: 300}}
+      drawerContentOptions={{
+        activeTintColor: '#e91e63',
+        itemStyle: {marginVertical: 20},
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="MainTabNavi" component={MainTabNavi} />
+      <Drawer.Screen name="Drawer" component={DrawerPage} />
+      <Drawer.Screen
+        name="MyPage"
+        component={MyPage}
+        options={{
+          drawerIcon: ({focused}) =>
+            focused ? (
+              <Icon name="settings" size={25} color="#999" />
+            ) : (
+              <Icon name="settings-outline" size={25} color="#999" />
+            ),
+        }}
+      />
       <Drawer.Screen name="AppNoticePage" component={AppNoticePage} />
     </Drawer.Navigator>
   );
 }
-export default DrawerNavi;
+// Drawer 컨텐츠
+import {KakaoLogout} from '~/Components/Login';
+function CustomDrawerContent(props: any) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList {...props} />
+      <DrawerItem
+        label="로그아웃"
+        onPress={() =>
+          Alert.alert('', '로그아웃 하시겠습니까?', [
+            {
+              text: '취소',
+              onPress: () => {
+                return null;
+              },
+            },
+            {
+              text: '확인',
+              onPress: () => {
+                KakaoLogout();
+              },
+            },
+          ])
+        }
+      />
+    </DrawerContentScrollView>
+  );
+}
+
+// Login Stack Navi
+function LoginStackNavi() {
+  // const isLoggedIn = props.isLoggedIn;
+
+  // if (isLoggedIn) {
+  //   return (
+  //     <AuthStack.Navigator
+  //       screenOptions={{
+  //         headerShown: false,
+  //       }}>
+  //       <AuthStack.Screen name="LoginPage" component={LoginPage} />
+  //     </AuthStack.Navigator>
+  //   );
+  // }
+  return (
+    <AuthStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <AuthStack.Screen name="DrawerNavi" component={DrawerNavi} />
+    </AuthStack.Navigator>
+  );
+}
+export default LoginStackNavi;
 
 // screenOptions = {{
 //   headerRight: () => (
