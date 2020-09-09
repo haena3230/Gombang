@@ -4,7 +4,7 @@ import React from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
 
-const EventPage = ({navigation}) => {
+const ProfileSettingPage = ({navigation}) => {
   return (
     <View style={{margin: 15}}>
       {/* 헤더 */}
@@ -84,4 +84,4 @@ const InputContainer = Styled.View`
   marginVertical:5px;
 `;
 
-export default EventPage;
+export default ProfileSettingPage;

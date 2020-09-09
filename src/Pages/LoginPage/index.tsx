@@ -1,6 +1,6 @@
 //LoginPage index.tsx
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import {KakaoLogin, GetProfile} from '~/Components/Login';
 
 // 로그인 페이지
