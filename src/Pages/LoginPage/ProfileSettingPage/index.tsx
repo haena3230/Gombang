@@ -1,8 +1,9 @@
 // 기본 프로필 설정
-import {NavigationContainer} from '@react-navigation/native';
-import React from 'react';
+
+import React, {useState} from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
+import {Picker} from '@react-native-community/picker';
 
 const ProfileSettingPage = ({navigation}) => {
   return (
@@ -23,8 +24,17 @@ const ProfileSettingPage = ({navigation}) => {
       {/* 정보입력 */}
       <View style={{marginVertical: 20}}>
         <InputContainer>
-          <TxtInput autoFocus={true} placeholder={'이름'} />
+          <TxtInput placeholder={'이름'} />
         </InputContainer>
+
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={styles.pickContainer}>
+            <DropMenuCampus />
+          </View>
+          <View style={styles.pickContainer}>
+            <DropMenuMajor />
+          </View>
+        </View>
         <InputContainer>
           <TxtInput placeholder={'휴대전화'} />
         </InputContainer>
@@ -35,9 +45,43 @@ const ProfileSettingPage = ({navigation}) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('MainPage')}
         style={styles.button}>
-        <Text style={styles.font}>설정 완료</Text>
+        <Text style={styles.buttonFont}>설정 완료</Text>
       </TouchableOpacity>
     </View>
+  );
+};
+
+const DropMenuCampus = () => {
+  const [selectedValue, setSelectedValue] = useState<string | number>('java');
+  return (
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={(itemValue) => setSelectedValue(itemValue)}
+      mode={'dropdown'}
+      style={{width: 150, height: 40}}>
+      <Picker.Item color="#808B96" label="대학" value="대학" />
+      <Picker.Item color="#808B96" label="죽전" value="죽전" />
+      <Picker.Item color="#808B96" label="천안" value="천안" />
+    </Picker>
+  );
+};
+
+const DropMenuMajor = () => {
+  const [selectedValue, setSelectedValue] = useState<string | number>('java');
+  return (
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={(itemValue) => setSelectedValue(itemValue)}
+      mode={'dropdown'}
+      style={{width: 150, height: 40}}>
+      <Picker.Item color="#808B96" label="학과" value="학과" />
+      <Picker.Item
+        color="#808B96"
+        label="소프트웨어학과"
+        value="소프트웨어학과"
+      />
+      <Picker.Item color="#808B96" label="컴퓨터공학과" value="컴퓨터공학과" />
+    </Picker>
   );
 };
 
@@ -56,10 +100,10 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
-  textInput: {
-    fontSize: 14,
+  pickContainer: {
     borderWidth: 2,
     borderColor: '#D5D8DC',
+    height: 40,
   },
   button: {
     padding: 10,
@@ -67,7 +111,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
-  font: {
+  buttonFont: {
     color: '#FDFEFE',
     fontWeight: 'bold',
   },
@@ -81,7 +125,7 @@ const TxtInput = Styled.TextInput`
 `;
 
 const InputContainer = Styled.View`
-  marginVertical:5px;
+  marginVertical:8px;
 `;
 
-export default ProfileSettingPage;
+export default ProfileSettingPagee;

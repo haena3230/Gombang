@@ -1,5 +1,5 @@
 // 메일 인증 페이지
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   TextInput,
@@ -21,18 +21,16 @@ const MailPage = () => {
 // 메일 입력
 const BtnText = '메일 전송';
 const MailComponent = () => {
-  const [msg, setMsg] = useState(BtnText);
-  const [check, setCheck] = useState(false);
+  const [msg, setMsg] = useState<string>(BtnText);
 
   return (
     <View>
       <TextInput
         style={styles.textInput}
-        autoFocus={true}
         placeholder={'ex) 학번@dankook.ac.kr'}
       />
       <TouchableOpacity
-        onPress={(msg) => setMsg('인증 메일 다시 받기')}
+        onPress={() => setMsg('인증 메일 다시 받기')}
         style={styles.button}>
         <Text style={styles.font}>{msg}</Text>
       </TouchableOpacity>
@@ -43,17 +41,10 @@ const MailComponent = () => {
 
 // 인증번호 입력
 const AuthNumberComponent = ({navigation}: any) => {
-  // Countdown(10);
   return (
     <View>
-      <View style={{alignItems: 'flex-end'}}>
-        <Text style={styles.count}>남은시간 : </Text>
-      </View>
-      <TextInput
-        style={styles.textInput}
-        autoFocus={true}
-        placeholder={'인증번호 입력'}
-      />
+      {/* <Countdown /> */}
+      <TextInput style={styles.textInput} placeholder={'인증번호 입력'} />
       <TouchableOpacity
         onPress={() => navigation.navigate('ProfileSettingPage')}
         style={styles.button}>
@@ -63,20 +54,36 @@ const AuthNumberComponent = ({navigation}: any) => {
   );
 };
 
-// 카운트 다운 함수
-const Countdown = (seconds: number) => {
-  let counter = seconds;
-  const interval = setInterval(() => {
-    console.log(counter);
-    counter--;
+// 카운트 다운
+const Countdown = () => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let counter = 10;
+    const interval = setInterval(() => {
+      console.log(counter);
+      (counter: React.SetStateAction<number>) => setCount(counter);
+      counter--;
 
-    if (counter < 0) {
-      clearInterval(interval);
-      console.log('Ding!');
-    }
-  }, 1000);
-  return counter;
+      if (counter < 0) {
+        clearInterval(interval);
+        console.log('Ding!');
+      }
+    }, 1000);
+  }, []);
+  return (
+    <View>
+      <Text>남은시간 : {() => setCount}</Text>
+    </View>
+  );
 };
+
+{
+  /* <button Onpress={this.startTimer}> Play </button>
+
+<Text style={{fontSize: 18, color: '#000'}}>
+ {this.state.timer === 0 ? 'Times Up!' : {this.state.timer} }
+</Text> */
+}
 
 const styles = StyleSheet.create({
   container: {

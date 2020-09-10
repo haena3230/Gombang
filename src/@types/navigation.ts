@@ -45,6 +45,7 @@ export type MainPageParamList = {
   ClubMainTabNavi: undefined;
   CalendarPage: undefined;
   FavoritesPage: undefined;
+  SearchPage: undefined;
 };
 // main2
 export interface SearchProps {

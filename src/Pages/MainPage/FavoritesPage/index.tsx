@@ -1,6 +1,6 @@
 // FavoritesPage index.tsx
 import React, {useState, useEffect} from 'react';
-import {Image, View, FlatList} from 'react-native';
+import {Image, View, FlatList, Text} from 'react-native';
 import Styled from 'styled-components/native';
 import {ClubInterface} from '~/@types/Club';
 
@@ -21,6 +21,7 @@ const FavoritesPage = () => {
       setClubs(clubs);
     })();
   }, []);
+
   return (
     <View style={{margin: 5}}>
       <FlatList
