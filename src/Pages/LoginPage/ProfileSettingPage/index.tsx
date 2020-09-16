@@ -4,8 +4,47 @@ import React, {useState} from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
 import {Picker} from '@react-native-community/picker';
+import {LoginStackProps} from '~/@types/navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const ProfileSettingPage = ({navigation}) => {
+const ProfileSettingPage = ({navigation}: LoginStackProps) => {
+  const [name, setName] = useState<string>();
+  const [phone, setPhone] = useState<string>();
+  const [birth, setBirth] = useState<string>();
+
+  // let photo = {uri: source.uri};
+  // let formdata = new FormData();
+
+  // formdata.append('product[name]', 'test');
+  // formdata.append('product[price]', 10);
+  // formdata.append('product[category_ids][]', 2);
+  // formdata.append('product[description]', '12dsadadsa');
+  // formdata.append('product[images_attributes[0][file]]', {
+  //   uri: photo.uri,
+  //   name: 'image.jpg',
+  //   type: 'image/jpeg',
+  // });
+  // const onPress = () => {
+  //   (async () => {
+  //     const request = await fetch(`http://49.50.174.166:3000/user`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-type': 'multipart/form-data',
+  //       },
+  //       body: formdata,
+  //     })
+  //       .then((response) => {
+  //         console.log('image uploaded');
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   })();
+  // };
+  const onPress = () => {
+    navigation.navigate('DrawerNavi');
+  };
+
   return (
     <View style={{margin: 15}}>
       {/* 헤더 */}
@@ -14,17 +53,32 @@ const ProfileSettingPage = ({navigation}) => {
       </View>
       {/* 사진 */}
       <View style={styles.imgContainer}>
-        <Image
-          style={styles.proflieImg}
-          source={{
-            uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-          }}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('UploadPhoto')}>
+          <Image
+            style={styles.proflieImg}
+            source={{
+              uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
+            }}
+          />
+          <Icon
+            name="camera"
+            size={25}
+            color="#808B96"
+            style={{
+              position: 'absolute',
+              right: 5,
+              bottom: 5,
+            }}></Icon>
+        </TouchableOpacity>
       </View>
       {/* 정보입력 */}
       <View style={{marginVertical: 20}}>
         <InputContainer>
-          <TxtInput placeholder={'이름'} />
+          <TxtInput
+            placeholder={'이름'}
+            onChangeText={(text) => setName(text)}
+            value={name}
+          />
         </InputContainer>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -36,15 +90,21 @@ const ProfileSettingPage = ({navigation}) => {
           </View>
         </View>
         <InputContainer>
-          <TxtInput placeholder={'휴대전화'} />
+          <TxtInput
+            placeholder={'휴대전화'}
+            onChangeText={(text) => setPhone(text)}
+            value={phone}
+          />
         </InputContainer>
         <InputContainer>
-          <TxtInput placeholder={'생년월일'} />
+          <TxtInput
+            placeholder={'생년월일'}
+            onChangeText={(text) => setBirth(text)}
+            value={birth}
+          />
         </InputContainer>
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('MainPage')}
-        style={styles.button}>
+      <TouchableOpacity onPress={onPress} style={styles.button}>
         <Text style={styles.buttonFont}>설정 완료</Text>
       </TouchableOpacity>
     </View>
@@ -128,4 +188,4 @@ const InputContainer = Styled.View`
   marginVertical:8px;
 `;
 
-export default ProfileSettingPagee;
+export default ProfileSettingPage;

@@ -3,19 +3,14 @@
 
 import React, {useEffect, useState} from 'react';
 import {MainProps} from '~/@types/navigation';
-import {
-  ScrollView,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from 'react-native';
+import {ScrollView, View, TouchableOpacity, StyleSheet} from 'react-native';
 import Styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // interface
-import {ClubInterface} from '~/@types/Club';
+import {ClubInterface} from '~/@types/Gombang';
+
 interface TextProp {
   color: string;
 }
@@ -27,7 +22,7 @@ const MainPage = ({navigation}: MainProps) => {
         {/* 이벤트 슬라이드 */}
         <Swiper style={styles.wrapper}>
           <View style={styles.slide}>
-            <TouchableOpacity onPress={() => navigation.navigate('LoginPage')}>
+            <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
               <BannerImage
                 source={{
                   uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
@@ -62,14 +57,12 @@ const MainPage = ({navigation}: MainProps) => {
               <SmallTitle color="">목록 편집</SmallTitle>
             </TouchableOpacity>
           </WrapTitle>
-          <View style={{margin: 7}}>
-            <UsersClubList />
-          </View>
+          <View style={{margin: 7}}>{/* <UsersClubList /> */}</View>
         </View>
         {/* 일정 */}
         <View style={{margin: 5}}>
           <Title>일정</Title>
-          <CalendarSchedule />
+          {/* <CalendarSchedule /> */}
         </View>
         {/* 즐겨찾기 */}
         <View style={{margin: 5}}>
@@ -118,12 +111,12 @@ const UsersClubList = ({navigation}: MainProps) => {
         return (
           <ClubListContainer>
             <ClubList>
-              <Image
+              {/* <Image
                 style={{width: 80, height: 80}}
                 key={club._id}
                 source={{
                   uri: `http://49.50.174.166:3000/image/${club.image}`,
-                }}></Image>
+                }}></Image> */}
             </ClubList>
             <SmallTitle color="#454545">{club.name}</SmallTitle>
           </ClubListContainer>

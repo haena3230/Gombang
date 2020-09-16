@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import {Image, View, FlatList, Text} from 'react-native';
 import Styled from 'styled-components/native';
-import {ClubInterface} from '~/@types/Club';
+import {ClubInterface} from '~/@types/Gombang';
 
 // 메인 -> 즐겨찾기 동아리 목록 페이지
 const FavoritesPage = () => {

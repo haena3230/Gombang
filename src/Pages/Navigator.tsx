@@ -19,14 +19,20 @@ import {
   PortfolioPageParamList,
   MainTabParamList,
   ClubMainTabParamList,
-  AuthStackParamList,
+  LoginStackParamList,
 } from '~/@types/navigation';
 
-// import Main pages
+// import Login pages
 import LoginPage from './LoginPage';
+import MailPage from './LoginPage/MailPage';
+import ProfileSettingPage from './LoginPage/ProfileSettingPage';
+import UploadPhoto from '~/Components/UploadPhoto';
+
+// import Main pages
 import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
 import FavoritesPage from './MainPage/FavoritesPage';
+
 // search
 import SearchPage from './SearchPage';
 import SearchClubPage from './SearchPage/SearchClubPage';
@@ -51,7 +57,7 @@ import MyPage from './Drawer/MyPage';
 import AppNoticePage from './Drawer/AppNoticePage';
 
 // Navigator 생성
-const AuthStack = createStackNavigator<AuthStackParamList>();
+const LoginStack = createStackNavigator<LoginStackParamList>();
 const MainTab = createBottomTabNavigator<MainTabParamList>();
 const ClubMainTab = createBottomTabNavigator<ClubMainTabParamList>();
 const Drawer = createDrawerNavigator();
@@ -313,30 +319,30 @@ function CustomDrawerContent(props: any) {
   );
 }
 
-// Login Stack Navi
-function LoginStackNavi() {
-  // const isLoggedIn = props.isLoggedIn;
-
-  // if (isLoggedIn) {
-  //   return (
-  //     <AuthStack.Navigator
-  //       screenOptions={{
-  //         headerShown: false,
-  //       }}>
-  //       <AuthStack.Screen name="LoginPage" component={LoginPage} />
-  //     </AuthStack.Navigator>
-  //   );
-  // }
+export function LoginStackNavi() {
   return (
-    <AuthStack.Navigator
+    <LoginStack.Navigator
+      initialRouteName="LoginPage"
       screenOptions={{
-        headerShown: false,
-      }}>
-      <AuthStack.Screen name="DrawerNavi" component={DrawerNavi} />
-    </AuthStack.Navigator>
+        animationEnabled: false,
+      }}
+      headerMode="none">
+      <LoginStack.Screen name="LoginPage" component={LoginPage} />
+      <LoginStack.Screen name="MailPage" component={MailPage} />
+
+      <LoginStack.Screen
+        name="ProfileSettingPage"
+        component={ProfileSettingPage}
+      />
+      <LoginStack.Screen name="UploadPhoto" component={UploadPhoto} />
+      <LoginStack.Screen name="DrawerNavi" component={DrawerNavi} />
+    </LoginStack.Navigator>
   );
 }
-export default LoginStackNavi;
+
+// dra
+
+export default DrawerNavi;
 
 // screenOptions = {{
 //   headerRight: () => (

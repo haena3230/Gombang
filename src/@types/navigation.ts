@@ -2,13 +2,17 @@ import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 // 로그인/ 인증 스택
-export interface AuthStackProps {
-  navigation: StackNavigationProp<AuthStackParamList, 'LoginPage'>;
+export interface LoginStackProps {
+  navigation: StackNavigationProp<LoginStackParamList, 'LoginPage'>;
 }
 
-export type AuthStackParamList = {
+export type LoginStackParamList = {
   LoginPage: undefined;
+  MailPage: undefined;
+  MailSecondPage: undefined;
+  ProfileSettingPage: undefined;
   DrawerNavi: undefined;
+  UploadPhoto: undefined;
 };
 
 // 메인탭

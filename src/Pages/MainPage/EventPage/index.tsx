@@ -1,7 +1,13 @@
 // 이벤트 페이지
 import React from 'react';
-import {Text} from 'react-native';
+import {View, Text} from 'react-native';
 
-export default function EventPage() {
-  return <Text>이벤트페이지</Text>;
-}
+const EventPage = () => {
+  return (
+    <View>
+      <Text>이벤트 페이지</Text>
+    </View>
+  );
+};
+
+export default EventPage;
