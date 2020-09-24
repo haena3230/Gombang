@@ -2,8 +2,16 @@
 // 메인1
 
 import React, {useEffect, useState} from 'react';
-import {MainProps} from '~/@types/navigation';
-import {ScrollView, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  ScrollView,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Text,
+  Alert,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -11,114 +19,137 @@ import Icon from 'react-native-vector-icons/Ionicons';
 // interface
 import {ClubInterface} from '~/@types/Gombang';
 
-interface TextProp {
-  color: string;
-}
-// main 페이지 구성
-const MainPage = ({navigation}: MainProps) => {
+// 컴포넌트
+import FavoritesPage from './FavoritesPage';
+import Styles, {Color} from '~/Components/InputText';
+const URL = 'http://133.186.159.137:3000';
+// main 페이지
+export default function MainPage() {
+  const navigation = useNavigation();
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
+      {/* 이벤트 슬라이드 */}
+      <EventSlide />
       <View>
-        {/* 이벤트 슬라이드 */}
-        <Swiper style={styles.wrapper}>
-          <View style={styles.slide}>
-            <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-              <BannerImage
-                source={{
-                  uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.slide}>
-            <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-              <BannerImage
-                source={{
-                  uri: 'https://via.placeholder.com/100/69ADF1/69ADF1.png',
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.slide}>
-            <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-              <BannerImage
-                source={{
-                  uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        </Swiper>
         {/* 동아리 리스트 */}
         <View style={{margin: 5}}>
           <WrapTitle>
-            <Title>내 동아리 리스트</Title>
+            <Text style={Styles.b_b_font}>내 동아리 리스트</Text>
             <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-              <SmallTitle color="">목록 편집</SmallTitle>
+              <Text style={Styles.s_b_font}>목록 편집</Text>
             </TouchableOpacity>
           </WrapTitle>
-          <View style={{margin: 7}}>{/* <UsersClubList /> */}</View>
+          <View style={{margin: 7}}>
+            <UsersClubList onPress={() => navigation.navigate('SearchPage')} />
+          </View>
+          <MakeClubButton />
         </View>
         {/* 일정 */}
         <View style={{margin: 5}}>
-          <Title>일정</Title>
-          {/* <CalendarSchedule /> */}
+          <Text style={Styles.b_b_font}>일정</Text>
+          <CalendarSchedule
+            onPress={() => navigation.navigate('CalendarPage')}
+          />
         </View>
         {/* 즐겨찾기 */}
         <View style={{margin: 5}}>
           <WrapTitle>
-            <Title>즐겨찾기 </Title>
+            <Text style={Styles.b_b_font}>즐겨찾기</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('FavoritesPage')}>
-              <SmallTitle color="">
+              <Text style={Styles.s_b_font}>
                 모두 보기
                 <Icon name="chevron-forward-outline"></Icon>
-              </SmallTitle>
+              </Text>
             </TouchableOpacity>
           </WrapTitle>
-          {/* <FavoritesPage /> */}
+          <FavoritesPage />
         </View>
       </View>
     </ScrollView>
   );
+}
+
+// 컴포넌트 1 이벤트 슬라이드
+const EventSlide = () => {
+  const navigation = useNavigation();
+  return (
+    <View>
+      {/* 이벤트 슬라이드 */}
+      <Swiper style={styles.wrapper}>
+        <View style={styles.slide}>
+          <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+            <BannerImage
+              source={{
+                uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.slide}>
+          <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+            <BannerImage
+              source={{
+                uri: 'https://via.placeholder.com/100/69ADF1/69ADF1.png',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.slide}>
+          <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+            <BannerImage
+              source={{
+                uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      </Swiper>
+    </View>
+  );
 };
 
-export default MainPage;
+// 컴포넌트 2-1 내 동아리 리스트
+interface UsersClubListProps {
+  onPress: () => void;
+}
 
-//구성요소
-
-// // 내 동아리 리스트
-const UsersClubList = ({navigation}: MainProps) => {
+const UsersClubList = ({onPress}: UsersClubListProps) => {
   const [clubs, setClubs] = useState<ClubInterface[]>([]);
-  const onPress = () => navigation.navigate('SearchPage');
-  useEffect(() => {
-    (async () => {
-      const response = await fetch('http://49.50.174.166:3000/club', {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json',
-        },
-      });
 
-      const clubs = await response.json();
-      setClubs(clubs);
-    })();
+  useEffect(() => {
+    try {
+      (async () => {
+        const response = await fetch(`${URL}/club`, {
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json',
+          },
+        });
+
+        const clubs = await response.json();
+        setClubs(clubs);
+      })();
+    } catch (e) {
+      console.log('Failed to fetch the data from storage');
+    }
   }, []);
 
   return (
     <ScrollView horizontal={true}>
+      {/* 동아리 이미지, 이름 불러오기 */}
       {clubs.map((club) => {
         return (
           <ClubListContainer>
             <ClubList>
-              {/* <Image
-                style={{width: 80, height: 80}}
+              <Image
+                style={{width: 90, height: 90}}
                 key={club._id}
                 source={{
-                  uri: `http://49.50.174.166:3000/image/${club.image}`,
-                }}></Image> */}
+                  uri: `${URL}/image/${club.image}`,
+                }}></Image>
             </ClubList>
-            <SmallTitle color="#454545">{club.name}</SmallTitle>
+            <Text style={Styles.s_b_font}>{club.name}</Text>
           </ClubListContainer>
         );
       })}
@@ -126,56 +157,49 @@ const UsersClubList = ({navigation}: MainProps) => {
       <ClubListContainer>
         <TouchableOpacity onPress={onPress}>
           <ClubList>
-            <Icon name="add-circle" size={30} color="#999" />
+            <Icon name="add-circle" size={30} color={Color.l_color} />
           </ClubList>
         </TouchableOpacity>
-        <SmallTitle color="#454545">동아리에 가입해보세요!</SmallTitle>
+        <Text style={Styles.s_b_font}>동아리에 가입해보세요!</Text>
       </ClubListContainer>
     </ScrollView>
   );
 };
 
-// 일정 알림
-const CalendarSchedule = ({navigation}) => {
+// 컴포넌트 2-2 동아리 만들기 버튼
+const MakeClubButton = () => {
   return (
-    <View style={{padding: 5}}>
-      <ScheduleBox>
-        <Schedule color="">OO동아리 OT</Schedule>
-        <Schedule color="">D-5</Schedule>
-      </ScheduleBox>
-      <ScheduleBox onPress={() => navigation.navigate('CalendarPage')}>
-        <Schedule color="gray">
-          <Icon name="add-circle" size={17} color="#999" />
-          일정 추가하기
-        </Schedule>
-      </ScheduleBox>
+    <View style={{alignItems: 'flex-end'}}>
+      <TouchableOpacity>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={Styles.ss_g_font}>직접 동아리를 만들어 보세요</Text>
+          <Icon name="add-circle" size={18} color={Color.l_color}></Icon>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
-// 텍스트
-const fontColor = Styled.Text`
-  color:#454545;
-fontWeight:bold;
-`;
-
-const Title = Styled(fontColor)`
-  fontSize: 18px;
-  margin: 5px;  
-`;
-
-const SmallTitle = Styled.Text`
-  fontSize: 13px;
-  padding:1px;
-  color: ${(props: TextProp) => (props.color ? props.color : 'gray')};
-  marginRight:10px;
-`;
-
-const Schedule = Styled(fontColor)`
-color: ${(props: TextProp) => (props.color ? props.color : '#454545')};
-  fontSize: 15px;
-  fontWeight: bold;
-`;
+// 컴포넌트 3 일정 알림
+interface CalendarScheduleProps {
+  onPress: () => void;
+}
+const CalendarSchedule = ({onPress}: CalendarScheduleProps) => {
+  return (
+    <View style={{padding: 5}}>
+      <ScheduleBox>
+        <Text style={Styles.m_b_font}>OO동아리 OT</Text>
+        <Text style={Styles.m_b_font}>D-5</Text>
+      </ScheduleBox>
+      <ScheduleBox onPress={onPress}>
+        <Text style={Styles.m_g_font}>
+          <Icon name="add-circle" size={17} color={Color.l_color} />
+          일정 추가하기
+        </Text>
+      </ScheduleBox>
+    </View>
+  );
+};
 
 const WrapTitle = Styled.View`
   flex-direction: row;
@@ -192,12 +216,11 @@ const BannerImage = Styled.Image`
 // 동아리 리스트
 const ClubListContainer = Styled.View`
   margin: 5px;
-
 `;
 const ClubList = Styled.View`
-  width: 90px;
-  height: 90px;
-  borderWidth: 2px;
+  width: 100px;
+  height: 100px;
+  borderWidth: 1px;
   borderColor: #D5D8DC;
   justifyContent: center;
  alignItems: center;

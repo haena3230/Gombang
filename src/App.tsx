@@ -13,7 +13,8 @@ import {LoginStackNavi} from './Pages/Navigator';
 export default function App() {
   return (
     <NavigationContainer>
-      <LoginStackNavi />
+      {/* <LoginStackNavi /> */}
+      <DrawerNavi />
     </NavigationContainer>
   );
 }

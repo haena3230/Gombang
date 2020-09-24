@@ -1,13 +1,28 @@
 // 기본 프로필 설정
 
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Text,
+  TextInput,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  ScrollView,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Styled from 'styled-components/native';
 import {Picker} from '@react-native-community/picker';
-import {LoginStackProps} from '~/@types/navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
+// 컴포넌트
+import Styles, {Color} from '~/Components/InputText';
+import {LongButton} from '~/Components/Button';
 
-const ProfileSettingPage = ({navigation}: LoginStackProps) => {
+const ProfileSettingPage = () => {
+  const navigation = useNavigation();
   const [name, setName] = useState<string>();
   const [phone, setPhone] = useState<string>();
   const [birth, setBirth] = useState<string>();
@@ -46,10 +61,15 @@ const ProfileSettingPage = ({navigation}: LoginStackProps) => {
   };
 
   return (
-    <View style={{margin: 15}}>
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: Color.w_color,
+        padding: 20,
+      }}>
       {/* 헤더 */}
       <View>
-        <Text style={styles.title}>기본 프로필 설정 </Text>
+        <Text style={Styles.b_b_font}>기본 프로필 설정 </Text>
       </View>
       {/* 사진 */}
       <View style={styles.imgContainer}>
@@ -72,51 +92,61 @@ const ProfileSettingPage = ({navigation}: LoginStackProps) => {
         </TouchableOpacity>
       </View>
       {/* 정보입력 */}
+
       <View style={{marginVertical: 20}}>
-        <InputContainer>
-          <TxtInput
+        <View style={styles.InputContainer}>
+          <TextInput
             placeholder={'이름'}
             onChangeText={(text) => setName(text)}
             value={name}
+            style={styles.txtInput}
           />
-        </InputContainer>
-
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={styles.pickContainer}>
-            <DropMenuCampus />
-          </View>
-          <View style={styles.pickContainer}>
-            <DropMenuMajor />
+        </View>
+        <View style={styles.InputContainer}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={styles.pickContainer}>
+              <DropMenuCampus />
+            </View>
+            <View style={styles.pickContainer}>
+              <DropMenuMajor />
+            </View>
           </View>
         </View>
-        <InputContainer>
-          <TxtInput
+        <View style={styles.InputContainer}>
+          <TextInput
             placeholder={'휴대전화'}
             onChangeText={(text) => setPhone(text)}
             value={phone}
+            style={styles.txtInput}
           />
-        </InputContainer>
-        <InputContainer>
-          <TxtInput
-            placeholder={'생년월일'}
-            onChangeText={(text) => setBirth(text)}
-            value={birth}
-          />
-        </InputContainer>
+        </View>
+        <KeyboardAvoidingView behavior="height">
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.InputContainer}>
+              <TextInput
+                placeholder={'생년월일'}
+                onChangeText={(text) => setBirth(text)}
+                value={birth}
+                style={styles.txtInput}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </View>
-      <TouchableOpacity onPress={onPress} style={styles.button}>
-        <Text style={styles.buttonFont}>설정 완료</Text>
-      </TouchableOpacity>
-    </View>
+
+      <LongButton onPress={onPress} buttonTitle={'설정완료'}></LongButton>
+    </ScrollView>
   );
 };
-
+// 대학선택메뉴
 const DropMenuCampus = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
   return (
     <Picker
       selectedValue={selectedValue}
-      onValueChange={(itemValue) => setSelectedValue(itemValue)}
+      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
+        setSelectedValue(itemValue)
+      }
       mode={'dropdown'}
       style={{width: 150, height: 40}}>
       <Picker.Item color="#808B96" label="대학" value="대학" />
@@ -125,15 +155,17 @@ const DropMenuCampus = () => {
     </Picker>
   );
 };
-
+// 학과선택메뉴
 const DropMenuMajor = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
   return (
     <Picker
       selectedValue={selectedValue}
-      onValueChange={(itemValue) => setSelectedValue(itemValue)}
+      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
+        setSelectedValue(itemValue)
+      }
       mode={'dropdown'}
-      style={{width: 150, height: 40}}>
+      style={{width: 150, height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="학과" value="학과" />
       <Picker.Item
         color="#808B96"
@@ -146,11 +178,6 @@ const DropMenuMajor = () => {
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
   imgContainer: {
     padding: 20,
     alignItems: 'center',
@@ -161,31 +188,21 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   pickContainer: {
-    borderWidth: 2,
-    borderColor: '#D5D8DC',
+    borderWidth: 1,
+    borderColor: Color.l_color,
     height: 40,
   },
-  button: {
-    padding: 10,
-    backgroundColor: '#808B96',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonFont: {
-    color: '#FDFEFE',
+  txtInput: {
+    height: 40,
+    marginLeft: 2,
+    fontSize: 14,
     fontWeight: 'bold',
+    borderWidth: 1,
+    borderColor: Color.l_color,
+  },
+  InputContainer: {
+    marginBottom: 10,
   },
 });
-
-const TxtInput = Styled.TextInput`
-  fontSize: 14px;
-  height:40px;
-  borderWidth: 2px;
-  borderColor: #D5D8DC;
-`;
-
-const InputContainer = Styled.View`
-  marginVertical:8px;
-`;
 
 export default ProfileSettingPage;

@@ -1,7 +1,5 @@
 // 카카오 로그아웃
 import KakaoLogins from '@react-native-seoul/kakao-login';
-// import iid from '@react-native-firebase/iid';
-import firebase from '@react-native-firebase/app';
 
 if (!KakaoLogins) {
   console.error('Module is Not Linked');
