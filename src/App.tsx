@@ -6,13 +6,15 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 
 // import Naviator
-import LoginStackNavi from './Pages/Navigator';
+import DrawerNavi from './Pages/Navigator';
+import {LoginStackNavi} from './Pages/Navigator';
 
 // 화면 구성
 export default function App() {
   return (
     <NavigationContainer>
-      <LoginStackNavi />
+      {/* <LoginStackNavi /> */}
+      <DrawerNavi />
     </NavigationContainer>
   );
 }
