@@ -3,11 +3,12 @@
 import React, {useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Styles,{Color} from '~/Components/InputText';
+import {Styles,Color} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
-import {Menu,MenuOptions,MenuOption,MenuTrigger} from 'react-native-popup-menu';
 import Plusbutton from '~/Assets/Plusbutton.svg';
+import {TwoOpModal} from '~/Components/Modal';
+import {NavigationContainer, useNavigation } from '@react-navigation/native';
 
 // 포트폴리오 페이지
 const PortfolioPage = () => {
@@ -36,6 +37,7 @@ const PortfolioPage = () => {
 
 // 폴더
 const Folder =()=>{
+  const navigation = useNavigation();
   // 폴더 이름
   const[folderId,setFolderId] = useState('');
 
@@ -56,6 +58,7 @@ const Folder =()=>{
     setDeleteF(!deleteF)
   }
   return(
+    <TouchableOpacity onPress = {()=>navigation.navigate('PortfolioInPage')}>
     <View style={{marginTop:20}}>
       <View style={styles.container}>
         <TouchableOpacity style={{padding:10}} onPress={onPressFav}>
@@ -63,7 +66,7 @@ const Folder =()=>{
           (<Icon name="star" size={20} />):
           (<Icon name="star-outline" size={20} />)}
         </TouchableOpacity>
-        <FolderMenu onPressMenuM={onPressModify} onPressMenuD={onPressDelete}/>
+        <TwoOpModal fst_op='수정하기' snd_op='삭제하기' onPressMenuM={onPressModify} onPressMenuD={onPressDelete}/>
         <ModifyTitle modifyVisible={modify} onBackMT={onPressModify}/>
         <DeleteFolder deleteVisible={deleteF} onBackMD={onPressDelete}/>
       </View>
@@ -71,33 +74,10 @@ const Folder =()=>{
         <Text style={Styles.s_b_font}>test</Text>
       </View>
     </View>
+    </TouchableOpacity>
   )
 }
 
-// 폴더 메뉴버튼
-interface FolderMenuProps{
-  onPressMenuM:()=>void;
-  onPressMenuD:()=>void;
-}
-const FolderMenu=({onPressMenuM, onPressMenuD}:FolderMenuProps)=>{
-  return(
-    <View  style={{padding:10}}>
-      <Menu>
-        <MenuTrigger>
-          <Icon name="ellipsis-vertical-outline" size={20}/>
-        </MenuTrigger>
-      <MenuOptions>
-        <MenuOption onSelect={onPressMenuM}>
-          <Text style={Styles.m_b_font}>이름편집</Text>
-        </MenuOption>
-        <MenuOption onSelect={onPressMenuD} >
-          <Text style={Styles.m_b_font}>삭제하기</Text>
-        </MenuOption>
-      </MenuOptions>
-      </Menu>
-    </View>
-  )
-}
 
 // 이름변경 모달
 interface ModifyTitleProps{
@@ -164,8 +144,11 @@ interface AddModalProps{
   onBack:()=>void;
 }
 const AddModal=({isVisible, onBack}:AddModalProps)=>{
+  const navigation = useNavigation();
+   // 폴더 추가
+  const onPressAdd=()=>{null};
+  // 폴더 설정
   const onPressSetting=()=>null;
-  const onPressAdd=()=>null;
   return(
     <Modal onBackdropPress={onBack} isVisible={isVisible}>
      <View style={{position:'absolute', bottom:180, right:0}}>
@@ -188,6 +171,8 @@ const AddModal=({isVisible, onBack}:AddModalProps)=>{
   );
   
 }
+
+
 const styles=StyleSheet.create({
   // 폴더 
   container:{

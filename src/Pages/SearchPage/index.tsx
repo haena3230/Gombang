@@ -4,7 +4,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, View, Image} from 'react-native';
 import Styled from 'styled-components/native';
-import {Color} from '~/Components/InputText';
+import {Color} from '~/@types/basic_style';
 import {Picker} from '@react-native-community/picker';
 
 const SearchPage = () => {

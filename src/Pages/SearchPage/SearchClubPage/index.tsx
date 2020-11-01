@@ -11,13 +11,14 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Styled from 'styled-components/native';
 import {ClubInterface} from '~/@types/Gombang';
-import Styles, {Color} from '~/Components/InputText';
+import {Styles, Color} from '~/@types/basic_style';
 import {useNavigation} from '@react-navigation/native';
 import SearchPopupPage from './SearchPopupPage';
 import SearchQAPage from './SearchPopupPage/SearchQAPage';
 import {ApplicationForm} from './SearchPopupPage/ApplicationForm';
+import {HashTagIcon} from '~/Components/HashTag';
 
-const URL = 'http://133.186.159.137:3000';
+import {URL} from '~/@types/Gombang'
 
 // 종류별 동아리 리스트
 export const TestFirst = () => {
@@ -76,7 +77,7 @@ export const TestFirst = () => {
 
         const fav_clubs = await response.json();
         setClubs(fav_clubs);
-        if (fav_clubs === null) {
+        if (fav_clubs.length === 0) {
           setEmptyList(true);
         }
       })();
@@ -87,7 +88,6 @@ export const TestFirst = () => {
 
   const isEmpty = emptyList;
 
-  if (isEmpty === false) {
     return (
       <ScrollView
         style={{
@@ -96,7 +96,12 @@ export const TestFirst = () => {
           padding: 10,
         }}>
         <Recruitment onPress={onPressR} isPicked={isPickedR} />
-        {clubs.map((club) => {
+        {isEmpty?(
+          <InfoView>
+           <Text style={Styles.m_g_font}>데이터 준비중...</Text>
+          </InfoView>
+        ):(
+          clubs.map((club) => {
           return (
             <TouchableOpacity onPress={popup}>
               <SearchPopupPage
@@ -139,16 +144,12 @@ export const TestFirst = () => {
               </ListContainer>
             </TouchableOpacity>
           );
-        })}
+        })
+        )}
+        
       </ScrollView>
     );
-  } else
-    return (
-      <InfoView>
-        <Text style={Styles.m_g_font}>등록된 즐겨찾기 동아리가 없습니다.</Text>
-        <Text style={Styles.m_g_font}>추가해 보세요!</Text>
-      </InfoView>
-    );
+
 };
 
 // 모집중 컴포넌트
@@ -190,30 +191,6 @@ const RecruitmentIcon = () => {
         alignItems: 'center',
       }}>
       <Text style={{fontSize: 10, fontWeight: 'bold'}}>모집중</Text>
-    </View>
-  );
-};
-
-// 해시태그 아이콘 컴포넌트
-interface HashTagIconProps {
-  text: string;
-}
-const HashTagIcon = ({text}: HashTagIconProps) => {
-  return (
-    <View
-      style={{
-        minWidth: 50,
-        width: text.length * 10,
-        height: 20,
-        backgroundColor: '#808B96',
-        borderRadius: 3,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 4,
-      }}>
-      <Text style={{color: '#FDFEFE', fontSize: 10, fontWeight: 'bold'}}>
-        # {text}
-      </Text>
     </View>
   );
 };
@@ -304,8 +281,6 @@ const HashtagContainer = Styled.View`
   alignItems:center;
 `;
 const InfoView = Styled.View`
-flex:1;
-backgroundColor:white;
 alignItems:center;
 justify-content:center;
 `;

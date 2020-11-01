@@ -17,12 +17,12 @@ import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // interface
-import {ClubInterface} from '~/@types/Gombang';
+import {ClubInterface, URL} from '~/@types/Gombang';
 
 // 컴포넌트
 import FavoritesPage from './FavoritesPage';
-import Styles, {Color} from '~/Components/InputText';
-const URL = 'http://133.186.159.137:3000';
+import {Styles, Color} from '~/@types/basic_style';
+
 // main 페이지
 export default function MainPage() {
   const navigation = useNavigation();
@@ -166,13 +166,12 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
 
 // 컴포넌트 2-2 동아리 만들기 버튼
 const MakeClubButton = () => {
+  const navigation = useNavigation();
   return (
     <View style={{alignItems: 'flex-end'}}>
-      <TouchableOpacity>
-        <View style={{flexDirection: 'row'}}>
+      <TouchableOpacity style={{flexDirection: 'row', alignItems:'center'}} onPress={()=>navigation.navigate('GenerateClubPage')}>
           <Text style={Styles.ss_g_font}>직접 동아리를 만들어 보세요</Text>
           <Icon name="add-circle" size={18} color={Color.l_color}></Icon>
-        </View>
       </TouchableOpacity>
     </View>
   );

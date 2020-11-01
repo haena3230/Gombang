@@ -27,6 +27,7 @@
     "@types/styled-components": "5.1.2",
     "react-native-calendars": "1.403.0",
     "react-native-countdown-component": "2.7.1",
+    "react-native-fs": "2.16.6",
     "react-native-gesture-handler": "1.7.0",
     "react-native-image-picker": "2.3.3",
     "react-native-modal": "11.5.6",

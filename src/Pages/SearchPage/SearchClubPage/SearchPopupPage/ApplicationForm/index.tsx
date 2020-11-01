@@ -8,7 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import Styles, {Color} from '~/Components/InputText';
+import {Styles, Color} from '~/@types/basic_style';
 import Styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {LongButton} from '~/Components/Button';

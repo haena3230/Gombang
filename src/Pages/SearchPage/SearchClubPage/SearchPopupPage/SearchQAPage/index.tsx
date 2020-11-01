@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {SearchQA} from './SearchQA';
-import Styles, {Color} from '~/Components/InputText';
+import {Styles, Color} from '~/@types/basic_style';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Ionicons';
 interface SearchQAPageProps {

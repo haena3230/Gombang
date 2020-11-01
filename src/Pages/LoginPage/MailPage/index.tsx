@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Text, TextInput, View, StyleSheet, Alert} from 'react-native';
 // 컴포넌트
 import {LongButton} from '~/Components/Button';
-import Styles, {Color} from '~/Components/InputText';
+import {Styles, Color} from '~/@types/basic_style';
 
 const URL = 'http://133.186.159.137:3000';
 // 인증메일 확인 페이지

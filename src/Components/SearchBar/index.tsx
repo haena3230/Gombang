@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, Alert, Text} from 'react-native';
 import Modal from 'react-native-modal';
 import Styled from 'styled-components/native';
-import Styles from '~/Components/InputText';
+import {Styles} from '~/@types/basic_style';
 
 // 검색바
 export const SearchBar = () => {

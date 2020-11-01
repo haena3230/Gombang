@@ -1,5 +1,7 @@
-// InputText component
+// 스타일 모음
 import {StyleSheet} from 'react-native';
+
+// 색상
 export const Color = {
   //color
   w_color: '#FFFFFF',
@@ -8,7 +10,9 @@ export const Color = {
   b_color: '#000000',
   p_color: '#B9E8F3',
 };
-const Styles = StyleSheet.create({
+
+// 텍스트 스타일
+export const Styles = StyleSheet.create({
   //s small font
   ss_w_font: {color: '#FFFFFF', fontSize: 10, fontWeight: 'bold'},
   ss_g_font: {color: '#808B96', fontSize: 10, fontWeight: 'bold'},
@@ -31,4 +35,19 @@ const Styles = StyleSheet.create({
   b_g_font: {color: '#808B96', fontSize: 18, fontWeight: 'bold'},
   b_b_font: {color: '#000000', fontSize: 18, fontWeight: 'bold'},
 });
-export default Styles;
+
+ // 페이지 스타일
+ export const Page=StyleSheet.create({
+     page_container:{
+        flex:1,
+        backgroundColor:Color.w_color
+    },
+});
+  
+// 디바이스 맞춤 너비
+import { Dimensions } from 'react-native';
+// export const DHeight = Dimensions.get('window').height;
+// export const DWidth = Dimensions.get('window').width;
+
+export const DHeight = Dimensions.get('window').height;
+export const DWidth = Dimensions.get('window').width;

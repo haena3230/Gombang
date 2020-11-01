@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Modal from 'react-native-modal'
 import Styled from 'styled-components/native'
-import Styles,{Color} from '~/Components/InputText';
+import {Styles,Color} from '~/@types/basic_style';
 
 
 

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View,Text, TextInput, StyleSheet, TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 
-import Styles,{Color} from '~/Components/InputText';
+import {Styles,Color} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import {useNavigation} from '@react-navigation/native';

@@ -1,6 +1,8 @@
+
+
 // Navigator.tsx 내비게이션 모음
 import React, {useState} from 'react';
-import {Alert, View} from 'react-native';
+import {Alert, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 // for navigator
@@ -18,13 +20,15 @@ import {
 import LoginPage from './LoginPage';
 import MailPage from './LoginPage/MailPage';
 import ProfileSettingPage from './LoginPage/ProfileSettingPage';
-import UploadPhoto from '~/Components/UploadPhoto';
 
 // import Main pages
 import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
 import FavoritesPage from './MainPage/FavoritesPage';
-import FavModal from '../Components/FavModal';
+import FavEditPage from './MainPage/FavoritesPage/FavEditPage';
+import FavModal from '../Components/Modal';
+import GenerateClubPage from './MainPage/GenerateClubPage';
+import CertifiedPage from './MainPage/GenerateClubPage/CertifiedPage';
 
 // search
 import SearchPage from './SearchPage';
@@ -37,6 +41,7 @@ import AlarmsPage from './AlarmsPage';
 // portfolio
 import PortfolioPage from './PortfolioPage';
 import PortfolioInPage from './PortfolioPage/PortfolioInPage';
+import PortfolioWritePage from './PortfolioPage/PortfolioInPage/PortFolioWritePage';
 
 // import ClubMainPage pages
 import ClubMainList from './MainPage/ClubMainPage';
@@ -49,7 +54,8 @@ import DrawerPage from '~/Pages/Drawer';
 import MyPage from './Drawer/MyPage';
 import AppNoticePage from './Drawer/AppNoticePage';
 
-import Styles,{Color} from '~/Components/InputText';
+import {Styles,Color} from '~/@types/basic_style';
+import Plusbutton from '~/Assets/Plusbutton.svg';
 
 // Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -113,7 +119,7 @@ function MainTabNavi() {
       {/* PortfolioPage 탭 메인5*/}
       <Tab.Screen
         name="PortfolioPage"
-        component={PortfolioStackNavi}
+        component={PortfolioPage}
         options={{
           tabBarIcon: () => <Icon name="grid-outline" size={25} color="#999" />,
         }}
@@ -191,11 +197,16 @@ function MainStackNavi({navigation}: any) {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  // 즐겨찾기페이지 정렬편집 클릭
+  const onPressEdit=()=>{
+    setModalVisible(false);
+    navigation.navigate('FavEditPage')}
   // Searchstack검색바
   const [isBarVisible, setBarVisible] = useState(false);
   const toggleBar = () => {
     setBarVisible(!isBarVisible);
   };
+  
   return (
     <Stack.Navigator
       initialRouteName="MainTabNavi"
@@ -290,8 +301,8 @@ function MainStackNavi({navigation}: any) {
               color="black">
               <FavModal
                 BackPress={toggleModal}
-                onPress={toggleModal}
                 visible={isModalVisible}
+                onPressEdit={onPressEdit}
               />
             </Icon>
           ),
@@ -299,7 +310,90 @@ function MainStackNavi({navigation}: any) {
         name="FavoritesPage"
         component={FavoritesPage}
       />
+       <Stack.Screen
+        options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '즐겨 찾기',
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            <TouchableOpacity style={{margin:10}} onPress={()=>navigation.goBack()}>
+              <Text style={Styles.m_b_font}>완료</Text>
+            </TouchableOpacity>
+          ),
+        }}
+        name="FavEditPage"
+        component={FavEditPage}
+      />
+      <Stack.Screen
+        options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '동아리 만들기',
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            null
+          ),
+        }}
+        name="GenerateClubPage"
+        component={GenerateClubPage}
+      />
+      <Stack.Screen
+        options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '동아리 만들기',
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            null
+          ),
+        }}
+        name="CertifiedPage"
+        component={CertifiedPage}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle:{
+            backgroundColor:Color.g_color
+          },
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '포트폴리오',
+          headerTitleAlign: 'left',
+          headerRight: () => (
+            <TouchableOpacity style = {{margin:15}} onPress = {()=>navigation.navigate('PortfolioWritePage')}>
+              <Plusbutton width = {25} height = {25} />
+            </TouchableOpacity>
+          ),
+        }}
+        name="PortfolioInPage"
+        component={PortfolioInPage}
+      />
+      <Stack.Screen
+        options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '글쓰기',
+          headerTitleAlign: 'center',
+           headerRight: () => (
+            null
+          ),
+        }}
+        name="PortfolioWritePage"
+        component={PortfolioWritePage}
+      />
     </Stack.Navigator>
+    
   );
 }
 
@@ -382,15 +476,6 @@ function CalendarStackNavi(){
   )
 }
 
-// PortfolioPage 메인 5번 내부 Stack
-function PortfolioStackNavi() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="PortfolioPage" component={PortfolioPage} />
-      <Stack.Screen name="PortfolioInPage" component={PortfolioInPage} />
-    </Stack.Navigator>
-  );
-}
 
 //Drawer 페이지
 function DrawerNavi() {
@@ -427,6 +512,7 @@ function DrawerNavi() {
 // Drawer 컨텐츠
 import {KakaoLogout} from '~/Components/Login';
 import {DrawerActions} from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 function CustomDrawerContent(props: any) {
   return (
     <DrawerContentScrollView {...props}>
@@ -464,9 +550,7 @@ export function LoginStackNavi() {
       headerMode="none">
       <Stack.Screen name="LoginPage" component={LoginPage} />
       <Stack.Screen name="MailPage" component={MailPage} />
-
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
-      <Stack.Screen name="UploadPhoto" component={UploadPhoto} />
       <Stack.Screen name="DrawerNavi" component={DrawerNavi} />
     </Stack.Navigator>
   );

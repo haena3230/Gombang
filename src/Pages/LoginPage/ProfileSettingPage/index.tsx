@@ -4,17 +4,16 @@ import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
-  TouchableOpacity,
   Text,
   TextInput,
   ScrollView,
 } from 'react-native';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-community/picker';
-import Icon from 'react-native-vector-icons/Ionicons';
 // 컴포넌트
-import Styles, {Color} from '~/Components/InputText';
+import {Styles, Color} from '~/@types/basic_style';
 import {LongButton} from '~/Components/Button';
+import AddPhoto from '~/Components/AddPhoto';
 
 const ProfileSettingPage = () => {
   const [name, setName] = useState<string>();
@@ -66,7 +65,7 @@ const ProfileSettingPage = () => {
       <View>
         <Text style={Styles.b_b_font}>기본 프로필 설정 </Text>
       </View>
-      <Photo />
+      <AddPhoto />
       {/* 정보입력 */}
 
       <View style={{marginVertical: 20}}>
@@ -124,33 +123,7 @@ const ProfileSettingPage = () => {
     </ScrollView>
   );
 };
-// 사진 업로드 메뉴
-const Photo = () => {
-  const navigation = useNavigation();
-  return (
-    <View style={styles.imgContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate('UploadPhoto')}>
-        <View
-          style={{
-            width: 100,
-            height: 100,
-            backgroundColor: Color.l_color,
-            borderRadius: 50,
-          }}
-        />
-        <Icon
-          name="camera"
-          size={25}
-          color="#808B96"
-          style={{
-            position: 'absolute',
-            right: 5,
-            bottom: 5,
-          }}></Icon>
-      </TouchableOpacity>
-    </View>
-  );
-};
+
 // 대학선택메뉴
 export const DropMenuCampus = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
@@ -258,15 +231,6 @@ export const DropMenuBirthDD = () => {
 };
 
 const styles = StyleSheet.create({
-  imgContainer: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  proflieImg: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
   pickContainer: {
     borderWidth: 1,
     borderColor: Color.l_color,

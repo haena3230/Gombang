@@ -1,15 +1,16 @@
-// FavoritesPage index.tsx
+// FavEditPage index.tsx
 import React, {useState, useEffect} from 'react';
 import {Image, View, Text} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styled from 'styled-components/native';
 import {ClubInterface} from '~/@types/Gombang';
 // 컴포넌트
 import {Styles} from '~/@types/basic_style';
 import {SelectButton} from '~/Components/Button';
-import {URL} from '~/@types/Gombang';
+const URL = 'http://133.186.159.137:3000';
 
 // 메인 -> 즐겨찾기 동아리 목록 페이지
-const FavoritesPage = () => {
+const FavEditPage = () => {
   const [clubs, setClubs] = useState<ClubInterface[]>([]);
   const [emptyList, setEmptyList] = useState(false);
 
@@ -25,7 +26,7 @@ const FavoritesPage = () => {
 
         const fav_clubs = await response.json();
         setClubs(fav_clubs);
-        if (fav_clubs.length === 0) {
+        if (fav_clubs === null) {
           setEmptyList(true);
         }
       })();
@@ -59,6 +60,9 @@ const FavoritesPage = () => {
                 <ItemContainer>
                   <Text style={Styles.b_b_font}>{club.name}</Text>
                 </ItemContainer>
+                </Section>
+                <Section>
+                  <SelectButton />
                 </Section>
             </ListContainer>
           );
@@ -101,4 +105,4 @@ alignItems:center;
 justify-content:center;
 `;
 
-export default FavoritesPage;
+export default FavEditPage;

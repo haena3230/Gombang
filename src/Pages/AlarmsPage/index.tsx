@@ -2,9 +2,9 @@
 // 메인4
 import React from 'react';
 import {Text, View, Button} from 'react-native';
-import {AlarmsProps} from '~/@types/navigation';
+import {TwoOpModal} from '~/Components/Modal';
 
-const AlarmsPage = ({navigation}: AlarmsProps) => {
+const AlarmsPage = ({navigation}) => {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>AlarmsPage 메인4</Text>
@@ -13,6 +13,7 @@ const AlarmsPage = ({navigation}: AlarmsProps) => {
         onPress={() => navigation.navigate('MainPage')}
       />
       <Button title="Go back" onPress={() => navigation.goBack()} />
+      <TwoOpModal fst_op="수정하기" snd_op="삭제하기" onPressMenuM={()=>null} onPressMenuD={()=>null}/>
     </View>
   );
 };

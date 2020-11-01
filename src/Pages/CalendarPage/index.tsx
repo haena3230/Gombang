@@ -2,7 +2,7 @@
 //main3
 import React, {useState} from 'react';
 import {ScrollView,View, StyleSheet, Text} from 'react-native';
-import Styles, {Color} from '~/Components/InputText';
+import {Styles, Color} from '~/@types/basic_style';
 import Calendarcom from '~/Components/CalendarCom';
 import {CalendarSchedule} from './CalendarSchedule';
 import {useNavigation} from '@react-navigation/native';

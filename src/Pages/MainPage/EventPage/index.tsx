@@ -5,7 +5,6 @@ import {
   TextInput,
   StyleSheet,
   Text,
-  Platform,
   TouchableWithoutFeedback,
   Button,
   Keyboard,
