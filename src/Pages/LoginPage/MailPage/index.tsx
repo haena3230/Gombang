@@ -68,7 +68,7 @@ const MailPage = () => {
   };
   const onFinish = () => {
     setisEffectiveMail(false),
-      Alert.alert('유효기간이 지났습니다. 다시 인증해주세요.');
+      Alert.alert('인증시간이 초과되었습니다. 재시도해주세요.');
   };
   return (
     <View style={styles.container}>
@@ -79,9 +79,10 @@ const MailPage = () => {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
-            placeholder={'학번 입력'}
+            placeholder={'메일(학번) 입력'}
             onChangeText={(text) => setMail(text)}
             value={mail}
+            keyboardType={'number-pad'}
           />
           <View
             style={{
@@ -101,6 +102,7 @@ const MailPage = () => {
           placeholder={'인증번호 입력'}
           onChangeText={(text) => setCode(text)}
           value={code}
+          keyboardType={'number-pad'}
         />
       </View>
       <LongButton buttonTitle="시작하기" onPress={onPressCode} />

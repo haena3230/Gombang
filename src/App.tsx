@@ -1,5 +1,6 @@
 // App.tsx
-import * as React from 'react';
+import * as React from 'react'; 
+import {MenuProvider} from 'react-native-popup-menu';
 
 // for navigator
 import 'react-native-gesture-handler';
@@ -12,9 +13,12 @@ import {LoginStackNavi} from './Pages/Navigator';
 // 화면 구성
 export default function App() {
   return (
+    <MenuProvider>
     <NavigationContainer>
       {/* <LoginStackNavi /> */}
+      {/* <StartStack /> */}
       <DrawerNavi />
     </NavigationContainer>
+    </MenuProvider>
   );
 }

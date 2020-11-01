@@ -30,12 +30,13 @@ export default function MainPage() {
     <ScrollView style={{backgroundColor: 'white'}}>
       {/* 이벤트 슬라이드 */}
       <EventSlide />
-      <View>
+      <View style={{margin: 5}}>
         {/* 동아리 리스트 */}
-        <View style={{margin: 5}}>
+        <View>
           <WrapTitle>
             <Text style={Styles.b_b_font}>내 동아리 리스트</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ClubMainTabNavi')}>
               <Text style={Styles.s_b_font}>목록 편집</Text>
             </TouchableOpacity>
           </WrapTitle>
@@ -52,15 +53,12 @@ export default function MainPage() {
           />
         </View>
         {/* 즐겨찾기 */}
-        <View style={{margin: 5}}>
+        <View>
           <WrapTitle>
             <Text style={Styles.b_b_font}>즐겨찾기</Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('FavoritesPage')}>
-              <Text style={Styles.s_b_font}>
-                모두 보기
-                <Icon name="chevron-forward-outline"></Icon>
-              </Text>
+              <Text style={Styles.s_b_font}>모두 보기</Text>
             </TouchableOpacity>
           </WrapTitle>
           <FavoritesPage />
@@ -205,6 +203,7 @@ const WrapTitle = Styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin:5px;
 `;
 
 // 배너이미지

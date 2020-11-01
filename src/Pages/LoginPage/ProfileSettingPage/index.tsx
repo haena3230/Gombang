@@ -4,17 +4,12 @@ import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Text,
   TextInput,
-  Keyboard,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import Styled from 'styled-components/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-community/picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 // 컴포넌트
@@ -22,7 +17,6 @@ import Styles, {Color} from '~/Components/InputText';
 import {LongButton} from '~/Components/Button';
 
 const ProfileSettingPage = () => {
-  const navigation = useNavigation();
   const [name, setName] = useState<string>();
   const [phone, setPhone] = useState<string>();
   const [birth, setBirth] = useState<string>();
@@ -56,8 +50,9 @@ const ProfileSettingPage = () => {
   //       });
   //   })();
   // };
+  const navigation = useNavigation();
   const onPress = () => {
-    navigation.navigate('DrawerNavi');
+    navigation.dispatch(StackActions.replace('DrawerNavi'));
   };
 
   return (
@@ -71,26 +66,7 @@ const ProfileSettingPage = () => {
       <View>
         <Text style={Styles.b_b_font}>기본 프로필 설정 </Text>
       </View>
-      {/* 사진 */}
-      <View style={styles.imgContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('UploadPhoto')}>
-          <Image
-            style={styles.proflieImg}
-            source={{
-              uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-            }}
-          />
-          <Icon
-            name="camera"
-            size={25}
-            color="#808B96"
-            style={{
-              position: 'absolute',
-              right: 5,
-              bottom: 5,
-            }}></Icon>
-        </TouchableOpacity>
-      </View>
+      <Photo />
       {/* 정보입력 */}
 
       <View style={{marginVertical: 20}}>
@@ -103,13 +79,21 @@ const ProfileSettingPage = () => {
           />
         </View>
         <View style={styles.InputContainer}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginBottom: 10,
+            }}>
             <View style={styles.pickContainer}>
               <DropMenuCampus />
             </View>
             <View style={styles.pickContainer}>
-              <DropMenuMajor />
+              <DropMenuCol />
             </View>
+          </View>
+          <View style={styles.pickContainer}>
+            <DropMenuMajor />
           </View>
         </View>
         <View style={styles.InputContainer}>
@@ -118,28 +102,57 @@ const ProfileSettingPage = () => {
             onChangeText={(text) => setPhone(text)}
             value={phone}
             style={styles.txtInput}
+            keyboardType={'number-pad'}
           />
         </View>
-        <KeyboardAvoidingView behavior="height">
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.InputContainer}>
-              <TextInput
-                placeholder={'생년월일'}
-                onChangeText={(text) => setBirth(text)}
-                value={birth}
-                style={styles.txtInput}
-              />
+        <View style={styles.InputContainer}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={styles.pickContainer}>
+              <DropMenuBirthY />
             </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+            <View style={styles.pickContainer}>
+              <DropMenuBirthD />
+            </View>
+            <View style={styles.pickContainer}>
+              <DropMenuBirthDD />
+            </View>
+          </View>
+        </View>
       </View>
 
       <LongButton onPress={onPress} buttonTitle={'설정완료'}></LongButton>
     </ScrollView>
   );
 };
+// 사진 업로드 메뉴
+const Photo = () => {
+  const navigation = useNavigation();
+  return (
+    <View style={styles.imgContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate('UploadPhoto')}>
+        <View
+          style={{
+            width: 100,
+            height: 100,
+            backgroundColor: Color.l_color,
+            borderRadius: 50,
+          }}
+        />
+        <Icon
+          name="camera"
+          size={25}
+          color="#808B96"
+          style={{
+            position: 'absolute',
+            right: 5,
+            bottom: 5,
+          }}></Icon>
+      </TouchableOpacity>
+    </View>
+  );
+};
 // 대학선택메뉴
-const DropMenuCampus = () => {
+export const DropMenuCampus = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
   return (
     <Picker
@@ -149,14 +162,14 @@ const DropMenuCampus = () => {
       }
       mode={'dropdown'}
       style={{width: 150, height: 40}}>
-      <Picker.Item color="#808B96" label="대학" value="대학" />
+      <Picker.Item color="#808B96" label="캠퍼스" value="캠퍼스" />
       <Picker.Item color="#808B96" label="죽전" value="죽전" />
       <Picker.Item color="#808B96" label="천안" value="천안" />
     </Picker>
   );
 };
-// 학과선택메뉴
-const DropMenuMajor = () => {
+// 대학선택메뉴
+export const DropMenuCol = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
   return (
     <Picker
@@ -166,13 +179,80 @@ const DropMenuMajor = () => {
       }
       mode={'dropdown'}
       style={{width: 150, height: 40, fontSize: 16}}>
+      <Picker.Item color="#808B96" label="대학" value="대학" />
+      <Picker.Item
+        color="#808B96"
+        label="소프트웨어대학"
+        value="소프트웨어대학"
+      />
+      <Picker.Item color="#808B96" label="공과대학" value="공과대학" />
+    </Picker>
+  );
+};
+// 학과 선택메뉴
+export const DropMenuMajor = () => {
+  const [selectedValue, setSelectedValue] = useState<string | number>('java');
+  return (
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
+        setSelectedValue(itemValue)
+      }
+      mode={'dropdown'}
+      style={{width: '100%', height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="학과" value="학과" />
       <Picker.Item
         color="#808B96"
         label="소프트웨어학과"
         value="소프트웨어학과"
       />
-      <Picker.Item color="#808B96" label="컴퓨터공학과" value="컴퓨터공학과" />
+      <Picker.Item color="#808B96" label="경영학과" value="경영학과" />
+    </Picker>
+  );
+};
+// 생일 선택 메뉴
+export const DropMenuBirthY = () => {
+  const [selectedValue, setSelectedValue] = useState<string | number>('java');
+  return (
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
+        setSelectedValue(itemValue)
+      }
+      mode={'dropdown'}
+      style={{width: 100, height: 40, fontSize: 16}}>
+      <Picker.Item color="#808B96" label="연도" value="연도" />
+      <Picker.Item color="#808B96" label="1990" value="1990" />
+    </Picker>
+  );
+};
+export const DropMenuBirthD = () => {
+  const [selectedValue, setSelectedValue] = useState<string | number>('java');
+  return (
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
+        setSelectedValue(itemValue)
+      }
+      mode={'dropdown'}
+      style={{width: 80, height: 40, fontSize: 16}}>
+      <Picker.Item color="#808B96" label="월" value="월" />
+      <Picker.Item color="#808B96" label="1" value="1" />
+    </Picker>
+  );
+};
+export const DropMenuBirthDD = () => {
+  const [selectedValue, setSelectedValue] = useState<string | number>('java');
+  return (
+    <Picker
+      selectedValue={selectedValue}
+      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
+        setSelectedValue(itemValue)
+      }
+      mode={'dropdown'}
+      style={{width: 80, height: 40, fontSize: 16}}>
+      <Picker.Item color="#808B96" label="일" value="일" />
+      <Picker.Item color="#808B96" label="1" value="1" />
     </Picker>
   );
 };

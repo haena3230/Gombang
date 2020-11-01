@@ -1,9 +1,9 @@
 // 즐겨찾기 페이지 모달 메뉴
 import React from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, Text} from 'react-native';
 import Modal from 'react-native-modal';
 import Styled from 'styled-components/native';
-import {MiddleTxtB} from '~/Components/InputText';
+import Styles, {Color} from '~/Components/InputText';
 
 interface FavModalProps {
   BackPress: () => void;
@@ -21,23 +21,23 @@ function FavModal({BackPress, onPress, visible}: FavModalProps) {
       <View style={{position: 'absolute', top: 30, right: 0}}>
         <ModalContainer>
           <TouchableOpacity onPress={onPress}>
-            <MiddleTxtB>정렬편집</MiddleTxtB>
+            <Text style={Styles.m_b_font}>정렬편집</Text>
           </TouchableOpacity>
         </ModalContainer>
         <ModalContainer>
           <TouchableOpacity onPress={onPress}>
-            <MiddleTxtB>삭제하기</MiddleTxtB>
+            <Text style={Styles.m_b_font}>삭제하기</Text>
           </TouchableOpacity>
         </ModalContainer>
       </View>
     </Modal>
   );
 }
-import {l_g_color} from '~/Components/InputText';
+
 const ModalContainer = Styled.View`
   width:100px;
   height:40px;
-  borderColor:${l_g_color};
+  borderColor:${Color.l_color};
   borderWidth:1px;
   backgroundColor:white;
   alignItems:center;

@@ -1,9 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.swcproject">
 
+  
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 카메라 관련 접근권한 -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
       android:name=".MainApplication"
@@ -11,7 +14,8 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:requestLegacyExternalStorage="true">
        <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />

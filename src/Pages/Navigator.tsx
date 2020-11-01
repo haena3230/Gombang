@@ -28,9 +28,10 @@ import FavModal from '../Components/FavModal';
 
 // search
 import SearchPage from './SearchPage';
-import SearchPopupPage from './SearchPage/SearchPopupPage';
 // calendar
 import CalendarPage from './CalendarPage';
+import AddSchedulePage from './CalendarPage/CalendarSchedule/AddSchedulePage';
+import SchedulePopupPage from './CalendarPage/CalendarSchedule/AddSchedulePage/SchedulePopupPage';
 // alarm
 import AlarmsPage from './AlarmsPage';
 // portfolio
@@ -47,6 +48,8 @@ import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
 import DrawerPage from '~/Pages/Drawer';
 import MyPage from './Drawer/MyPage';
 import AppNoticePage from './Drawer/AppNoticePage';
+
+import Styles,{Color} from '~/Components/InputText';
 
 // Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -80,7 +83,7 @@ function MainTabNavi() {
       {/* SearchPage 탭 메인2*/}
       <Tab.Screen
         name="SearchPage"
-        component={SearchStackNavi}
+        component={SearchPage}
         options={{
           tabBarIcon: () => (
             <Icon name="search-outline" size={25} color="#999" />
@@ -183,14 +186,19 @@ function ClubMainTabNavi() {
 
 // MainPage 메인 1번 내부 Stack Navi
 function MainStackNavi({navigation}: any) {
+  // favoratepage 모달메뉴
   const [isModalVisible, setModalVisible] = useState(false);
-
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+  // Searchstack검색바
+  const [isBarVisible, setBarVisible] = useState(false);
+  const toggleBar = () => {
+    setBarVisible(!isBarVisible);
+  };
   return (
     <Stack.Navigator
-      initialRouteName="MainPage"
+      initialRouteName="MainTabNavi"
       screenOptions={{
         headerRight: () => (
           <Icon
@@ -198,20 +206,80 @@ function MainStackNavi({navigation}: any) {
             onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
             size={25}
             color="black"
+            style={{marginRight: 10}}
           />
         ),
       }}>
       <Stack.Screen
-        name="MainPage"
+        name="MainTabNavi"
         component={MainTabNavi}
         options={{title: ' '}}
       />
+      <Stack.Screen
+        name="SearchStackNavi"
+        component={SearchStackNavi}
+        options={{
+          title: '중앙동아리',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 10,
+                alignItems: 'center',
+              }}>
+              <Icon
+                name="search"
+                onPress={toggleBar}
+                size={25}
+                color="black"
+                style={{margin: 10}}>
+                <SearchBarModal
+                  BackPress={toggleBar}
+                  onPress={toggleBar}
+                  visible={isBarVisible}
+                />
+              </Icon>
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={25}
+                color="black"
+              />
+            </View>
+          ),
+        }}
+      />
       <Stack.Screen name="EventPage" component={EventPage} />
-      <Stack.Screen name="ClubMainTabNavi" component={ClubMainTabNavi} />
-      <Stack.Screen name="CalendarPage" component={CalendarPage} />
+      {/* <Stack.Screen name="ClubMainTabNavi" component={ClubMainTabNavi} /> */}
+      <Stack.Screen 
+       options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '새로운 일정',
+          headerTitleAlign: 'center',
+          headerRight: () => (
+            <Icon
+              name="checkmark-outline"
+              onPress={toggleModal}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+          ),
+        }}
+        name="AddSchedulePage" component={CalendarStackNavi} />
       <Stack.Screen
         options={{
-          headerTitleStyle: {fontSize: 18, fontWeight: 'bold'},
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
           title: '즐겨 찾기',
           headerTitleAlign: 'center',
           headerRight: () => (
@@ -237,52 +305,10 @@ function MainStackNavi({navigation}: any) {
 
 // SearchPage 메인 2번 내부 Stack Navi
 import {SearchBarModal} from '~/Components/SearchBar';
-function SearchStackNavi({navigation}: any) {
-  const [isBarVisible, setBarVisible] = useState(false);
-
-  const toggleBar = () => {
-    setBarVisible(!isBarVisible);
-  };
+function SearchStackNavi() {
   return (
-    <Stack.Navigator
-      initialRouteName="SearchPage"
-      screenOptions={{
-        headerRight: () => (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              padding: 10,
-              alignItems: 'center',
-            }}>
-            <Icon
-              name="search"
-              onPress={toggleBar}
-              size={25}
-              color="black"
-              style={{margin: 10}}>
-              <SearchBarModal
-                BackPress={toggleBar}
-                onPress={toggleBar}
-                visible={isBarVisible}
-              />
-            </Icon>
-            <Icon
-              name="menu"
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              size={25}
-              color="black"
-            />
-          </View>
-        ),
-      }}>
-      <Stack.Screen name="SearchPage" component={SearchPage} />
-      <Stack.Screen
-        name="SearchTopTabStack"
-        component={SearchTopTabNavi}
-        options={{title: '중앙동아리'}}
-      />
-      <Stack.Screen name="SearchPopupPage" component={SearchPopupPage} />
+    <Stack.Navigator initialRouteName="SearchTopTabNavi">
+      <Stack.Screen name="SearchTopTabStack" component={SearchTopTabNavi} />
     </Stack.Navigator>
   );
 }
@@ -345,20 +371,21 @@ const SearchTopTabNavi = () => {
   );
 };
 
+// calendar 메인 3번 내부 stack
+function CalendarStackNavi(){
+  return(
+   <Stack.Navigator>
+     {/* <Stack.Screen name="TestPage" component={TestPage} /> */}
+      <Stack.Screen name="AddSchedulePage" component={AddSchedulePage} />
+      <Stack.Screen name="SchedulePopupPage" component={SchedulePopupPage} />
+    </Stack.Navigator>
+  )
+}
+
 // PortfolioPage 메인 5번 내부 Stack
-function PortfolioStackNavi({navigation}: any) {
+function PortfolioStackNavi() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerRight: () => (
-          <Icon
-            name="menu"
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-            size={25}
-            color="black"
-          />
-        ),
-      }}>
+    <Stack.Navigator>
       <Stack.Screen name="PortfolioPage" component={PortfolioPage} />
       <Stack.Screen name="PortfolioInPage" component={PortfolioInPage} />
     </Stack.Navigator>
@@ -370,6 +397,7 @@ function DrawerNavi() {
   return (
     <Drawer.Navigator
       initialRouteName="MainStackNavi"
+      screenOptions={{}}
       drawerPosition={'right'}
       drawerStyle={{width: 300}}
       drawerContentOptions={{
@@ -378,6 +406,7 @@ function DrawerNavi() {
       }}
       drawerContent={(props: any) => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="MainStackNavi" component={MainStackNavi} />
+
       <Drawer.Screen name="Drawer" component={DrawerPage} />
       <Drawer.Screen
         name="MyPage"
