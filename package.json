@@ -13,6 +13,8 @@
     "@react-native-community/async-storage": "1.12.0",
     "@react-native-community/datetimepicker": "3.0.3",
     "@react-native-community/picker": "1.6.6",
+    "@react-native-firebase/app": "8.4.7",
+    "@react-native-firebase/iid": "7.4.10",
     "@react-native-seoul/kakao-login": "2.10.1",
     "@react-navigation/bottom-tabs": "5.8.0",
     "@react-navigation/drawer": "5.9.0",

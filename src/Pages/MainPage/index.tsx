@@ -115,23 +115,23 @@ interface UsersClubListProps {
 const UsersClubList = ({onPress}: UsersClubListProps) => {
   const [clubs, setClubs] = useState<ClubInterface[]>([]);
 
-  useEffect(() => {
-    try {
-      (async () => {
-        const response = await fetch(`${URL}/club`, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'application/json',
-          },
-        });
+  // useEffect(() => {
+  //   try {
+  //     (async () => {
+  //       const response = await fetch(`${URL}/club`, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-type': 'application/json',
+  //         },
+  //       });
 
-        const clubs = await response.json();
-        setClubs(clubs);
-      })();
-    } catch (e) {
-      console.log('Failed to fetch the data from storage');
-    }
-  }, []);
+  //       const clubs = await response.json();
+  //       setClubs(clubs);
+  //     })();
+  //   } catch (e) {
+  //     console.log('Failed to fetch the data from storage');
+  //   }
+  // }, []);
 
   return (
     <ScrollView horizontal={true}>
@@ -169,7 +169,7 @@ const MakeClubButton = () => {
   const navigation = useNavigation();
   return (
     <View style={{alignItems: 'flex-end'}}>
-      <TouchableOpacity style={{flexDirection: 'row', alignItems:'center'}} onPress={()=>navigation.navigate('GenerateClubPage')}>
+      <TouchableOpacity style={{flexDirection: 'row', alignItems:'center'}} onPress={()=>navigation.navigate('GenerateClubStackNavi')}>
           <Text style={Styles.ss_g_font}>직접 동아리를 만들어 보세요</Text>
           <Icon name="add-circle" size={18} color={Color.l_color}></Icon>
       </TouchableOpacity>

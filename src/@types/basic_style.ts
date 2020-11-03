@@ -46,8 +46,8 @@ export const Styles = StyleSheet.create({
   
 // 디바이스 맞춤 너비
 import { Dimensions } from 'react-native';
-// export const DHeight = Dimensions.get('window').height;
-// export const DWidth = Dimensions.get('window').width;
 
 export const DHeight = Dimensions.get('window').height;
 export const DWidth = Dimensions.get('window').width;
+
+

@@ -8,7 +8,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Plusbutton from '~/Assets/Plusbutton.svg';
 import {TwoOpModal} from '~/Components/Modal';
-import {NavigationContainer, useNavigation } from '@react-navigation/native';
+import {useNavigation } from '@react-navigation/native';
+import ConfirmModal from '~/Components/Modal/ConfirmModal';
 
 // 포트폴리오 페이지
 const PortfolioPage = () => {
@@ -16,7 +17,6 @@ const PortfolioPage = () => {
   const [modalVisible,setModalVisible] = useState(false);
   const onPressModal=()=>{
     setModalVisible(!modalVisible)
-    console.log(modalVisible);
   }
   return (
     <View style={{flex:1,backgroundColor:Color.w_color, paddingHorizontal:20}}>
@@ -68,7 +68,7 @@ const Folder =()=>{
         </TouchableOpacity>
         <TwoOpModal fst_op='수정하기' snd_op='삭제하기' onPressMenuM={onPressModify} onPressMenuD={onPressDelete}/>
         <ModifyTitle modifyVisible={modify} onBackMT={onPressModify}/>
-        <DeleteFolder deleteVisible={deleteF} onBackMD={onPressDelete}/>
+        <ConfirmModal isVisible={deleteF} onBack={onPressDelete} text1={'폴더이름 폴더를'} text2 ={'삭제하시겠습니까?'}/>
       </View>
       <View style={{margin:1}}>
         <Text style={Styles.s_b_font}>test</Text>
@@ -112,31 +112,6 @@ const ModifyTitle=({modifyVisible, onBackMT}:ModifyTitleProps)=>{
   )
 }
 
-// 폴더 삭제 모달
-interface DeleteFolderProps{
-  deleteVisible:boolean;
-  onBackMD:()=>void;
-}
-const DeleteFolder=({deleteVisible, onBackMD}:DeleteFolderProps)=>{
-  return(
-    <Modal onBackdropPress={onBackMD} isVisible={deleteVisible}>
-      <View style={{justifyContent:'center', alignItems:'center'}}>
-        <View style={styles.modifyContainer}>
-          <Text style={Styles.m_b_font}>폴더이름 폴더를</Text>
-          <Text style={Styles.m_b_font}>삭제하시겠습니까?</Text>
-        </View>
-        <View style={{flexDirection:'row'}}>
-            <TouchableOpacity style={styles.button} onPress={onBackMD}>
-              <Text style={Styles.m_b_font}>취소</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={Styles.m_b_font}>완료</Text>
-            </TouchableOpacity>
-          </View>
-      </View>
-    </Modal>
-  )
-}
 
 // 추가 모달
 interface AddModalProps{

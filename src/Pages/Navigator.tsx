@@ -339,23 +339,8 @@ function MainStackNavi({navigation}: any) {
             null
           ),
         }}
-        name="GenerateClubPage"
-        component={GenerateClubPage}
-      />
-      <Stack.Screen
-        options={{
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-          },
-          title: '동아리 만들기',
-          headerTitleAlign: 'center',
-          headerRight: () => (
-            null
-          ),
-        }}
-        name="CertifiedPage"
-        component={CertifiedPage}
+        name="GenerateClubStackNavi"
+        component={GenerateClubStackNavi}
       />
       <Stack.Screen
         options={{
@@ -472,6 +457,16 @@ function CalendarStackNavi(){
      {/* <Stack.Screen name="TestPage" component={TestPage} /> */}
       <Stack.Screen name="AddSchedulePage" component={AddSchedulePage} />
       <Stack.Screen name="SchedulePopupPage" component={SchedulePopupPage} />
+    </Stack.Navigator>
+  )
+}
+
+// 동아리 만들기 stack 
+function GenerateClubStackNavi(){
+  return(
+   <Stack.Navigator>
+      <Stack.Screen name="GenerateClubPage" component={GenerateClubPage} />
+      <Stack.Screen name="CertifiedPage" component={CertifiedPage} />
     </Stack.Navigator>
   )
 }

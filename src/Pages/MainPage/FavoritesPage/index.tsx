@@ -13,26 +13,26 @@ const FavoritesPage = () => {
   const [clubs, setClubs] = useState<ClubInterface[]>([]);
   const [emptyList, setEmptyList] = useState(false);
 
-  useEffect(() => {
-    try {
-      (async () => {
-        const response = await fetch(`${URL}/club`, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'application/json',
-          },
-        });
+  // useEffect(() => {
+  //   try {
+  //     (async () => {
+  //       const response = await fetch(`${URL}/club`, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-type': 'application/json',
+  //         },
+  //       });
 
-        const fav_clubs = await response.json();
-        setClubs(fav_clubs);
-        if (fav_clubs.length === 0) {
-          setEmptyList(true);
-        }
-      })();
-    } catch (e) {
-      console.log('Failed to fetch the data from storage');
-    }
-  }, []);
+  //       const fav_clubs = await response.json();
+  //       setClubs(fav_clubs);
+  //       if (fav_clubs.length === 0) {
+  //         setEmptyList(true);
+  //       }
+  //     })();
+  //   } catch (e) {
+  //     console.log('Failed to fetch the data from storage');
+  //   }
+  // }, []);
 
   const isEmpty = emptyList;
 
