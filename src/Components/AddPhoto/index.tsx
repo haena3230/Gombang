@@ -78,9 +78,6 @@ const AddPhoto = () => {
             right: 5,
             bottom: 5,
           }} />
-
-        
-
       </TouchableOpacity>
       <Modal isVisible={modal} onBackdropPress={toggle}>
         <Container>

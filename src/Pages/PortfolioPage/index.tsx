@@ -58,7 +58,7 @@ const Folder =()=>{
     setDeleteF(!deleteF)
   }
   return(
-    <TouchableOpacity onPress = {()=>navigation.navigate('PortfolioInPage')}>
+    <TouchableOpacity onPress = {()=>navigation.navigate('PortfolioStackNavi')}>
     <View style={{marginTop:20}}>
       <View style={styles.container}>
         <TouchableOpacity style={{padding:10}} onPress={onPressFav}>

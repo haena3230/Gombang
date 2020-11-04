@@ -5,12 +5,14 @@ import {Styles,Color,Page,DWidth} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Plusbutton from '~/Assets/Plusbutton.svg';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
 const PortfolioWritePage = ()=>{
+
+    const navigation = useNavigation()
     // text 내용
     const [text,setText] = useState('')
     // 모달
@@ -101,7 +103,7 @@ const PortfolioWritePage = ()=>{
             </ScrollView>
             <TouchableOpacity   onPress= {onPress} style = {{position:'absolute', right:20, bottom:20}}>
                 <Plusbutton width={45} height ={45} />
-                <MenuModal isVisible={isVisible} onBack={onPress} onPressCamera={()=>showCamera()} onPressStorage={()=>showCameraRoll()} onPressScrap={()=>null}/>
+                <MenuModal isVisible={isVisible} onBack={onPress} onPressCamera={()=>showCamera()} onPressStorage={()=>showCameraRoll()} onPressScrap={()=>navigation.navigate('ScrapPage')}/>
             </TouchableOpacity>
         </View>
     )

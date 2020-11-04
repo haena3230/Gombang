@@ -8,10 +8,11 @@ import Modal from 'react-native-modal';
 interface ConfirmModalProps{
   isVisible:boolean;
   onBack:()=>void;
+  onConfirm:()=>void;
   text1:string;
   text2:string;
 }
-const ConfirmModal=({isVisible, onBack, text1, text2}:ConfirmModalProps)=>{
+const ConfirmModal=({isVisible, onBack, onConfirm, text1, text2}:ConfirmModalProps)=>{
   return(
     <Modal onBackdropPress={onBack} isVisible={isVisible}>
       <View style={{justifyContent:'center', alignItems:'center'}}>
@@ -23,7 +24,7 @@ const ConfirmModal=({isVisible, onBack, text1, text2}:ConfirmModalProps)=>{
             <TouchableOpacity style={styles.button} onPress={onBack}>
               <Text style={Styles.m_b_font}>취소</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={onConfirm}>
               <Text style={Styles.m_b_font}>완료</Text>
             </TouchableOpacity>
           </View>

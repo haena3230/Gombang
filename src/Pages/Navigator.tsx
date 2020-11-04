@@ -2,8 +2,14 @@
 
 // Navigator.tsx 내비게이션 모음
 import React, {useState} from 'react';
-import {Alert, View, Text} from 'react-native';
+import {Alert, View, Text, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+// 컴포넌트
+import {Styles,Color} from '~/@types/basic_style';
+import Plusbutton from '~/Assets/Plusbutton.svg';
+import {KakaoLogout} from '~/Components/Login';
 
 // for navigator
 import {createStackNavigator} from '@react-navigation/stack';
@@ -14,7 +20,10 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
+  DrawerContentComponentProps 
 } from '@react-navigation/drawer';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+
 
 // import Login pages
 import LoginPage from './LoginPage';
@@ -42,6 +51,7 @@ import AlarmsPage from './AlarmsPage';
 import PortfolioPage from './PortfolioPage';
 import PortfolioInPage from './PortfolioPage/PortfolioInPage';
 import PortfolioWritePage from './PortfolioPage/PortfolioInPage/PortFolioWritePage';
+import ScrapPage from './PortfolioPage/PortfolioInPage/ScrapPage';
 
 // import ClubMainPage pages
 import ClubMainList from './MainPage/ClubMainPage';
@@ -50,12 +60,13 @@ import MemberListPage from './MainPage/ClubMainPage/MemberListPage';
 import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
 
 //import Drawer Page
-import DrawerPage from '~/Pages/Drawer';
+import TermsOfUse from './Drawer/TermsOfUse';
+import SettingPage from './Drawer/SettingPage'
+import ProgramInfoPage from './Drawer/SettingPage/ProgramInfoPage'
+import NoticePage from './Drawer/SettingPage/NoticePage';
+import HelpPage from './Drawer/HelpPage';
 import MyPage from './Drawer/MyPage';
-import AppNoticePage from './Drawer/AppNoticePage';
 
-import {Styles,Color} from '~/@types/basic_style';
-import Plusbutton from '~/Assets/Plusbutton.svg';
 
 // Navigator 생성
 const Tab = createBottomTabNavigator();
@@ -265,7 +276,11 @@ function MainStackNavi({navigation}: any) {
           ),
         }}
       />
-      <Stack.Screen name="EventPage" component={EventPage} />
+      <Stack.Screen 
+        options={{
+         headerShown:false
+        }}
+        name="EventPage" component={EventPage} />
       {/* <Stack.Screen name="ClubMainTabNavi" component={ClubMainTabNavi} /> */}
       <Stack.Screen 
        options={{
@@ -344,38 +359,10 @@ function MainStackNavi({navigation}: any) {
       />
       <Stack.Screen
         options={{
-          headerStyle:{
-            backgroundColor:Color.g_color
-          },
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-          },
-          title: '포트폴리오',
-          headerTitleAlign: 'left',
-          headerRight: () => (
-            <TouchableOpacity style = {{margin:15}} onPress = {()=>navigation.navigate('PortfolioWritePage')}>
-              <Plusbutton width = {25} height = {25} />
-            </TouchableOpacity>
-          ),
+          headerShown:false
         }}
-        name="PortfolioInPage"
-        component={PortfolioInPage}
-      />
-      <Stack.Screen
-        options={{
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-          },
-          title: '글쓰기',
-          headerTitleAlign: 'center',
-           headerRight: () => (
-            null
-          ),
-        }}
-        name="PortfolioWritePage"
-        component={PortfolioWritePage}
+        name="PortfolioStackNavi"
+        component={PortfolioStackNavi}
       />
     </Stack.Navigator>
     
@@ -471,69 +458,233 @@ function GenerateClubStackNavi(){
   )
 }
 
+// 포트폴리오 stack 
+function PortfolioStackNavi(){
+  const navigation=useNavigation()
+  return(
+   <Stack.Navigator>
+      <Stack.Screen 
+        options={{
+            headerStyle:{
+              backgroundColor:Color.g_color
+            },
+            headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            title: '포트폴리오',
+            headerTitleAlign: 'left',
+            headerRight: () => (
+              <TouchableOpacity style = {{margin:15}} onPress = {()=>navigation.navigate('PortfolioWritePage')}>
+                <Plusbutton width = {25} height = {25} />
+              </TouchableOpacity>
+            ),
+          }}
+         name="PortfolioInPage" 
+        component={PortfolioInPage} />
+      <Stack.Screen 
+        options={{
+            headerStyle:{
+              backgroundColor:Color.w_color
+            },
+            headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            title: '글쓰기',
+            headerTitleAlign: 'center',
+          }}
+        name="PortfolioWritePage" component={PortfolioWritePage} />
+        <Stack.Screen 
+        options={{
+            title:'',
+            headerRight: () => (
+              <TouchableOpacity style = {{margin:15}} onPress = {()=>navigation.goBack()}>
+                <Text style={Styles.m_g_font}>완료</Text>
+              </TouchableOpacity>
+            ),
+          }}
+        name="ScrapPage" component={ScrapPage} />
+    </Stack.Navigator>
+  )
+}
+
+
+// 어플설정 stack
+function SettingStackNavi(){
+  const navigation=useNavigation()
+  return(
+   <Stack.Navigator initialRouteName="SettingPage">
+      <Stack.Screen 
+        options={{
+            title:'어플 설정',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerLeft: () => (
+              <Icon
+              name="arrow-back-outline"
+              onPress={()=>navigation.goBack()}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
+          }}
+        name="SettingPage" component={SettingPage} />
+      <Stack.Screen 
+         options={{
+            title:'프로그램 정보',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerLeft: () => (
+              <Icon
+              name="arrow-back-outline"
+              onPress={()=>navigation.navigate('SettingPage')}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
+          }}
+        name="ProgramInfoPage" component={ProgramInfoPage} />
+         <Stack.Screen 
+         options={{
+            title:'공지사항',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerLeft: () => (
+              <Icon
+              name="arrow-back-outline"
+              onPress={()=>navigation.navigate('SettingPage')}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
+          }}
+        name="NoticePage" component={NoticePage} />
+    </Stack.Navigator>
+  )
+}
 
 //Drawer 페이지
 function DrawerNavi() {
   return (
     <Drawer.Navigator
       initialRouteName="MainStackNavi"
-      screenOptions={{}}
       drawerPosition={'right'}
       drawerStyle={{width: 300}}
       drawerContentOptions={{
-        activeTintColor: '#e91e63',
-        itemStyle: {marginVertical: 20},
+        activeTintColor: Color.w_color,
+        itemStyle: {marginVertical: 5},
       }}
-      drawerContent={(props: any) => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen name="MainStackNavi" component={MainStackNavi} />
-
-      <Drawer.Screen name="Drawer" component={DrawerPage} />
-      <Drawer.Screen
+     drawerContent={props => <CustomDrawerContent {...props} />}>
+       <Drawer.Screen
+        options={{
+          title:'마이 페이지',
+          drawerIcon: () =>
+            <Icon name="person-circle-outline" size={25} color="#999" />
+        }}
         name="MyPage"
         component={MyPage}
+      /> 
+{/*          
+      <Drawer.Screen
         options={{
-          drawerIcon: ({focused}) =>
-            focused ? (
-              <Icon name="settings" size={25} color="#999" />
-            ) : (
-              <Icon name="settings-outline" size={25} color="#999" />
-            ),
+          title:'내 채팅방 목록',
+          drawerIcon: () =>
+            <Icon name="chatbox-ellipses-outline" size={25} color="#999" />
         }}
+        name="EventPage"
+        component={EventPage}
+      />   */}
+      <Drawer.Screen
+        options={{
+          title:'이벤트',
+          drawerIcon: () =>
+            <Icon name="megaphone-outline" size={25} color="#999" />
+        }}
+        name="EventPage"
+        component={EventPage}
+      /> 
+      <Drawer.Screen
+        options={{
+          title:'어플 설정',
+          drawerIcon: () =>
+            <Icon name="settings-outline" size={25} color="#999" />
+        }}
+        name="SettingStackNavi"
+        component={SettingStackNavi}
       />
-      <Drawer.Screen name="AppNoticePage" component={AppNoticePage} />
+       <Drawer.Screen
+        options={{
+          title:'문의하기/도움말',
+          drawerIcon: () =>
+           <Icon name="mail-outline" size={25} color="#999" />
+        }}
+        name="HelpPage"
+        component={HelpPage}
+      />
+      <Drawer.Screen
+        options={{
+          title:'이용약관',
+          drawerIcon: () =>
+           <Icon name="alert-circle-outline" size={25} color="#999" />
+        }}
+        name="TermsOfUse"
+        component={TermsOfUse}
+      /> 
+        <Drawer.Screen 
+        options={{
+            title:'',
+          }}
+        name="MainStackNavi" 
+        component={MainStackNavi} />
     </Drawer.Navigator>
   );
 }
 // Drawer 컨텐츠
-import {KakaoLogout} from '~/Components/Login';
-import {DrawerActions} from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-function CustomDrawerContent(props: any) {
+
+const  CustomDrawerContent=(props) => {  
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      <DrawerItem
-        label="로그아웃"
-        onPress={() =>
-          Alert.alert('', '로그아웃 하시겠습니까?', [
-            {
-              text: '취소',
-              onPress: () => {
-                return null;
-              },
-            },
-            {
-              text: '확인',
-              onPress: () => {
-                KakaoLogout();
-              },
-            },
-          ])
-        }
-      />
+          <View style = {{alignItems:'center', margin:30}}>
+            <View style= {{width:80, height:80, backgroundColor:Color.l_color,borderRadius:50}} />
+            <Text style={Styles.m_b_font}>XX님</Text>
+          </View>
+          <DrawerItem
+            style ={{borderBottomWidth:1,borderColor:Color.l_color}}
+            icon={()=><Icon name ="exit-outline" size={25} color="#999" />}
+            label="로그아웃"
+            onPress={() =>
+              Alert.alert('', '로그아웃 하시겠습니까?', [
+                {
+                  text: '취소',
+                  onPress: () => {
+                    return null;
+                  },
+                },
+                {
+                  text: '확인',
+                  onPress: () => {
+                    KakaoLogout();
+                  },
+                },
+              ])
+            }
+          />
+         <DrawerItemList {...props} />
+
     </DrawerContentScrollView>
   );
 }
+
 
 export function LoginStackNavi() {
   return (
