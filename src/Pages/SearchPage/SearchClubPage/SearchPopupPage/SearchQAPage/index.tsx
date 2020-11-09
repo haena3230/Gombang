@@ -7,6 +7,7 @@ import {Styles, Color} from '~/@types/basic_style';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ONButton,OFFButton} from '~/Components/Button/OnOffButton';
+import { WriteBtn } from '~/Components/Button/WriteBtn';
 interface SearchQAPageProps {
   BackPressQA: () => void;
   QAvisible: boolean;
@@ -91,7 +92,7 @@ const SearchQAPage = ({BackPressQA, QAvisible}: SearchQAPageProps) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <QButton />
+          <WriteBtn text={'질문하기'} />
         </View>
       </View>
     </Modal>
@@ -161,30 +162,6 @@ const Listalign = ({
         )}
       </View>
     </View>
-  );
-};
-
-
-// 하단 질문하기 버튼
-const QButton = () => {
-  return (
-    <TouchableOpacity onPress={() => null}>
-      <View
-        style={{
-          flexDirection: 'row',
-          backgroundColor: Color.l_color,
-          height: 30,
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 15,
-          borderRadius: 30,
-          borderWidth: 2,
-          borderColor: Color.b_color,
-        }}>
-        <Icon name="pencil-outline" size={20} color={Color.g_color}></Icon>
-        <Text style={Styles.m_b_font}>질문하기</Text>
-      </View>
-    </TouchableOpacity>
   );
 };
 

@@ -2,7 +2,7 @@
 
 // Navigator.tsx 내비게이션 모음
 import React, {useState} from 'react';
-import {Alert, View, Text, Button} from 'react-native';
+import {Alert, View, Text, Button, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -10,6 +10,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import {Styles,Color} from '~/@types/basic_style';
 import Plusbutton from '~/Assets/Plusbutton.svg';
 import {KakaoLogout} from '~/Components/Login';
+
 
 // for navigator
 import {createStackNavigator} from '@react-navigation/stack';
@@ -20,7 +21,6 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
-  DrawerContentComponentProps 
 } from '@react-navigation/drawer';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 
@@ -35,7 +35,7 @@ import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
 import FavoritesPage from './MainPage/FavoritesPage';
 import FavEditPage from './MainPage/FavoritesPage/FavEditPage';
-import FavModal from '../Components/Modal';
+import FavModal, { TwoOpModal } from '../Components/Modal';
 import GenerateClubPage from './MainPage/GenerateClubPage';
 import CertifiedPage from './MainPage/GenerateClubPage/CertifiedPage';
 
@@ -54,10 +54,19 @@ import PortfolioWritePage from './PortfolioPage/PortfolioInPage/PortFolioWritePa
 import ScrapPage from './PortfolioPage/PortfolioInPage/ScrapPage';
 
 // import ClubMainPage pages
-import ClubMainList from './MainPage/ClubMainPage';
-import ChattingPage from './MainPage/ClubMainPage/ChattingPage';
+import ClubMainPage from './MainPage/ClubMainPage';
 import MemberListPage from './MainPage/ClubMainPage/MemberListPage';
+import ChattingPage from './MainPage/ClubMainPage/ChattingPage';
 import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
+import ClubNoticePage from './MainPage/ClubMainPage/Stack/ClubNoticePage';
+import ClubFeedPage from './MainPage/ClubMainPage/Stack/ClubFeedPage';
+import ClubWritePage from './MainPage/ClubMainPage/Stack/ClubWritePage';
+import ClubAddSchedulePage from './MainPage/ClubMainPage/Stack/ClubAddSchedulePage';
+import ChattingRoomPage from './MainPage/ClubMainPage/ChattingPage/ChattingRoomPage';
+import ChattingInvitePage from './MainPage/ClubMainPage/ChattingPage/ChattingRoomPage/ChattingInvitePage'
+import ChattingUserPage from './MainPage/ClubMainPage/ChattingPage/ChattingRoomPage/ChattingUserPage'
+import ChattingImagePage from './MainPage/ClubMainPage/ChattingPage/ChattingRoomPage/ChattingImagePage'
+import ChattingSettingPage from './MainPage/ClubMainPage/ChattingPage/ChattingRoomPage/ChattingSettingPage';
 
 //import Drawer Page
 import TermsOfUse from './Drawer/TermsOfUse';
@@ -142,11 +151,15 @@ function MainTabNavi() {
 // ClubMainPage BottomTab navi 작성
 function ClubMainTabNavi() {
   return (
-    <Tab.Navigator initialRouteName="ClubMainPage">
+    <Tab.Navigator 
+      tabBarOptions={{
+        showLabel: false,
+        activeBackgroundColor: '#D5D8DC',
+      }}>
       {/* 동아리메인1 */}
       <Tab.Screen
         name="ClubMainPage"
-        component={ClubMainList}
+        component={ClubMainPage}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -159,7 +172,7 @@ function ClubMainTabNavi() {
       {/* 동아리메인2 */}
       <Tab.Screen
         name="ChattingPage"
-        component={ChattingPage}
+        component={ChattingStack}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -232,6 +245,9 @@ function MainStackNavi({navigation}: any) {
           />
         ),
       }}>
+      <Stack.Screen 
+        options={{headerShown:false}}
+        name="ClubStackNavi" component={ClubStackNavi} />
       <Stack.Screen
         name="MainTabNavi"
         component={MainTabNavi}
@@ -261,7 +277,6 @@ function MainStackNavi({navigation}: any) {
                 color="black"
                 style={{margin: 10}}>
                 <SearchBarModal
-                  BackPress={toggleBar}
                   onPress={toggleBar}
                   visible={isBarVisible}
                 />
@@ -281,7 +296,7 @@ function MainStackNavi({navigation}: any) {
          headerShown:false
         }}
         name="EventPage" component={EventPage} />
-      {/* <Stack.Screen name="ClubMainTabNavi" component={ClubMainTabNavi} /> */}
+      
       <Stack.Screen 
        options={{
           headerTitleStyle: {
@@ -388,6 +403,7 @@ import {
   TestFifth,
   TestSixth,
 } from '~/Pages/SearchPage/SearchClubPage';
+
 const SearchTopTabNavi = () => {
   return (
     <TopTab.Navigator
@@ -573,6 +589,181 @@ function SettingStackNavi(){
   )
 }
 
+// 동아리 메인 내부 stack
+
+function ClubStackNavi(){
+  const navigation=useNavigation()
+  const [isBarVisible,setIsBarVisible] = useState(false)
+  const onPress=()=>{
+    setIsBarVisible(!isBarVisible);
+  }
+  return(
+   <Stack.Navigator>
+      <Stack.Screen 
+        options={{headerShown:false}}
+        name="ClubMainTabNavi" component={ClubMainTabNavi} />
+      <Stack.Screen 
+       options={{
+            title:'공지사항',
+            headerTitleAlign: 'left',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+          }}
+        name="ClubNoticePage" component={ClubNoticePage} />
+      <Stack.Screen 
+        options={{title:'',}}
+        name="ClubFeedPage" component={ClubFeedPage} />
+      <Stack.Screen 
+        options={{
+            title:'글쓰기',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerRight: () => (
+              <Icon
+              name="checkmark-outline"
+              onPress={()=>navigation.goBack()}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
+          }}
+        
+        name="ClubWritePage" component={ClubWritePage} />
+         <Stack.Screen 
+        options={{
+            title:'일정추가',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerRight: () => (
+              <Icon
+              name="checkmark-outline"
+              onPress={()=>navigation.goBack()}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
+          }}
+        
+        name="ClubAddSchedulePage" component={ClubAddSchedulePage} />
+         <Stack.Screen name="SchedulePopupPage" component={SchedulePopupPage} />
+        <Stack.Screen name="ScrapPage" component={ScrapPage} />
+        <Stack.Screen 
+           options={{
+            title:'xx일정톡',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerRight: () => (
+              <View>
+                <Icon
+                name="search-outline"
+                onPress={onPress}
+                size={25}
+                color={Color.b_color} 
+                style={{margin:10}}/>
+                <SearchBarModal
+                  onPress={onPress}
+                  visible={isBarVisible}
+                />
+              </View>
+            ),
+          }}
+        
+          name="ChattingRoomPage" component={ChattingDrawerNavi} />
+          <Stack.Screen 
+           options={{
+            title:'대화상대 초대',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerRight: () => (
+              <TouchableOpacity onPress={()=>navigation.goBack()}> 
+                <Text style={Styles.m_g_font}>완료</Text>
+              </TouchableOpacity>
+            ),
+          }}
+        
+          name="ChattingInvitePage" component={ChattingInvitePage} />
+           <Stack.Screen 
+           options={{
+            title:'회원',
+            headerTitleAlign: 'left',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+          }}
+        
+          name="ChattingUserPage" component={ChattingUserPage} />
+          <Stack.Screen 
+           options={{
+            title:'회원',
+            headerTitleAlign: 'left',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+          }}
+        
+          name="ChattingImagePage" component={ChattingImagePage} />
+           <Stack.Screen 
+           options={{
+            title:'채팅방 설정',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+          }}
+        
+          name="ChattingSettingPage" component={ChattingSettingPage} />
+          
+          
+          
+         <Stack.Screen name="ChattingStack" component={ChattingStack} />
+    </Stack.Navigator>
+  )
+}
+
+// 채팅방 stack
+function ChattingStack(){
+  const navigation=useNavigation()
+  
+  return(
+   <Stack.Navigator>
+      <Stack.Screen 
+      options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '채팅',
+          headerTitleAlign: 'left',
+          headerRight: () => (
+            <TwoOpModal fst_op="채팅생성" snd_op="목록편집" onPressMenuM={()=>null} onPressMenuD={()=>null}/>
+          ),
+           headerLeft: () => (
+             <TouchableOpacity style={{margin:10}} onPress={()=>navigation.navigate('ClubMainPage')}>
+              <Icon name="home-outline" size={25}/>
+            </TouchableOpacity>
+          ),
+        }}
+        name="ChattingPage" component={ChattingPage} />
+    </Stack.Navigator>
+  )
+}
 //Drawer 페이지
 function DrawerNavi() {
   return (
@@ -686,6 +877,103 @@ const  CustomDrawerContent=(props) => {
 }
 
 
+// 채팅방 드로워 메뉴
+function ChattingDrawerNavi() {
+  return (
+    <Drawer.Navigator
+      initialRouteName="ChattingRoomPage"
+      drawerPosition={'right'}
+      drawerStyle={{width: 300}}
+      drawerContentOptions={{
+        activeTintColor: Color.w_color,
+        itemStyle: {marginVertical: 5},
+      }}
+     drawerContent={props => <ChattingDrawerContent {...props} />}>
+       <Drawer.Screen name="ChattingRoomPage" component={ChattingRoomPage} />
+
+    </Drawer.Navigator>
+  );
+}
+
+// 채팅 Drawer 컨텐츠
+
+const  ChattingDrawerContent=(props) => {  
+  const navigation=useNavigation()
+  return (
+    <DrawerContentScrollView {...props}>
+        {/* 첫번째 */}
+          <DrawerItem
+            label="사진첩(모두보기)>"
+            onPress={() =>navigation.navigate('ChattingImagePage')}
+          />
+          <View style ={{
+            borderBottomWidth:1,
+            borderColor:Color.l_color, 
+            padding:10,
+            flexDirection:'row'}}>
+            <View style={{margin:5}}>
+              <Image 
+                style={{width:60,height:60}}
+                source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png',}}/>
+            </View>
+            <View style={{margin:5}}>
+              <Image 
+                style={{width:60,height:60}}
+                source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png',}}/>
+            </View>
+            <View style={{margin:5}}>
+              <Image 
+                style={{width:60,height:60}}
+                source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png',}}/>
+            </View>
+            <View style={{margin:5}}>
+              <Image 
+                style={{width:60,height:60}}
+                source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png',}}/>
+            </View>
+          </View>
+          {/* 두번째 */}
+          <DrawerItem
+            label="참여 회원 리스트 (모두보기) >"
+            onPress={() =>navigation.navigate('ChattingUserPage')}
+          />
+          <View style={{flexDirection:'row', alignItems:'center',padding:10}}>
+            <View style={{marginHorizontal:10}}>
+              <Image 
+                  style={{width:40,height:40, borderRadius:20}}
+                  source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png',}}/>
+            </View>
+            <Text style={Styles.m_b_font}> 양해나</Text>
+          </View>
+          <TouchableOpacity 
+            style={{flexDirection:'row', alignItems:'center',padding:20}}
+            onPress={()=>navigation.navigate('ChattingInvitePage')}>
+            <Icon name="add-outline" size={30} />
+            <Text style={Styles.m_p_font}>초대하기</Text>
+          </TouchableOpacity>
+          <View style ={{
+            borderBottomWidth:1,
+            borderColor:Color.l_color, 
+            flexDirection:'row'}}></View>
+            {/* 세번째 */}
+          <DrawerItem
+          label="채팅방 설정"
+          onPress={() =>navigation.navigate('ChattingSettingPage')}
+        />
+         <View style ={{
+            borderBottomWidth:1,
+            borderColor:Color.l_color, 
+            flexDirection:'row'}}></View>
+        <DrawerItem
+          label="채팅방 나가기"
+          onPress={() =>null}
+        />
+         <DrawerItemList {...props} />
+
+    </DrawerContentScrollView>
+  );
+}
+
 export function LoginStackNavi() {
   return (
     <Stack.Navigator
@@ -702,7 +990,6 @@ export function LoginStackNavi() {
   );
 }
 
-// dra
 
 export default DrawerNavi;
 

@@ -68,7 +68,7 @@ const Folder =()=>{
         </TouchableOpacity>
         <TwoOpModal fst_op='수정하기' snd_op='삭제하기' onPressMenuM={onPressModify} onPressMenuD={onPressDelete}/>
         <ModifyTitle modifyVisible={modify} onBackMT={onPressModify}/>
-        <ConfirmModal isVisible={deleteF} onBack={onPressDelete} text1={'폴더이름 폴더를'} text2 ={'삭제하시겠습니까?'}/>
+        <ConfirmModal isVisible={deleteF} onBack={onPressDelete} onConfirm={onPressDelete} text1={'폴더이름 폴더를'} text2 ={'삭제하시겠습니까?'}/>
       </View>
       <View style={{margin:1}}>
         <Text style={Styles.s_b_font}>test</Text>

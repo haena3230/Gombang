@@ -76,29 +76,32 @@ const EventSlide = () => {
       {/* 이벤트 슬라이드 */}
       <Swiper style={styles.wrapper}>
         <View style={styles.slide}>
-          <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-            <BannerImage
+          <TouchableOpacity onPress={() => navigation.navigate('ClubStackNavi')}>
+            <Image
               source={{
                 uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
               }}
+              style={styles.bannerImg}
             />
           </TouchableOpacity>
         </View>
         <View style={styles.slide}>
           <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-            <BannerImage
+            <Image
               source={{
                 uri: 'https://via.placeholder.com/100/69ADF1/69ADF1.png',
               }}
+              style={styles.bannerImg}
             />
           </TouchableOpacity>
         </View>
         <View style={styles.slide}>
           <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
-            <BannerImage
+            <Image
               source={{
                 uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
               }}
+              style={styles.bannerImg}
             />
           </TouchableOpacity>
         </View>
@@ -205,12 +208,6 @@ const WrapTitle = Styled.View`
   margin:5px;
 `;
 
-// 배너이미지
-const BannerImage = Styled.Image`
- width:100%;
- height:80px;
-                
-`;
 // 동아리 리스트
 const ClubListContainer = Styled.View`
   margin: 5px;
@@ -244,6 +241,11 @@ const styles = StyleSheet.create({
   slide: {
     flex: 1,
     justifyContent: 'center',
+  },
+  // 배너이미지
+  bannerImg:{
+    width:'100%',
+    aspectRatio:40/9
   },
   // 알림일정
   scheduleListTop: {

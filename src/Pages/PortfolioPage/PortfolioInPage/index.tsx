@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import {Color, Styles} from '~/@types/basic_style';
 import {TwoOpModal} from '~/Components/Modal';
 import AlignPhoto from '~/Components/FeedPhoto';
+import { ClubFeedUser } from '~/Components/Club/ClubFeed';
 
 const PortfolioInPage = () => {
   return (
@@ -55,18 +56,7 @@ const PSFeed =()=>{
       </View>
       {/* 스크랩 정보 */}
       <View style = {{flexDirection:'row', justifyContent:'space-between'}}>
-        <View style={{flexDirection:'row', alignItems:'center', margin:10}}>
-          <Image
-            style={{borderRadius:15, width:30,height:30}}
-            source={{
-              uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-            }}
-          />
-          <View style={{marginLeft:10}}>
-            <Text style = {Styles.m_b_font}>oo 동아리 회장</Text>  
-            <Text style ={Styles.ss_b_font}>2020년 0월 0일</Text>
-          </View>  
-        </View>
+        <ClubFeedUser />
         <TwoOpModal fst_op = '수정하기' snd_op='삭제하기' onPressMenuM={()=>null} onPressMenuD={()=>null}/>
       </View>
       {/* TextZone */}

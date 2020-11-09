@@ -25,6 +25,7 @@ export const Styles = StyleSheet.create({
   s_b_font: {color: '#000000', fontSize: 13, fontWeight: 'bold'},
 
   // middle font
+  m_p_font: {color: '#8CDFF3', fontSize: 15, fontWeight: 'bold'},
   m_w_font: {color: '#FFFFFF', fontSize: 15, fontWeight: 'bold'},
   m_l_font: {color: '#E1E1E1', fontSize: 15, fontWeight: 'bold'},
   m_g_font: {color: '#808B96', fontSize: 15, fontWeight: 'bold'},
@@ -40,7 +41,8 @@ export const Styles = StyleSheet.create({
  export const Page=StyleSheet.create({
      page_container:{
         flex:1,
-        backgroundColor:Color.w_color
+        backgroundColor:Color.w_color,
+        
     },
 });
   

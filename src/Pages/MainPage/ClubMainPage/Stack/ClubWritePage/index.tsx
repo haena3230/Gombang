@@ -1,4 +1,4 @@
-// 포트폴리오 작성 / 수정 페이지
+// 동아리 피드 글 작성 페이지
 import React,{useState, useEffect} from 'react';
 import {View, TextInput, TouchableOpacity, Image, Alert} from 'react-native';
 import {Styles,Color,Page} from '~/@types/basic_style';
@@ -8,13 +8,19 @@ import Plusbutton from '~/Assets/Plusbutton.svg';
 import { useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
+import {FeedSchedule} from '~/Components/Club/ClubFeed';
 
 
-const PortfolioWritePage = ()=>{
+const ClubWritePage = ()=>{
 
     const navigation = useNavigation()
     // text 내용
     const [text,setText] = useState('')
+    // 일정
+    const [schedule,setSchedule] = useState(true);
+    const onPressSD=()=>{
+        setSchedule(!schedule);
+    }
     // 모달
     const[isVisible,setisVisible] = useState(false);
     const onPress=()=>{
@@ -79,6 +85,13 @@ const PortfolioWritePage = ()=>{
                     maxLength={1000}
                     style={Styles.m_g_font}
                 />
+                {schedule?(
+                <TouchableOpacity onPress={()=>navigation.navigate('ClubAddSchedulePage')}>
+                    <FeedSchedule onPressSD={onPressSD}/>
+                </TouchableOpacity>
+                ):(
+                    null
+                )}
                 
                 {img?(
                 
@@ -103,7 +116,13 @@ const PortfolioWritePage = ()=>{
             </ScrollView>
             <TouchableOpacity   onPress= {onPress} style = {{position:'absolute', right:20, bottom:20}}>
                 <Plusbutton width={45} height ={45} />
-                <MenuModal isVisible={isVisible} onBack={onPress} onPressCamera={()=>showCamera()} onPressStorage={()=>showCameraRoll()} onPressScrap={()=>navigation.navigate('ScrapPage')}/>
+                <MenuModal 
+                    isVisible={isVisible} 
+                    onBack={onPress} 
+                    onPressCamera={()=>showCamera()} 
+                    onPressStorage={()=>showCameraRoll()} 
+                    onPressFile={()=>null}
+                    onPressSchedule={onPressSD}/>
             </TouchableOpacity>
         </View>
     )
@@ -116,25 +135,31 @@ interface ModalProps{
   onBack:()=>void;
   onPressStorage:()=>void;
   onPressCamera:()=>void;
-  onPressScrap:()=>void;
+  onPressFile:()=>void;
+  onPressSchedule:()=>void;
 }
-const MenuModal=({isVisible, onBack,onPressStorage,onPressCamera,onPressScrap}:ModalProps)=>{
+const MenuModal=({isVisible, onBack,onPressStorage,onPressCamera,onPressFile,onPressSchedule}:ModalProps)=>{
  
   return(
     <Modal onBackdropPress={onBack} isVisible={isVisible}>
-        <View style={{position:'absolute', bottom:240, right:0}}>
+        <View style={{position:'absolute', bottom:300, right:0}}>
             <TouchableOpacity onPress={onPressStorage}>
                 <Icon name="image-outline" size={40} color={Color.g_color}></Icon>
             </TouchableOpacity>
         </View>
-        <View style={{position:'absolute', bottom:180, right:0}}>
+        <View style={{position:'absolute', bottom:240, right:0}}>
             <TouchableOpacity onPress={onPressCamera}>
                  <Icon name="camera-outline" size={40} color={Color.g_color}></Icon>
             </TouchableOpacity>
         </View>
-        <View style={{position:'absolute', bottom:120, right:0}}>
-            <TouchableOpacity onPress={onPressScrap}>
+        <View style={{position:'absolute', bottom:180, right:0}}>
+            <TouchableOpacity onPress={onPressFile}>
                 <Icon name="clipboard-outline" size={40} color={Color.g_color}></Icon>
+            </TouchableOpacity>
+        </View>
+        <View style={{position:'absolute', bottom:120, right:0}}>
+            <TouchableOpacity onPress={onPressSchedule}>
+                <Icon name="calendar-outline" size={40} color={Color.g_color}></Icon>
             </TouchableOpacity>
         </View>
         <View style={{position:'absolute', bottom:60, right:0}}>
@@ -148,4 +173,4 @@ const MenuModal=({isVisible, onBack,onPressStorage,onPressCamera,onPressScrap}:M
   
 }
 
-export default PortfolioWritePage
+export default ClubWritePage

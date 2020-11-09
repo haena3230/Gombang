@@ -30,12 +30,10 @@ export const SearchBar = () => {
 
 // 모달용
 interface SearchBarModalProps {
-  BackPress: () => void;
   onPress: () => void;
   visible: boolean;
 }
 export const SearchBarModal = ({
-  BackPress,
   onPress,
   visible,
 }: SearchBarModalProps) => {
@@ -45,7 +43,7 @@ export const SearchBarModal = ({
       animationIn={'slideInDown'}
       animationOut={'slideOutUp'}
       backdropOpacity={0.6}
-      onBackdropPress={BackPress}>
+      onBackdropPress={onPress}>
       <SearchBar />
     </Modal>
   );

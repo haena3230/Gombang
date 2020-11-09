@@ -67,7 +67,7 @@ interface SecondProps{
     pickHour:string|undefined;
     pickMinute:string|undefined;    
 }
-const Second=({pickYear,pickMonth,pickDay, pickHour,pickMinute}:SecondProps)=>{
+export const Second=({pickYear,pickMonth,pickDay, pickHour,pickMinute}:SecondProps)=>{
     const navigation=useNavigation();
     const [area,setArea] = useState('');
     return(
@@ -100,7 +100,7 @@ const Second=({pickYear,pickMonth,pickDay, pickHour,pickMinute}:SecondProps)=>{
 }
 
 // 세번째 메모
-const Third = ()=>{
+export const Third = ()=>{
     const [note,setNote] = useState('');
     return(
         <KeyboardAvoidingView
