@@ -1,7 +1,7 @@
 // MainPage index.tsx
 // 메인1
 
-import React, {useEffect, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   ScrollView,
   View,
@@ -15,9 +15,10 @@ import {useNavigation} from '@react-navigation/native';
 import Styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-community/async-storage'
 
 // interface
-import {ClubInterface, URL} from '~/@types/Gombang';
+import {URL} from '~/@types/Gombang';
 
 // 컴포넌트
 import FavoritesPage from './FavoritesPage';
@@ -25,7 +26,8 @@ import {Styles, Color} from '~/@types/basic_style';
 
 // main 페이지
 export default function MainPage() {
-  const navigation = useNavigation();
+   const navigation = useNavigation();
+
   return (
     <ScrollView style={{backgroundColor: 'white'}}>
       {/* 이벤트 슬라이드 */}
@@ -36,7 +38,7 @@ export default function MainPage() {
           <WrapTitle>
             <Text style={Styles.b_b_font}>내 동아리 리스트</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('ClubMainTabNavi')}>
+              onPress={() => Alert.alert('준비중')}>
               <Text style={Styles.s_b_font}>목록 편집</Text>
             </TouchableOpacity>
           </WrapTitle>
@@ -116,56 +118,71 @@ interface UsersClubListProps {
 }
 
 const UsersClubList = ({onPress}: UsersClubListProps) => {
-  const [clubs, setClubs] = useState<ClubInterface[]>([]);
-
-  // useEffect(() => {
-  //   try {
-  //     (async () => {
-  //       const response = await fetch(`${URL}/club`, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-type': 'application/json',
-  //         },
-  //       });
-
-  //       const clubs = await response.json();
-  //       setClubs(clubs);
-  //     })();
-  //   } catch (e) {
-  //     console.log('Failed to fetch the data from storage');
-  //   }
-  // }, []);
+  const [clubs, setClubs] = useState<Array<any>>([]);
+  useEffect(()=>{
+        try { 
+        (async () => {
+          const id = await AsyncStorage.getItem('UserId')
+ 
+          axios.get(`${URL}/user/${id}`)
+          .then((res:any)=>{
+              if(res.status==200) {setEmpty(false)}
+              else {setEmpty(true)} 
+              setClubs(res.data.signedClub)
+          })
+        })();
+         } catch (e) {
+        console.log('Failed to fetch the data from storage');
+         }
+     }, [clubs])
+  const [empty,setEmpty] = useState(true);
+  const axios = require('axios');  
 
   return (
-    <ScrollView horizontal={true}>
-      {/* 동아리 이미지, 이름 불러오기 */}
-      {clubs.map((club) => {
-        return (
+    <View>
+    {empty?(
+        <ScrollView horizontal={true}>
+          {/* 추가버튼 */}
           <ClubListContainer>
-            <ClubList>
-              <Image
-                style={{width: 90, height: 90}}
-                key={club._id}
-                source={{
-                  uri: `${URL}/image/${club.image}`,
-                }}></Image>
-            </ClubList>
-            <Text style={Styles.s_b_font}>{club.name}</Text>
+            <TouchableOpacity onPress={onPress}>
+              <ClubList>
+                <Icon name="add-circle" size={30} color={Color.l_color} />
+              </ClubList>
+            </TouchableOpacity>
+            <Text style={Styles.s_b_font}>동아리에 가입해보세요!</Text>
           </ClubListContainer>
-        );
-      })}
-      {/* 추가버튼 */}
-      <ClubListContainer>
-        <TouchableOpacity onPress={onPress}>
-          <ClubList>
-            <Icon name="add-circle" size={30} color={Color.l_color} />
-          </ClubList>
-        </TouchableOpacity>
-        <Text style={Styles.s_b_font}>동아리에 가입해보세요!</Text>
-      </ClubListContainer>
-    </ScrollView>
-  );
-};
+        </ScrollView>
+    ):(
+        <ScrollView horizontal={true}>
+          {clubs.map((club) => {
+            return (
+              // 동아리 이미지, 이름 불러오기 
+              <ClubListContainer key={club.id.toString()}>
+                <ClubList>
+                  <Image
+                    style={{width: 90, height: 90}}
+                    source={{
+                      uri: `${URL}/image/${club.image}`,
+                    }}></Image>
+                </ClubList>
+                <Text style={Styles.s_b_font}>{club.name}</Text>
+              </ClubListContainer>
+            );
+          })}
+          {/* 추가버튼 */}
+          <ClubListContainer>
+            <TouchableOpacity onPress={onPress}>
+              <ClubList>
+                <Icon name="add-circle" size={30} color={Color.l_color} />
+              </ClubList>
+            </TouchableOpacity>
+            <Text style={Styles.s_b_font}>동아리에 가입해보세요!</Text>
+          </ClubListContainer>
+        </ScrollView>
+    )}
+    </View>
+  )
+}
 
 // 컴포넌트 2-2 동아리 만들기 버튼
 const MakeClubButton = () => {

@@ -6,11 +6,13 @@ import {Color} from '~/@types/basic_style';
 import Styled from 'styled-components/native';
 import ImagePicker from 'react-native-image-picker';
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-community/async-storage'
+import {URL} from '~/@types/Gombang'
 // 이미지 비율 구하는 함수
 
 // 사진 업로드 메뉴
 const AddPhoto = () => {
-  const [uri, setUri] = useState('');
+  const[uri, setUri] = useState('');
   const[photo,setPhoto]=useState(false);
   useEffect(()=>{
     if(uri===''){
@@ -25,6 +27,7 @@ const AddPhoto = () => {
       skipBackup: true,
       path: 'images',
     },
+    includeBase64:true,
   };
   // 카메라 
   const showCamera = (): void => {
@@ -33,16 +36,21 @@ const AddPhoto = () => {
         console.log('LaunchCamera Error: ', response.error);
       } else {
         setUri(String(response.uri));
+        // AsyncStorage.setItem('userImgName', JSON.stringify(response.fileName))    
+        // AsyncStorage.setItem('userImgBase', response.data)  
       }
     });
   };
   // 사진보관함
   const showCameraRoll = (): void => {
+    const axios = require('axios')
+
     ImagePicker.launchImageLibrary(options, (response) => {
       if (response.error) {
         console.log('LaunchImageLibrary Error: ', response.error);
       } else {
         setUri(String(response.uri));
+        
       }
     });
   };

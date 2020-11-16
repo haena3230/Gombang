@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import {Alert, View, Text, Button, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage'
 
 // 컴포넌트
 import {Styles,Color} from '~/@types/basic_style';
@@ -83,7 +84,6 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const TopTab = createMaterialTopTabNavigator();
 
-// 로그인 네비게이터
 
 // Tab Navigator 작성
 
@@ -230,6 +230,7 @@ function MainStackNavi({navigation}: any) {
   const toggleBar = () => {
     setBarVisible(!isBarVisible);
   };
+  
   
   return (
     <Stack.Navigator
@@ -978,27 +979,13 @@ export function LoginStackNavi() {
   return (
     <Stack.Navigator
       initialRouteName="LoginPage"
-      screenOptions={{
-        animationEnabled: false,
-      }}
       headerMode="none">
       <Stack.Screen name="LoginPage" component={LoginPage} />
       <Stack.Screen name="MailPage" component={MailPage} />
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
-      <Stack.Screen name="DrawerNavi" component={DrawerNavi} />
     </Stack.Navigator>
   );
 }
 
 
 export default DrawerNavi;
-
-// screenOptions = {{
-//   headerRight: () => (
-//     <Icon
-//       name="ellipsis-vertical-outline"
-//       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-//       size={25}
-//       color="black"></Icon>
-//   ),
-// }}

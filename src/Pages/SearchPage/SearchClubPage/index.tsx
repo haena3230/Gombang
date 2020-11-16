@@ -7,38 +7,38 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Styled from 'styled-components/native';
-import {ClubInterface} from '~/@types/Gombang';
 import {Styles, Color} from '~/@types/basic_style';
 import {useNavigation} from '@react-navigation/native';
 import SearchPopupPage from './SearchPopupPage';
 import SearchQAPage from './SearchPopupPage/SearchQAPage';
 import {ApplicationForm} from './SearchPopupPage/ApplicationForm';
 import {HashTagIcon} from '~/Components/HashTag';
+import AsyncStorage from '@react-native-community/async-storage'
 
 import {URL} from '~/@types/Gombang'
 
+
+
 // 종류별 동아리 리스트
 export const TestFirst = () => {
+  const axios = require('axios')
   const navigation = useNavigation();
-  const [clubs, setClubs] = useState<ClubInterface[]>([]);
+  const [clubs, setClubs] = useState<Array<any>>([]);
   const [emptyList, setEmptyList] = useState(false);
   // 모집중
-  const [recruit, setRecruit] = useState(false);
-  const isPickedR = recruit;
+  const [recruitBtn, setRecruitBtn] = useState(false);
   const onPressR = () => {
-    if (isPickedR === false) setRecruit(true);
-    else setRecruit(false);
+    if (recruitBtn === false) setRecruitBtn(true);
+    else setRecruitBtn(false);
   };
-  // 즐겨찾기
-  const [fav, setFav] = useState(false);
-  const isPickedF = fav;
-  const onPressF = () => {
-    if (isPickedF === false) setFav(true);
-    else setFav(false);
-  };
+  // 즐겨찾기 
+  const [userId,setUserId] = useState<string|null>('')
+  
+  
   // 동아리 홍보창 띄우기
   const [isPage, setIsPage] = useState(false);
   const popup = () => {
@@ -48,7 +48,6 @@ export const TestFirst = () => {
   const [isQAPage, setIsQAPage] = useState(false);
   const QApopup = () => {
     setIsQAPage(true);
-    console.log('test');
   };
   // QA창 끄기
   const QAdown = () => {
@@ -66,20 +65,16 @@ export const TestFirst = () => {
     setIsPage(true);
   };
   useEffect(() => {
+    AsyncStorage.getItem('UserId').then((val)=>setUserId(val))
     try {
       (async () => {
-        const response = await fetch(`${URL}/club`, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'application/json',
-          },
-        });
-
-        const fav_clubs = await response.json();
-        setClubs(fav_clubs);
-        if (fav_clubs.length === 0) {
-          setEmptyList(true);
-        }
+        await axios.get(`${URL}/club`)
+        .then((response:any)=>{
+            setClubs(response.data); 
+            if (response.status === 204) {
+              setEmptyList(true);
+             }
+        })
       })();
     } catch (e) {
       console.log('Failed to fetch the data from storage');
@@ -95,7 +90,8 @@ export const TestFirst = () => {
           backgroundColor: 'white',
           padding: 10,
         }}>
-        <Recruitment onPress={onPressR} isPicked={isPickedR} />
+        <Recruitment onPress={onPressR} isPicked={recruitBtn} />
+        {/* 데이터 없을때 */}
         {isEmpty?(
           <InfoView>
            <Text style={Styles.m_g_font}>데이터 준비중...</Text>
@@ -103,50 +99,111 @@ export const TestFirst = () => {
         ):(
           clubs.map((club) => {
           return (
-            <TouchableOpacity onPress={popup}>
-              <SearchPopupPage
-                BackPress={popup}
-                visible={isPage}
-                onPressQA={QApopup}
-                onPressForm={Formpopup}
-              />
-              <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
-              <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
-              <ListContainer>
-                <ListItem>
-                  <ItemContainer>
-                    <Image
-                      source={{
-                        uri: `${URL}/image/${club.image}`,
-                      }}
-                      key={club._id}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 30,
-                      }}
-                    />
-                  </ItemContainer>
-                  <ItemContainer>
-                    <Text style={Styles.b_b_font}>{club.name}</Text>
-                  </ItemContainer>
-                  <ItemContainer>
-                    <RecruitmentIcon />
-                  </ItemContainer>
-
-                  <FavoriteIcon onPress={onPressF} isPicked={isPickedF} />
-                </ListItem>
-                <HashtagContainer>
-                  <HashTagIcon text={'해시태그'} />
-                  <HashTagIcon text={'해시태그'} />
-                  <HashTagIcon text={'해시태그'} />
-                </HashtagContainer>
-              </ListContainer>
-            </TouchableOpacity>
+            <TouchableOpacity onPress={popup}  key={JSON.stringify(club.id)}>
+              {/* 모집중 버튼 눌렀을때 */}
+              {recruitBtn?(
+                <View>
+                  <SearchPopupPage
+                    BackPress={popup}
+                    visible={isPage}
+                    onPressQA={QApopup}
+                    onPressForm={Formpopup}
+                    clubName={club.name}
+                    clubPostImg={club.image}
+                    clubText={club.text}
+                  />
+                  <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
+                  <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
+                  {club.recruitment===1?(
+                      <ListContainer>
+                        <ListItem>
+                          <ItemContainer>
+                            <Image
+                              source={{
+                                uri: `${URL}/image/${club.image}`,
+                              }}
+                              style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 30,
+                              }}
+                            />
+                          </ItemContainer>
+                          <ItemContainer>
+                            <Text style={Styles.b_b_font}>{club.name}</Text>
+                          </ItemContainer>
+                          <ItemContainer>
+                            <RecruitmentIcon />
+                          </ItemContainer>
+                          <FavoriteIcon userId={userId} clubId={club.id}/>
+                        </ListItem>
+                      {club.hashtags.map((tag:any)=>{
+                        return(
+                        <HashtagContainer key = {tag.hashtagId.toString()}>
+                          <HashTagIcon text={tag.hashtag} />
+                        </HashtagContainer>
+                        )
+                      })}
+                    </ListContainer>
+                  ):(
+                    null
+                  )}
+              </View>
+              ):(
+                // 평상시
+                <View>
+                  <SearchPopupPage
+                    BackPress={popup}
+                    visible={isPage}
+                    onPressQA={QApopup}
+                    onPressForm={Formpopup}
+                    clubName={club.name}
+                    clubPostImg={club.image}
+                    clubText={club.text}
+                  />
+                  <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
+                  <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
+               <ListContainer>
+                  <ListItem>
+                    <ItemContainer>
+                      <Image
+                        source={{
+                          uri: `${URL}/image/${club.image}`,
+                        }}
+                        style={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: 30,
+                        }}
+                      />
+                    </ItemContainer>
+                    <ItemContainer>
+                      <Text style={Styles.b_b_font}>{club.name}</Text>
+                    </ItemContainer>
+                    <ItemContainer>
+                      {/* 모집중일때만 모집중 아이콘 */}
+                      {club.recruitment===1?(
+                        <RecruitmentIcon />
+                      ):(
+                        null
+                      )}
+                    </ItemContainer>
+                    <FavoriteIcon userId={userId} clubId={club.id} />
+                  </ListItem>
+                    {club.hashtags.map((tag:any)=>{
+                      return(
+                      <HashtagContainer key = {tag.hashtagId.toString()}>
+                        <HashTagIcon text={tag.hashtag} />
+                      </HashtagContainer>
+                      )
+                    })}
+                </ListContainer>
+                </View>
+              )}
+              </TouchableOpacity>
           );
         })
         )}
-        
       </ScrollView>
     );
 
@@ -197,10 +254,23 @@ const RecruitmentIcon = () => {
 
 // 즐겨찾기 선택 아이콘
 interface FavoriteIconProps {
-  onPress: () => void;
-  isPicked: boolean;
+  userId:string;
+  clubId:string;
+
 }
-const FavoriteIcon = ({onPress, isPicked}: FavoriteIconProps) => {
+const FavoriteIcon = ({userId,clubId}:FavoriteIconProps) => {
+  const [fav, setFav] = useState(false);
+  const axios=require('axios')
+  const onPress=()=>{
+    axios.patch(`${URL}/user/${userId}/favorite_club_list`,{
+      clubId:clubId
+    })
+    .then((res: any)=>{
+      console.log(res.data)
+      if(res.data===true)  setFav(true)
+      else if(res.data ===false) setFav(false)
+    })
+  }
   return (
     <View
       style={{
@@ -209,7 +279,7 @@ const FavoriteIcon = ({onPress, isPicked}: FavoriteIconProps) => {
         justifyContent: 'center',
       }}>
       <TouchableOpacity onPress={onPress}>
-        {isPicked ? (
+        {fav ? (
           <Icon name="star" size={20} color={'#FCF415'}></Icon>
         ) : (
           <Icon name="star-outline" size={20} color={Color.b_color}></Icon>
@@ -222,7 +292,7 @@ const FavoriteIcon = ({onPress, isPicked}: FavoriteIconProps) => {
 export const TestSecond = () => {
   return (
     <View>
-      <Text>테스트2</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
@@ -230,7 +300,7 @@ export const TestSecond = () => {
 export const TestThird = () => {
   return (
     <View>
-      <Text>테스트3</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
@@ -238,7 +308,7 @@ export const TestThird = () => {
 export const TestFourth = () => {
   return (
     <View>
-      <Text>테스트4</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
@@ -246,20 +316,20 @@ export const TestFourth = () => {
 export const TestFifth = () => {
   return (
     <View>
-      <Text>테스트5</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
 export const TestSixth = () => {
   return (
     <View>
-      <Text>테스트6</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
 
 const ListContainer = Styled.View`
-  height: 80px;
+  paddingVertical:10px;
   borderBottomWidth: 1px;
   borderColor: ${Color.l_color};
   marginHorizontal: 15px;
@@ -277,19 +347,12 @@ const ListItem = Styled.View`
 const HashtagContainer = Styled.View`
   flex: 1;
   flexDirection: row;
+  flexWrap: wrap;
   height:20px;
   alignItems:center;
+  marginVertical:5px;
 `;
 const InfoView = Styled.View`
 alignItems:center;
 justify-content:center;
 `;
-
-const styles = StyleSheet.create({
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-});

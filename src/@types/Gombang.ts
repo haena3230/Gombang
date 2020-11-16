@@ -2,7 +2,7 @@
 export const URL = 'http://133.186.159.137:3000';
 
 export interface ClubInterface {
-  _id?: string; // 필수
+  id?: string; // 필수
   name?: string;
   campus?: string;
   image?: string; // 이미지 파일명

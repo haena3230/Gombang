@@ -63,8 +63,10 @@ const ClubWritePage = ()=>{
       if (response.error) {
         console.log('LaunchImageLibrary Error: ', response.error);
       } else {
-        if(uri.length<6)
-          setUri( [...uri,String(response.uri)])
+        if(uri.length<6){
+          console.log(response.fileName)
+          setUri( [...uri,response.uri])
+        }
         else
           Alert.alert('최대 업로드 사진 개수는 6개 입니다.');
       }

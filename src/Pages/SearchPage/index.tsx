@@ -1,11 +1,12 @@
 // SearchPage index.tsx
 // 메인2
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {ScrollView, View, Image} from 'react-native';
+import {ScrollView, View, Image, Alert} from 'react-native';
 import Styled from 'styled-components/native';
 import {Color} from '~/@types/basic_style';
 import {Picker} from '@react-native-community/picker';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const SearchPage = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('picker');
@@ -14,6 +15,11 @@ const SearchPage = () => {
   );
   // 선택되면 이동
   const navigation = useNavigation();
+  useEffect(()=>{
+    setSelectedValue('죽전캠퍼스')
+    setSelectedValueC('천안캠퍼스')
+  },[selectedValue])
+  
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white', padding: 10}}>
@@ -29,7 +35,8 @@ const SearchPage = () => {
           selectedValue={selectedValue}
           onValueChange={(itemValue: React.SetStateAction<string | number>) => {
             setSelectedValue(itemValue);
-            navigation.navigate('SearchStackNavi');
+            if(itemValue==='중앙동아리') navigation.navigate('SearchStackNavi');
+            else Alert.alert('준비중입니다. 죽전캠퍼스 중앙동아리를 이용해주세요.') 
           }}
           mode={'dropdown'}
           style={{
@@ -55,7 +62,7 @@ const SearchPage = () => {
           selectedValue={selectedValueC}
           onValueChange={(itemValue: React.SetStateAction<string | number>) => {
             setSelectedValueC(itemValue);
-            navigation.navigate('SearchStackNavi');
+            Alert.alert('준비중입니다. 죽전캠퍼스 중앙동아리를 이용해주세요.')
           }}
           mode={'dropdown'}
           style={{

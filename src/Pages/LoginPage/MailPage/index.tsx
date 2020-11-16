@@ -2,18 +2,23 @@
 // 메일 전송을 눌렀을때
 import React, {useState} from 'react';
 import CountDown from 'react-native-countdown-component';
-import {useNavigation} from '@react-navigation/native';
-import {Text, TextInput, View, StyleSheet, Alert} from 'react-native';
+import {useNavigation,useRoute} from '@react-navigation/native';
+import {Text, TextInput, View, StyleSheet, Alert, Button} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 // 컴포넌트
 import {LongButton} from '~/Components/Button';
 import {Styles, Color} from '~/@types/basic_style';
 
 const URL = 'http://133.186.159.137:3000';
+
+
 // 인증메일 확인 페이지
 const MailPage = () => {
+
+
   const navigation = useNavigation();
   // 메일
-  const [mail, setMail] = useState<string>();
+  const [mail, setMail] = useState('');
   const [isEffectiveMail, setisEffectiveMail] = useState(false);
   // 인증코드
   const [authCode, setAuthCode] = useState<string>();
@@ -46,7 +51,7 @@ const MailPage = () => {
       Alert.alert('메일 주소를 확인해 주세요.');
     }
   };
-  const onPressCode = () => {
+  const onPressCode = async () => {
     console.log(String(code));
     console.log(String(authCode));
     if (isEffectiveMail === false) {
@@ -58,10 +63,12 @@ const MailPage = () => {
       }
       if (code !== undefined) {
         {
-          String(authCode) === String(code)
-            ? (navigation.navigate('ProfileSettingPage'),
-              setisEffectiveMail(false))
-            : Alert.alert('인증번호를 확인해 주세요.');
+          String(authCode) === String(code)? (
+              await AsyncStorage.setItem('email', mail),
+              navigation.navigate('ProfileSettingPage'),
+              setisEffectiveMail(false)
+              )
+            : (Alert.alert('인증번호를 확인해 주세요.'))
         }
       }
     }

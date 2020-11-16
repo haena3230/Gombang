@@ -5,29 +5,38 @@ import {MenuProvider} from 'react-native-popup-menu';
 // for navigator
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
-
+import {useState,useEffect} from 'react'
 // import Naviator
 import DrawerNavi from './Pages/Navigator';
 import {LoginStackNavi} from './Pages/Navigator';
-
-
-import iid from '@react-native-firebase/iid';
-
-
-async function getFBToken() {
-  const fbtoken = await iid().getToken();
-  console.log(fbtoken)
-}
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 
 // 화면 구성
 export default function App() {
+  const[status,setStatus] = useState<null|string>('');
+  const[isLogged,setIsLogged] = useState(false);
+  useEffect(()=>{
+    //  AsyncStorage.setItem('isLogin', JSON.stringify(false))
+    console.log('e')
+    AsyncStorage.getItem('isLogin').then((value) => {
+        setStatus(value);
+    });
+    if(status=='true'){
+      setIsLogged(true)
+    }
+    else setIsLogged(false)
+  },[isLogged])
+  
   return (
     <MenuProvider>
     <NavigationContainer>
-      {/* <LoginStackNavi /> */}
-      <DrawerNavi />
+      {isLogged?(
+        <DrawerNavi />
+      ):(
+        <LoginStackNavi />
+      )}
     </NavigationContainer>
     </MenuProvider>
   );

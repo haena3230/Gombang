@@ -14,7 +14,7 @@ export const HashTagIcon = ({text}: HashTagIconProps) => {
     <View
       style={{
         minWidth: 50,
-        width: text.length * 10,
+        width: text.length * 15,
         height: 20,
         backgroundColor: '#808B96',
         borderRadius: 3,

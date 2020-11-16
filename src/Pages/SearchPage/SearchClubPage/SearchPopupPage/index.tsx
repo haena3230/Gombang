@@ -5,18 +5,26 @@ import {Text, View, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {Styles, Color} from '~/@types/basic_style';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {URL} from '~/@types/Gombang'
 
 interface SearchPopupPageProps {
   BackPress: () => void;
   visible: boolean;
   onPressQA: () => void;
   onPressForm: () => void;
+  clubName:string;
+  clubPostImg:string;
+  clubText:string;
 }
 const SearchPopupPage = ({
   BackPress,
   visible,
   onPressQA,
   onPressForm,
+  clubName,
+  clubPostImg,
+  clubText,
+  
 }: SearchPopupPageProps) => {
   return (
     <Modal
@@ -26,8 +34,6 @@ const SearchPopupPage = ({
       animationIn={'slideInUp'}
       hasBackdrop={true}
       backdropColor={Color.w_color}
-      // 안드로이드 백버튼
-      // onBackButtonPress={() => null}
     >
       <View style={{flex: 1, backgroundColor: Color.w_color}}>
         {/* 헤더 */}
@@ -39,7 +45,7 @@ const SearchPopupPage = ({
             flexDirection: 'row',
           }}>
           <View style={{justifyContent: 'center'}}>
-            <Text style={Styles.b_b_font}>OO동아리</Text>
+            <Text style={Styles.b_b_font}>{clubName}</Text>
           </View>
           <TouchableOpacity
             onPress={BackPress}
@@ -50,14 +56,14 @@ const SearchPopupPage = ({
         <ScrollView>
           {/* 인사말 */}
           <View style={{marginVertical: 30}}>
-            <Text style={Styles.m_b_font}>안녕하세요 OO동아리 입니다.</Text>
+            <Text style={Styles.m_b_font}>{clubText}</Text>
           </View>
           {/* 동아리 홍보사진 */}
           <View>
             <Image
               style={{width: '100%', height: undefined, aspectRatio: 1 / 1}}
               source={{
-                uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
+                uri: `${URL}/image/${clubPostImg}`,
               }}></Image>
           </View>
         </ScrollView>

@@ -2,37 +2,38 @@
 import React, {useState, useEffect} from 'react';
 import {Image, View, Text} from 'react-native';
 import Styled from 'styled-components/native';
-import {ClubInterface} from '~/@types/Gombang';
 // 컴포넌트
 import {Styles} from '~/@types/basic_style';
-import {SelectButton} from '~/Components/Button';
 import {URL} from '~/@types/Gombang';
-
+import AsyncStorage from '@react-native-community/async-storage'
 // 메인 -> 즐겨찾기 동아리 목록 페이지
 const FavoritesPage = () => {
-  const [clubs, setClubs] = useState<ClubInterface[]>([]);
+  const [userId,setUserId]=useState<string|null>('')
+  const [clubs, setClubs] = useState<Array<any>>([]);
   const [emptyList, setEmptyList] = useState(false);
 
-  // useEffect(() => {
-  //   try {
-  //     (async () => {
-  //       const response = await fetch(`${URL}/club`, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-type': 'application/json',
-  //         },
-  //       });
+  const axios = require('axios');  
+  useEffect(() => {
+    AsyncStorage.getItem('UserId').then((val)=>setUserId(val))
+    try {
+      (async () => {
+          await axios.get(`${URL}/user/${userId}`)
+          .then((res:any)=>{
+            console.log(res.data.favoriteClub)
+            if(res.data.favoriteClub===undefined) setEmptyList(true)
+            else{
+              setEmptyList(false)
+              setClubs(res.data.favoriteClub)
+            }
+          })
 
-  //       const fav_clubs = await response.json();
-  //       setClubs(fav_clubs);
-  //       if (fav_clubs.length === 0) {
-  //         setEmptyList(true);
-  //       }
-  //     })();
-  //   } catch (e) {
-  //     console.log('Failed to fetch the data from storage');
-  //   }
-  // }, []);
+      })()
+
+        
+    } catch (e) {
+      console.log('Failed to fetch the data from storage');
+    }
+  }, [userId]);
 
   const isEmpty = emptyList;
 
@@ -41,14 +42,13 @@ const FavoritesPage = () => {
       <View style={{flex: 1, backgroundColor: 'white'}}>
         {clubs.map((club) => {
           return (
-            <ListContainer>
+            <ListContainer key={club.id.toString()}>
               <Section>
                 <ItemContainer>
                   <Image
                     source={{
                       uri: `${URL}/image/${club.image}`,
                     }}
-                    key={club._id}
                     style={{
                       width: 50,
                       height: 50,
