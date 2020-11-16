@@ -1,87 +1,212 @@
 // SearchClubPage index.tsx (카테고리 선택시)
 import React, {useState, useEffect} from 'react';
 import {
+  ScrollView,
   Text,
   View,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   Image,
+  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Styled from 'styled-components/native';
-import {ClubInterface} from '~/@types/Gombang';
-import Styles from '~/Components/InputText';
-const URL = 'http://133.186.159.137:3000';
-// 리스트
-export const TestFirst = () => {
-  const [clubData, setClubData] = useState<ClubInterface[]>([]);
-  const [emptyList, setEmptyList] = useState(false);
-  const isEmpty = emptyList;
+import {Styles, Color} from '~/@types/basic_style';
+import {useNavigation} from '@react-navigation/native';
+import SearchPopupPage from './SearchPopupPage';
+import SearchQAPage from './SearchPopupPage/SearchQAPage';
+import {ApplicationForm} from './SearchPopupPage/ApplicationForm';
+import {HashTagIcon} from '~/Components/HashTag';
+import AsyncStorage from '@react-native-community/async-storage'
 
+import {URL} from '~/@types/Gombang'
+
+
+
+// 종류별 동아리 리스트
+export const TestFirst = () => {
+  const axios = require('axios')
+  const navigation = useNavigation();
+  const [clubs, setClubs] = useState<Array<any>>([]);
+  const [emptyList, setEmptyList] = useState(false);
+  // 모집중
+  const [recruitBtn, setRecruitBtn] = useState(false);
+  const onPressR = () => {
+    if (recruitBtn === false) setRecruitBtn(true);
+    else setRecruitBtn(false);
+  };
+  // 즐겨찾기 
+  const [userId,setUserId] = useState<string|null>('')
+  
+  
+  // 동아리 홍보창 띄우기
+  const [isPage, setIsPage] = useState(false);
+  const popup = () => {
+    setIsPage(!isPage);
+  };
+  // QA창 띄우기
+  const [isQAPage, setIsQAPage] = useState(false);
+  const QApopup = () => {
+    setIsQAPage(true);
+  };
+  // QA창 끄기
+  const QAdown = () => {
+    setIsQAPage(false);
+    setIsPage(true);
+  };
+  // 동아리 신청서 창 띄우기
+  const [isForm, setIsForm] = useState(false);
+  const Formpopup = () => {
+    setIsForm(true);
+  };
+  // 동아리 신청서 창 끄기
+  const Formdown = () => {
+    setIsForm(false);
+    setIsPage(true);
+  };
   useEffect(() => {
+    AsyncStorage.getItem('UserId').then((val)=>setUserId(val))
     try {
       (async () => {
-        const response = await fetch(`${URL}}/club`, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'applycation/json',
-          },
-        });
-        const search_clubs = await response.json();
-        setClubData(search_clubs);
-        if (search_clubs === null) {
-          setEmptyList(true);
-        }
+        await axios.get(`${URL}/club`)
+        .then((response:any)=>{
+            setClubs(response.data); 
+            if (response.status === 204) {
+              setEmptyList(true);
+             }
+        })
       })();
     } catch (e) {
-      Alert.alert('데이터 가져오다 에러발생');
+      console.log('Failed to fetch the data from storage');
     }
   }, []);
-  const [recruit, setRecruit] = useState(false);
-  const isPicked = recruit;
-  const onPressR = () => {
-    if (isPicked === false) setRecruit(true);
-    else setRecruit(false);
-  };
-  if (isEmpty === false) {
+
+  const isEmpty = emptyList;
+
     return (
-      <View style={{flex: 1, backgroundColor: 'white'}}>
-        <RecruitmentIcon />
-        <HashTagIcon text={'해시태그'} />
-        <Recrutment onPress={onPressR} isPicked={recruit} />
-        {clubData.map((club) => {
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: 'white',
+          padding: 10,
+        }}>
+        <Recruitment onPress={onPressR} isPicked={recruitBtn} />
+        {/* 데이터 없을때 */}
+        {isEmpty?(
+          <InfoView>
+           <Text style={Styles.m_g_font}>데이터 준비중...</Text>
+          </InfoView>
+        ):(
+          clubs.map((club) => {
           return (
-            <ListContainer>
-              <ListItem>
-                <ItemContainer>
-                  <Image
-                    source={{
-                      uri: `http://49.50.174.166:3000/image/${club.image}`,
-                    }}
-                    key={club._id}
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 30,
-                    }}
+            <TouchableOpacity onPress={popup}  key={JSON.stringify(club.id)}>
+              {/* 모집중 버튼 눌렀을때 */}
+              {recruitBtn?(
+                <View>
+                  <SearchPopupPage
+                    BackPress={popup}
+                    visible={isPage}
+                    onPressQA={QApopup}
+                    onPressForm={Formpopup}
+                    clubName={club.name}
+                    clubPostImg={club.image}
+                    clubText={club.text}
                   />
-                </ItemContainer>
-                <ItemContainer>
-                  <Text style={Styles.m_b_font}>{club.name}</Text>
-                </ItemContainer>
-              </ListItem>
-            </ListContainer>
+                  <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
+                  <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
+                  {club.recruitment===1?(
+                      <ListContainer>
+                        <ListItem>
+                          <ItemContainer>
+                            <Image
+                              source={{
+                                uri: `${URL}/image/${club.image}`,
+                              }}
+                              style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 30,
+                              }}
+                            />
+                          </ItemContainer>
+                          <ItemContainer>
+                            <Text style={Styles.b_b_font}>{club.name}</Text>
+                          </ItemContainer>
+                          <ItemContainer>
+                            <RecruitmentIcon />
+                          </ItemContainer>
+                          <FavoriteIcon userId={userId} clubId={club.id}/>
+                        </ListItem>
+                      {club.hashtags.map((tag:any)=>{
+                        return(
+                        <HashtagContainer key = {tag.hashtagId.toString()}>
+                          <HashTagIcon text={tag.hashtag} />
+                        </HashtagContainer>
+                        )
+                      })}
+                    </ListContainer>
+                  ):(
+                    null
+                  )}
+              </View>
+              ):(
+                // 평상시
+                <View>
+                  <SearchPopupPage
+                    BackPress={popup}
+                    visible={isPage}
+                    onPressQA={QApopup}
+                    onPressForm={Formpopup}
+                    clubName={club.name}
+                    clubPostImg={club.image}
+                    clubText={club.text}
+                  />
+                  <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
+                  <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
+               <ListContainer>
+                  <ListItem>
+                    <ItemContainer>
+                      <Image
+                        source={{
+                          uri: `${URL}/image/${club.image}`,
+                        }}
+                        style={{
+                          width: 50,
+                          height: 50,
+                          borderRadius: 30,
+                        }}
+                      />
+                    </ItemContainer>
+                    <ItemContainer>
+                      <Text style={Styles.b_b_font}>{club.name}</Text>
+                    </ItemContainer>
+                    <ItemContainer>
+                      {/* 모집중일때만 모집중 아이콘 */}
+                      {club.recruitment===1?(
+                        <RecruitmentIcon />
+                      ):(
+                        null
+                      )}
+                    </ItemContainer>
+                    <FavoriteIcon userId={userId} clubId={club.id} />
+                  </ListItem>
+                    {club.hashtags.map((tag:any)=>{
+                      return(
+                      <HashtagContainer key = {tag.hashtagId.toString()}>
+                        <HashTagIcon text={tag.hashtag} />
+                      </HashtagContainer>
+                      )
+                    })}
+                </ListContainer>
+                </View>
+              )}
+              </TouchableOpacity>
           );
-        })}
-      </View>
+        })
+        )}
+      </ScrollView>
     );
-  } else
-    return (
-      <InfoView>
-        <Text style={Styles.m_g_font}>동아리가 없습니다.</Text>
-      </InfoView>
-    );
+
 };
 
 // 모집중 컴포넌트
@@ -89,7 +214,7 @@ interface recruitProps {
   onPress: () => void;
   isPicked: boolean;
 }
-const Recrutment = ({onPress, isPicked}: recruitProps) => {
+const Recruitment = ({onPress, isPicked}: recruitProps) => {
   return (
     <View
       style={{
@@ -127,25 +252,39 @@ const RecruitmentIcon = () => {
   );
 };
 
-// 해시태그 아이콘 컴포넌트
-interface HashTagIconProps {
-  text: string;
+// 즐겨찾기 선택 아이콘
+interface FavoriteIconProps {
+  userId:string;
+  clubId:string;
+
 }
-const HashTagIcon = ({text}: HashTagIconProps) => {
+const FavoriteIcon = ({userId,clubId}:FavoriteIconProps) => {
+  const [fav, setFav] = useState(false);
+  const axios=require('axios')
+  const onPress=()=>{
+    axios.patch(`${URL}/user/${userId}/favorite_club_list`,{
+      clubId:clubId
+    })
+    .then((res: any)=>{
+      console.log(res.data)
+      if(res.data===true)  setFav(true)
+      else if(res.data ===false) setFav(false)
+    })
+  }
   return (
     <View
       style={{
-        minWidth: 50,
-        width: text.length * 10,
-        height: 20,
-        backgroundColor: '#808B96',
-        borderRadius: 3,
+        flex: 1,
+        alignItems: 'flex-end',
         justifyContent: 'center',
-        alignItems: 'center',
       }}>
-      <Text style={{color: '#FDFEFE', fontSize: 10, fontWeight: 'bold'}}>
-        # {text}
-      </Text>
+      <TouchableOpacity onPress={onPress}>
+        {fav ? (
+          <Icon name="star" size={20} color={'#FCF415'}></Icon>
+        ) : (
+          <Icon name="star-outline" size={20} color={Color.b_color}></Icon>
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -153,7 +292,7 @@ const HashTagIcon = ({text}: HashTagIconProps) => {
 export const TestSecond = () => {
   return (
     <View>
-      <Text>테스트2</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
@@ -161,7 +300,7 @@ export const TestSecond = () => {
 export const TestThird = () => {
   return (
     <View>
-      <Text>테스트3</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
@@ -169,7 +308,7 @@ export const TestThird = () => {
 export const TestFourth = () => {
   return (
     <View>
-      <Text>테스트4</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
@@ -177,45 +316,43 @@ export const TestFourth = () => {
 export const TestFifth = () => {
   return (
     <View>
-      <Text>테스트5</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
 export const TestSixth = () => {
   return (
     <View>
-      <Text>테스트6</Text>
+      <Text>준비중...</Text>
     </View>
   );
 };
 
 const ListContainer = Styled.View`
-  height: 100px;
-  borderTopWidth: 2px;
-  borderColor: #D5D8DC;
+  paddingVertical:10px;
+  borderBottomWidth: 1px;
+  borderColor: ${Color.l_color};
   marginHorizontal: 15px;
 `;
 const ItemContainer = Styled.View`
 justify-content:center;
 alignItems:center;
+marginHorizontal:8px;
 `;
 const ListItem = Styled.View`
   width: 100%;
   flex: 1;
-  flexDirection: row;z
+  flexDirection: row;
+`;
+const HashtagContainer = Styled.View`
+  flex: 1;
+  flexDirection: row;
+  flexWrap: wrap;
+  height:20px;
+  alignItems:center;
+  marginVertical:5px;
 `;
 const InfoView = Styled.View`
-flex:1;
-backgroundColor:white;
 alignItems:center;
 justify-content:center;
 `;
-
-const styles = StyleSheet.create({
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-});
