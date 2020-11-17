@@ -2,38 +2,36 @@
 import React, {useState, useEffect} from 'react';
 import {Image, View, Text} from 'react-native';
 import Styled from 'styled-components/native';
+import {ClubInterface} from '~/@types/Gombang';
 // 컴포넌트
-import {Styles} from '~/@types/basic_style';
-import {URL} from '~/@types/Gombang';
-import AsyncStorage from '@react-native-community/async-storage'
+import Styles from '~/Components/InputText';
+const URL = 'http://133.186.159.137:3000';
+
 // 메인 -> 즐겨찾기 동아리 목록 페이지
 const FavoritesPage = () => {
-  const [userId,setUserId]=useState<string|null>('')
-  const [clubs, setClubs] = useState<Array<any>>([]);
+  const [clubs, setClubs] = useState<ClubInterface[]>([]);
   const [emptyList, setEmptyList] = useState(false);
 
-  const axios = require('axios');  
   useEffect(() => {
-    AsyncStorage.getItem('UserId').then((val)=>setUserId(val))
     try {
       (async () => {
-          await axios.get(`${URL}/user/${userId}`)
-          .then((res:any)=>{
-            console.log(res.data.favoriteClub)
-            if(res.data.favoriteClub===undefined) setEmptyList(true)
-            else{
-              setEmptyList(false)
-              setClubs(res.data.favoriteClub)
-            }
-          })
+        const response = await fetch(`${URL}/club`, {
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json',
+          },
+        });
 
-      })()
-
-        
+        const fav_clubs = await response.json();
+        setClubs(fav_clubs);
+        if (fav_clubs === null) {
+          setEmptyList(true);
+        }
+      })();
     } catch (e) {
       console.log('Failed to fetch the data from storage');
     }
-  }, [userId]);
+  }, []);
 
   const isEmpty = emptyList;
 
@@ -42,13 +40,14 @@ const FavoritesPage = () => {
       <View style={{flex: 1, backgroundColor: 'white'}}>
         {clubs.map((club) => {
           return (
-            <ListContainer key={club.id.toString()}>
-              <Section>
+            <ListContainer>
+              <ListItem>
                 <ItemContainer>
                   <Image
                     source={{
                       uri: `${URL}/image/${club.image}`,
                     }}
+                    key={club._id}
                     style={{
                       width: 50,
                       height: 50,
@@ -59,7 +58,7 @@ const FavoritesPage = () => {
                 <ItemContainer>
                   <Text style={Styles.b_b_font}>{club.name}</Text>
                 </ItemContainer>
-                </Section>
+              </ListItem>
             </ListContainer>
           );
         })}
@@ -74,26 +73,20 @@ const FavoritesPage = () => {
     );
 };
 
-
-
 const ListContainer = Styled.View`
   height: 65px;
   borderBottomWidth: 2px;
   borderColor: #D5D8DC;
   marginHorizontal: 15px;
-  flexDirection: row;
-  width: 330px;
-  justify-content:space-between;
-`;
-const Section = Styled.View`
-    flexDirection: row;
-    alignItems:center;
 `;
 const ItemContainer = Styled.View`
   justify-content:center;
-  margin:10px;
 `;
-
+const ListItem = Styled.View`
+  width: 100%;
+  flex: 1;
+  flexDirection: row;
+`;
 const InfoView = Styled.View`
 flex:1;
 backgroundColor:white;

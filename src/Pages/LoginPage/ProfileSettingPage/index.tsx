@@ -1,84 +1,64 @@
 // 기본 프로필 설정
 
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
+  Image,
+  TouchableOpacity,
   Text,
   TextInput,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
   ScrollView,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import Styled from 'styled-components/native';
 import {Picker} from '@react-native-community/picker';
+import Icon from 'react-native-vector-icons/Ionicons';
 // 컴포넌트
-import {Styles, Color} from '~/@types/basic_style';
+import Styles, {Color} from '~/Components/InputText';
 import {LongButton} from '~/Components/Button';
-import AddPhoto from '~/Components/AddPhoto';
-import AsyncStorage from '@react-native-community/async-storage';
-import {URL} from '~/@types/Gombang'
-
-
-let campus: string | number;
-let college: string | number;
-let department: string | number;
-let year: string | number | ((prevState: string | undefined) => string | undefined) | undefined;
-let month: string | number;
-let date: string | number;
 
 const ProfileSettingPage = () => {
-  const axios = require('axios')
-  useEffect(()=>
-    set()
-  )
-  const set =()=>{
-    AsyncStorage.getItem('kakaoId').then((value) => {
-     setKakaoId(value);})
-    AsyncStorage.getItem('fbToken').then((value) => {
-     setFbToken(value);})
-    AsyncStorage.getItem('email').then((value) => {
-      setMail(value+'@dankook.ac.kr');
-    });    
-  }
-  const [kakaoId,setKakaoId] = useState<null|string>('');
-  const [fbToken,setFbToken] = useState<null|string>('');
-  const [mail,setMail] = useState<string|null>('');
-  const [photo,setPhoto] = useState<null|string>('');
+  const navigation = useNavigation();
   const [name, setName] = useState<string>();
-  const [studentNum, setStudentNum] = useState<string>();
   const [phone, setPhone] = useState<string>();
   const [birth, setBirth] = useState<string>();
 
-  const onPress = () => {
-    (async () => {
-      setBirth(year+'.'+month+'.'+date)
-      AsyncStorage.getItem('userImg').then((value) => {
-            setPhoto(value);
-      });
-      await axios.post(`${URL}/user`,{
-        
-        'kakaoId': kakaoId,
-        'token': fbToken,
-        'name': name,
-        'email': mail,
-        'phone': phone,
-        'birth': birth,
-        'campus': campus,
-        'college':college,
-        'department' :department,
-        'studentNumber': studentNum,
-        })
-       .then((response: any) => {
-           AsyncStorage.setItem('isLogin', JSON.stringify(true))
-           console.log(response);
-       })
-        .catch((err: any) => {
-          console.log(err);
-        });
-        
-    })();
-  };
+  // let photo = {uri: source.uri};
+  // let formdata = new FormData();
 
- 
- 
+  // formdata.append('product[name]', 'test');
+  // formdata.append('product[price]', 10);
+  // formdata.append('product[category_ids][]', 2);
+  // formdata.append('product[description]', '12dsadadsa');
+  // formdata.append('product[images_attributes[0][file]]', {
+  //   uri: photo.uri,
+  //   name: 'image.jpg',
+  //   type: 'image/jpeg',
+  // });
+  // const onPress = () => {
+  //   (async () => {
+  //     const request = await fetch(`http://49.50.174.166:3000/user`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-type': 'multipart/form-data',
+  //       },
+  //       body: formdata,
+  //     })
+  //       .then((response) => {
+  //         console.log('image uploaded');
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   })();
+  // };
+  const onPress = () => {
+    navigation.navigate('DrawerNavi');
+  };
 
   return (
     <ScrollView
@@ -91,7 +71,26 @@ const ProfileSettingPage = () => {
       <View>
         <Text style={Styles.b_b_font}>기본 프로필 설정 </Text>
       </View>
-      <AddPhoto />
+      {/* 사진 */}
+      <View style={styles.imgContainer}>
+        <TouchableOpacity onPress={() => navigation.navigate('UploadPhoto')}>
+          <Image
+            style={styles.proflieImg}
+            source={{
+              uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
+            }}
+          />
+          <Icon
+            name="camera"
+            size={25}
+            color="#808B96"
+            style={{
+              position: 'absolute',
+              right: 5,
+              bottom: 5,
+            }}></Icon>
+        </TouchableOpacity>
+      </View>
       {/* 정보입력 */}
 
       <View style={{marginVertical: 20}}>
@@ -104,31 +103,14 @@ const ProfileSettingPage = () => {
           />
         </View>
         <View style={styles.InputContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginBottom: 10,
-            }}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={styles.pickContainer}>
               <DropMenuCampus />
             </View>
             <View style={styles.pickContainer}>
-              <DropMenuCol />
+              <DropMenuMajor />
             </View>
           </View>
-          <View style={styles.pickContainer}>
-            <DropMenuMajor />
-          </View>
-        </View>
-        <View style={styles.InputContainer}>
-          <TextInput
-            placeholder={'학번'}
-            onChangeText={(text) => setStudentNum(text)}
-            value={studentNum}
-            style={styles.txtInput}
-            keyboardType={'number-pad'}
-          />
         </View>
         <View style={styles.InputContainer}>
           <TextInput
@@ -136,33 +118,29 @@ const ProfileSettingPage = () => {
             onChangeText={(text) => setPhone(text)}
             value={phone}
             style={styles.txtInput}
-            keyboardType={'number-pad'}
           />
         </View>
-        <View style={styles.InputContainer}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={styles.pickContainer}>
-              <DropMenuBirthY />
+        <KeyboardAvoidingView behavior="height">
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.InputContainer}>
+              <TextInput
+                placeholder={'생년월일'}
+                onChangeText={(text) => setBirth(text)}
+                value={birth}
+                style={styles.txtInput}
+              />
             </View>
-            <View style={styles.pickContainer}>
-              <DropMenuBirthD />
-            </View>
-            <View style={styles.pickContainer}>
-              <DropMenuBirthDD />
-            </View>
-          </View>
-        </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </View>
 
       <LongButton onPress={onPress} buttonTitle={'설정완료'}></LongButton>
     </ScrollView>
   );
 };
-
 // 대학선택메뉴
-export const DropMenuCampus = () => {
+const DropMenuCampus = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
-  campus = selectedValue;
   return (
     <Picker
       selectedValue={selectedValue}
@@ -171,16 +149,15 @@ export const DropMenuCampus = () => {
       }
       mode={'dropdown'}
       style={{width: 150, height: 40}}>
-      <Picker.Item color="#808B96" label="캠퍼스" value="캠퍼스" />
+      <Picker.Item color="#808B96" label="대학" value="대학" />
       <Picker.Item color="#808B96" label="죽전" value="죽전" />
       <Picker.Item color="#808B96" label="천안" value="천안" />
     </Picker>
   );
 };
-// 대학선택메뉴
-export const DropMenuCol = () => {
+// 학과선택메뉴
+const DropMenuMajor = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('java');
-  college = selectedValue
   return (
     <Picker
       selectedValue={selectedValue}
@@ -189,140 +166,27 @@ export const DropMenuCol = () => {
       }
       mode={'dropdown'}
       style={{width: 150, height: 40, fontSize: 16}}>
-      <Picker.Item color="#808B96" label="대학" value="대학" />
-      <Picker.Item
-        color="#808B96"
-        label="소프트웨어대학"
-        value="소프트웨어대학"
-      />
-      <Picker.Item color="#808B96" label="공과대학" value="공과대학" />
-    </Picker>
-  );
-};
-// 학과 선택메뉴
-export const DropMenuMajor = () => {
-  const [selectedValue, setSelectedValue] = useState<string | number>('java');
-  department = selectedValue
-  return (
-    <Picker
-      selectedValue={selectedValue}
-      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
-        setSelectedValue(itemValue)
-      }
-      mode={'dropdown'}
-      style={{width: '100%', height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="학과" value="학과" />
       <Picker.Item
         color="#808B96"
         label="소프트웨어학과"
         value="소프트웨어학과"
       />
-      <Picker.Item color="#808B96" label="경영학과" value="경영학과" />
-    </Picker>
-  );
-};
-// 생일 선택 메뉴
-export const DropMenuBirthY = () => {
-  const [selectedValue, setSelectedValue] = useState<string | number>('java');
-  year = selectedValue
-  return (
-    <Picker
-      selectedValue={selectedValue}
-      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
-        setSelectedValue(itemValue)
-      }
-      mode={'dropdown'}
-      style={{width: 100, height: 40, fontSize: 16}}>
-      <Picker.Item color="#808B96" label="연도" value="연도" />
-      <Picker.Item color="#808B96" label="1990" value="1990" />
-      <Picker.Item color="#808B96" label="1991" value="1991" />
-      <Picker.Item color="#808B96" label="1992" value="1992" />
-      <Picker.Item color="#808B96" label="1993" value="1993" />
-      <Picker.Item color="#808B96" label="1994" value="1994" />
-      <Picker.Item color="#808B96" label="1995" value="1995" />
-      <Picker.Item color="#808B96" label="1996" value="1996" />
-      <Picker.Item color="#808B96" label="1997" value="1997" />
-      <Picker.Item color="#808B96" label="1998" value="1998" />
-      <Picker.Item color="#808B96" label="1998" value="1999" />
-      <Picker.Item color="#808B96" label="2000" value="2000" />
-    </Picker>
-  );
-};
-export const DropMenuBirthD = () => {
-  const [selectedValue, setSelectedValue] = useState<string | number>('java');
-  month = selectedValue
-  return (
-    <Picker
-      selectedValue={selectedValue}
-      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
-        setSelectedValue(itemValue)
-      }
-      mode={'dropdown'}
-      style={{width: 90, height: 40, fontSize: 16}}>
-      <Picker.Item color="#808B96" label="월" value="월" />
-      <Picker.Item color="#808B96" label="1" value="1" />
-      <Picker.Item color="#808B96" label="2" value="2" />
-      <Picker.Item color="#808B96" label="3" value="3" />
-      <Picker.Item color="#808B96" label="4" value="4" />
-      <Picker.Item color="#808B96" label="5" value="5" />
-      <Picker.Item color="#808B96" label="6" value="6" />
-      <Picker.Item color="#808B96" label="7" value="7" />
-      <Picker.Item color="#808B96" label="8" value="8" />
-      <Picker.Item color="#808B96" label="9" value="9" />
-      <Picker.Item color="#808B96" label="10" value="10" />
-      <Picker.Item color="#808B96" label="11" value="11" />
-      <Picker.Item color="#808B96" label="12" value="12" />
-    </Picker>
-  );
-};
-export const DropMenuBirthDD = () => {
-  const [selectedValue, setSelectedValue] = useState<string | number>('java');
-  date = selectedValue
-  return (
-    <Picker
-      selectedValue={selectedValue}
-      onValueChange={(itemValue: React.SetStateAction<string | number>) =>
-        setSelectedValue(itemValue)
-      }
-      mode={'dropdown'}
-      style={{width: 90, height: 40, fontSize: 16}}>
-      <Picker.Item color="#808B96" label="일" value="일" />
-      <Picker.Item color="#808B96" label="1" value="1" />
-      <Picker.Item color="#808B96" label="2" value="2" />
-      <Picker.Item color="#808B96" label="3" value="3" />
-      <Picker.Item color="#808B96" label="4" value="4" />
-      <Picker.Item color="#808B96" label="5" value="5" />
-      <Picker.Item color="#808B96" label="6" value="6" />
-      <Picker.Item color="#808B96" label="7" value="7" />
-      <Picker.Item color="#808B96" label="8" value="8" />
-      <Picker.Item color="#808B96" label="9" value="9" />
-      <Picker.Item color="#808B96" label="10" value="10" />
-      <Picker.Item color="#808B96" label="11" value="11" />
-      <Picker.Item color="#808B96" label="12" value="12" />
-      <Picker.Item color="#808B96" label="13" value="13" />
-      <Picker.Item color="#808B96" label="14" value="14" />
-      <Picker.Item color="#808B96" label="15" value="15" />
-      <Picker.Item color="#808B96" label="16" value="16" />
-      <Picker.Item color="#808B96" label="17" value="17" />
-      <Picker.Item color="#808B96" label="18" value="18" />
-      <Picker.Item color="#808B96" label="19" value="19" />
-      <Picker.Item color="#808B96" label="20" value="20" />
-      <Picker.Item color="#808B96" label="21" value="21" />
-      <Picker.Item color="#808B96" label="22" value="22" />
-      <Picker.Item color="#808B96" label="23" value="23" />
-      <Picker.Item color="#808B96" label="24" value="24" />
-      <Picker.Item color="#808B96" label="25" value="25" />
-      <Picker.Item color="#808B96" label="26" value="26" />
-      <Picker.Item color="#808B96" label="27" value="27" />
-      <Picker.Item color="#808B96" label="28" value="28" />
-      <Picker.Item color="#808B96" label="29" value="29" />
-      <Picker.Item color="#808B96" label="30" value="30" />
-      <Picker.Item color="#808B96" label="31" value="31" />
+      <Picker.Item color="#808B96" label="컴퓨터공학과" value="컴퓨터공학과" />
     </Picker>
   );
 };
 
 const styles = StyleSheet.create({
+  imgContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  proflieImg: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
   pickContainer: {
     borderWidth: 1,
     borderColor: Color.l_color,

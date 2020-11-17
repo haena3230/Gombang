@@ -2,23 +2,18 @@
 // 메일 전송을 눌렀을때
 import React, {useState} from 'react';
 import CountDown from 'react-native-countdown-component';
-import {useNavigation,useRoute} from '@react-navigation/native';
-import {Text, TextInput, View, StyleSheet, Alert, Button} from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import {Text, TextInput, View, StyleSheet, Alert} from 'react-native';
 // 컴포넌트
 import {LongButton} from '~/Components/Button';
-import {Styles, Color} from '~/@types/basic_style';
+import Styles, {Color} from '~/Components/InputText';
 
 const URL = 'http://133.186.159.137:3000';
-
-
 // 인증메일 확인 페이지
 const MailPage = () => {
-
-
   const navigation = useNavigation();
   // 메일
-  const [mail, setMail] = useState('');
+  const [mail, setMail] = useState<string>();
   const [isEffectiveMail, setisEffectiveMail] = useState(false);
   // 인증코드
   const [authCode, setAuthCode] = useState<string>();
@@ -51,7 +46,7 @@ const MailPage = () => {
       Alert.alert('메일 주소를 확인해 주세요.');
     }
   };
-  const onPressCode = async () => {
+  const onPressCode = () => {
     console.log(String(code));
     console.log(String(authCode));
     if (isEffectiveMail === false) {
@@ -63,19 +58,17 @@ const MailPage = () => {
       }
       if (code !== undefined) {
         {
-          String(authCode) === String(code)? (
-              await AsyncStorage.setItem('email', mail),
-              navigation.navigate('ProfileSettingPage'),
-              setisEffectiveMail(false)
-              )
-            : (Alert.alert('인증번호를 확인해 주세요.'))
+          String(authCode) === String(code)
+            ? (navigation.navigate('ProfileSettingPage'),
+              setisEffectiveMail(false))
+            : Alert.alert('인증번호를 확인해 주세요.');
         }
       }
     }
   };
   const onFinish = () => {
     setisEffectiveMail(false),
-      Alert.alert('인증시간이 초과되었습니다. 재시도해주세요.');
+      Alert.alert('유효기간이 지났습니다. 다시 인증해주세요.');
   };
   return (
     <View style={styles.container}>
@@ -86,10 +79,9 @@ const MailPage = () => {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.textInput}
-            placeholder={'메일(학번) 입력'}
+            placeholder={'학번 입력'}
             onChangeText={(text) => setMail(text)}
             value={mail}
-            keyboardType={'number-pad'}
           />
           <View
             style={{
@@ -109,7 +101,6 @@ const MailPage = () => {
           placeholder={'인증번호 입력'}
           onChangeText={(text) => setCode(text)}
           value={code}
-          keyboardType={'number-pad'}
         />
       </View>
       <LongButton buttonTitle="시작하기" onPress={onPressCode} />

@@ -1,54 +1,22 @@
 // SearchPage index.tsx
 // 메인2
-import React, {useState,useEffect} from 'react';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {ScrollView, View, Image, Alert} from 'react-native';
+import {ScrollView, View, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
-import {Color} from '~/@types/basic_style';
-import {Picker} from '@react-native-community/picker';
-import AsyncStorage from '@react-native-community/async-storage';
+import Styles from '~/Components/InputText';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const SearchPage = () => {
-  const [selectedValue, setSelectedValue] = useState<string | number>('picker');
-  const [selectedValueC, setSelectedValueC] = useState<string | number>(
-    'picker',
-  );
-  // 선택되면 이동
-  const navigation = useNavigation();
-  useEffect(()=>{
-    setSelectedValue('죽전캠퍼스')
-    setSelectedValueC('천안캠퍼스')
-  },[selectedValue])
-  
-
   return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white', padding: 10}}>
+    <ScrollView style={{flex: 1, backgroundColor: 'white', margin: 10}}>
       <View style={{margin: 1}}>
         <BigImg
           source={{
             uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
           }}
         />
-      </View>
-      <View style={{margin: 5}}>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={(itemValue: React.SetStateAction<string | number>) => {
-            setSelectedValue(itemValue);
-            if(itemValue==='중앙동아리') navigation.navigate('SearchStackNavi');
-            else Alert.alert('준비중입니다. 죽전캠퍼스 중앙동아리를 이용해주세요.') 
-          }}
-          mode={'dropdown'}
-          style={{
-            width: '100%',
-            height: 40,
-            color: Color.b_color,
-          }}>
-          <Picker.Item label="죽전 캠퍼스" value="죽전캠퍼스" />
-          <Picker.Item label="중앙 동아리" value="중앙동아리" />
-          <Picker.Item label="일반 동아리" value="일반동아리" />
-          <Picker.Item label="연합 동아리" value="연합동아리" />
-        </Picker>
+        <List listTitle={'죽전 캠퍼스'} />
       </View>
       <View style={{margin: 1}}>
         <BigImg
@@ -56,33 +24,92 @@ const SearchPage = () => {
             uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
           }}
         />
-      </View>
-      <View style={{margin: 5}}>
-        <Picker
-          selectedValue={selectedValueC}
-          onValueChange={(itemValue: React.SetStateAction<string | number>) => {
-            setSelectedValueC(itemValue);
-            Alert.alert('준비중입니다. 죽전캠퍼스 중앙동아리를 이용해주세요.')
-          }}
-          mode={'dropdown'}
-          style={{
-            width: '100%',
-            height: 40,
-            color: Color.b_color,
-          }}>
-          <Picker.Item label="천안 캠퍼스" value="천안캠퍼스" />
-          <Picker.Item label="중앙 동아리" value="중앙동아리" />
-          <Picker.Item label="일반 동아리" value="일반동아리" />
-          <Picker.Item label="연합 동아리" value="연합동아리" />
-        </Picker>
+        <List listTitle={'천안 캠퍼스'} />
       </View>
     </ScrollView>
   );
 };
 
+// 리스트 컴포넌트
+interface ListProps {
+  listTitle: string;
+}
+const List = ({listTitle}: ListProps) => {
+  const navigation = useNavigation();
+  const [pick, setPick] = useState(false);
+  const isPicked = pick;
+  const onPress = () => {
+    if (pick === false) {
+      setPick(true);
+    } else {
+      setPick(false);
+    }
+  };
+
+  return (
+    <View>
+      <TouchableOpacity onPress={onPress}>
+        <ListContainer>
+          <View>
+            <Title>{listTitle}</Title>
+          </View>
+          <View>
+            {isPicked ? (
+              <Icon name="chevron-up-outline" size={18}></Icon>
+            ) : (
+              <Icon name="chevron-down-outline" size={18}></Icon>
+            )}
+          </View>
+        </ListContainer>
+      </TouchableOpacity>
+      {isPicked ? (
+        <View>
+          <ListMember
+            listValue={'중앙 동아리'}
+            onPressNavi={() => navigation.navigate('SearchTopTabStack')}
+          />
+          <ListMember
+            listValue={'일반 동아리'}
+            onPressNavi={() => navigation.navigate('SearchTopTabStack')}
+          />
+          <ListMember
+            listValue={'연합 동아리'}
+            onPressNavi={() => navigation.navigate('SearchTopTabStack')}
+          />
+        </View>
+      ) : (
+        <View />
+      )}
+    </View>
+  );
+};
+
+// 리스트멤버 컴포넌트
+interface ListMemberProps {
+  listValue: string;
+  onPressNavi: () => void;
+}
+const ListMember = ({listValue, onPressNavi}: ListMemberProps) => {
+  return (
+    <ListContainer>
+      <TouchableOpacity onPress={onPressNavi} style={{marginLeft: 10}}>
+        <Text style={Styles.m_b_font}>{listValue}</Text>
+      </TouchableOpacity>
+    </ListContainer>
+  );
+};
 export default SearchPage;
 
 const BigImg = Styled.Image`
   width: 100%;
   height:150px;
+`;
+const ListContainer = Styled.View`
+flex: 1;
+flexDirection: row;
+justifyContent: space-between;
+alignItems: center;
+height:50px;
+borderBottomWidth:2px;
+borderColor:#D5D8DC;
 `;

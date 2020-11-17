@@ -1,9 +1,9 @@
 // search bar
 import React, {useState} from 'react';
-import {View, TouchableOpacity, Alert, Text} from 'react-native';
+import {View, TouchableOpacity, Alert} from 'react-native';
 import Modal from 'react-native-modal';
 import Styled from 'styled-components/native';
-import {Styles} from '~/@types/basic_style';
+import {MiddleTxtB} from '~/Components/InputText';
 
 // 검색바
 export const SearchBar = () => {
@@ -21,7 +21,7 @@ export const SearchBar = () => {
         <TouchableOpacity
           onPress={() => Alert.alert('test')}
           style={{justifyContent: 'center', padding: 10}}>
-          <Text style={Styles.b_b_font}>검색</Text>
+          <MiddleTxtB>검색</MiddleTxtB>
         </TouchableOpacity>
       </InsideContainer>
     </SearchBarContainer>
@@ -30,10 +30,12 @@ export const SearchBar = () => {
 
 // 모달용
 interface SearchBarModalProps {
+  BackPress: () => void;
   onPress: () => void;
   visible: boolean;
 }
 export const SearchBarModal = ({
+  BackPress,
   onPress,
   visible,
 }: SearchBarModalProps) => {
@@ -43,7 +45,7 @@ export const SearchBarModal = ({
       animationIn={'slideInDown'}
       animationOut={'slideOutUp'}
       backdropOpacity={0.6}
-      onBackdropPress={onPress}>
+      onBackdropPress={BackPress}>
       <SearchBar />
     </Modal>
   );

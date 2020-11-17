@@ -1,6 +1,6 @@
 // 카카오 로그아웃
 import KakaoLogins from '@react-native-seoul/kakao-login';
-import {Alert} from 'react-native';
+
 if (!KakaoLogins) {
   console.error('Module is Not Linked');
 }
@@ -30,21 +30,3 @@ export function KakaoLogout() {
       console.log(`Logout Failed:${err.code} ${err.message}`);
     });
 }
-
-export const Logout=()=>{
-    Alert.alert('', '로그아웃 하시겠습니까?', [
-        {
-          text: '취소',
-          onPress: () => {
-            return null;
-          },
-        },
-        {
-          text: '확인',
-          onPress: () => {
-            KakaoLogout();
-          },
-        },
-      ])
-}
- 
