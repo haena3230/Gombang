@@ -1,43 +1,49 @@
 // App.tsx
-import * as React from 'react'; 
+import React,{useState,useEffect} from 'react'; 
 import {MenuProvider} from 'react-native-popup-menu';
+import {createStore,combineReducers,Reducer,Store} from 'redux'
+import {Provider} from 'react-redux'
+import {loginReducers} from '~/Store/reducer'
 
-// for navigator
 import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
-import {useState,useEffect} from 'react'
-// import Naviator
 import DrawerNavi from './Pages/Navigator';
 import {LoginStackNavi} from './Pages/Navigator';
 import AsyncStorage from '@react-native-community/async-storage';
+import SplashScreen from 'react-native-splash-screen'
 
-
+const rootReducer:Reducer = combineReducers({
+  login:loginReducers,
+})
+const store:Store = createStore(rootReducer)
 
 // 화면 구성
 export default function App() {
-  const[status,setStatus] = useState<null|string>('');
-  const[isLogged,setIsLogged] = useState(false);
+  setTimeout(()=>{
+       SplashScreen.hide()
+  },1000)
+  const [isToken,setIsToken] = useState(false)
   useEffect(()=>{
-    //  AsyncStorage.setItem('isLogin', JSON.stringify(false))
-    console.log('e')
-    AsyncStorage.getItem('isLogin').then((value) => {
-        setStatus(value);
-    });
-    if(status=='true'){
-      setIsLogged(true)
-    }
-    else setIsLogged(false)
-  },[isLogged])
+        AsyncStorage.getItem('fbToken').then((value) => {
+        if(value==null) setIsToken(false)
+        else setIsToken(true)
+        })
+  },[])
   
+
+ 
   return (
-    <MenuProvider>
-    <NavigationContainer>
-      {isLogged?(
-        <DrawerNavi />
-      ):(
-        <LoginStackNavi />
-      )}
+    <Provider store ={store}>
+      <MenuProvider>
+      <NavigationContainer>
+        {isToken?(
+          <DrawerNavi />
+        ):( 
+          <LoginStackNavi />
+        )}
     </NavigationContainer>
-    </MenuProvider>
+      </MenuProvider>
+    </Provider>
   );
+  
 }
