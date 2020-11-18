@@ -7,11 +7,14 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  Alert
+  Alert,
+  Button,
+  TextInput
 } from 'react-native';
 import {Styles,Color} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+
 
 const EventPage = () => {
   const navigation=useNavigation()
@@ -66,4 +69,6 @@ const styles = StyleSheet.create({
  
 });
 
-export default EventPage;
+export default EventPage
+
+

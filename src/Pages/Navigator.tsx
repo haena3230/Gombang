@@ -983,6 +983,7 @@ export function LoginStackNavi() {
       <Stack.Screen name="LoginPage" component={LoginPage} />
       <Stack.Screen name="MailPage" component={MailPage} />
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
+      <Stack.Screen name="MainPage" component={DrawerNavi} />
     </Stack.Navigator>
   );
 }

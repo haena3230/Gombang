@@ -7,38 +7,42 @@ import {
   Text,
   TextInput,
   ScrollView,
+  Button,
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
+import {useSelector} from 'react-redux'
 // 컴포넌트
 import {Styles, Color} from '~/@types/basic_style';
 import {LongButton} from '~/Components/Button';
 import AddPhoto from '~/Components/AddPhoto';
 import AsyncStorage from '@react-native-community/async-storage';
 import {URL} from '~/@types/Gombang'
+import {useNavigation} from '@react-navigation/native';
 
 
 let campus: string | number;
 let college: string | number;
 let department: string | number;
-let year: string | number | ((prevState: string | undefined) => string | undefined) | undefined;
+let year: string | number ;
 let month: string | number;
 let date: string | number;
 
 const ProfileSettingPage = () => {
+  const navigation = useNavigation()
   const axios = require('axios')
-  useEffect(()=>
+  useEffect(()=>{
     set()
-  )
+    setBirth(year+'.'+month+'.'+date)
+  },[date])
+    
+  
   const set =()=>{
-    AsyncStorage.getItem('kakaoId').then((value) => {
-     setKakaoId(value);})
     AsyncStorage.getItem('fbToken').then((value) => {
      setFbToken(value);})
     AsyncStorage.getItem('email').then((value) => {
       setMail(value+'@dankook.ac.kr');
     });    
   }
-  const [kakaoId,setKakaoId] = useState<null|string>('');
   const [fbToken,setFbToken] = useState<null|string>('');
   const [mail,setMail] = useState<string|null>('');
   const [photo,setPhoto] = useState<null|string>('');
@@ -47,9 +51,11 @@ const ProfileSettingPage = () => {
   const [phone, setPhone] = useState<string>();
   const [birth, setBirth] = useState<string>();
 
+  const kakaoId =useSelector((state)=>state.login.kakaoId)
+
   const onPress = () => {
+    
     (async () => {
-      setBirth(year+'.'+month+'.'+date)
       AsyncStorage.getItem('userImg').then((value) => {
             setPhoto(value);
       });
@@ -67,14 +73,13 @@ const ProfileSettingPage = () => {
         'studentNumber': studentNum,
         })
        .then((response: any) => {
-           AsyncStorage.setItem('isLogin', JSON.stringify(true))
-           console.log(response);
+           AsyncStorage.setItem('UserId', JSON.stringify(response.data.id))
        })
         .catch((err: any) => {
           console.log(err);
         });
-        
-    })();
+        navigation.navigate('MainPage')
+    })();    
   };
 
  
@@ -93,7 +98,6 @@ const ProfileSettingPage = () => {
       </View>
       <AddPhoto />
       {/* 정보입력 */}
-
       <View style={{marginVertical: 20}}>
         <View style={styles.InputContainer}>
           <TextInput

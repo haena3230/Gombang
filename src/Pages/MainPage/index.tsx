@@ -1,7 +1,7 @@
 // MainPage index.tsx
 // 메인1
 
-import React, {Component, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   View,
@@ -10,28 +10,32 @@ import {
   Image,
   Text,
   Alert,
+  Button,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage'
+import {useSelector,useDispatch} from 'react-redux'
 
 // interface
 import {URL} from '~/@types/Gombang';
 
+
 // 컴포넌트
 import FavoritesPage from './FavoritesPage';
 import {Styles, Color} from '~/@types/basic_style';
+import { userIdAction } from '~/Store/actions';
 
 // main 페이지
 export default function MainPage() {
    const navigation = useNavigation();
-
-  return (
+     return (
     <ScrollView style={{backgroundColor: 'white'}}>
       {/* 이벤트 슬라이드 */}
       <EventSlide />
+      
       <View style={{margin: 5}}>
         {/* 동아리 리스트 */}
         <View>
@@ -118,17 +122,26 @@ interface UsersClubListProps {
 }
 
 const UsersClubList = ({onPress}: UsersClubListProps) => {
-  const [clubs, setClubs] = useState<Array<any>>([]);
+  const[clubs, setClubs] = useState<Array<any>>([]);  
+  const dispatch = useDispatch()
+  const storeUserId=(inputId:string|null)=>{
+    dispatch(userIdAction(inputId))
+  }
   useEffect(()=>{
         try { 
         (async () => {
-          const id = await AsyncStorage.getItem('UserId')
- 
-          axios.get(`${URL}/user/${id}`)
+          const userId = await AsyncStorage.getItem('UserId')
+          storeUserId(userId)
+          axios.get(`${URL}/user/${userId}`)
           .then((res:any)=>{
-              if(res.status==200) {setEmpty(false)}
-              else {setEmpty(true)} 
-              setClubs(res.data.signedClub)
+              if(res.status==200) {
+                setEmpty(false)
+                setClubs(res.data.signedClub)
+              }
+              else {
+                setEmpty(true)
+              } 
+              
           })
         })();
          } catch (e) {

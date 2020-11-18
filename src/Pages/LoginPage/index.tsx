@@ -1,25 +1,30 @@
 //LoginPage index.tsx
-import React, {useState,useEffect,useContext,createContext} from 'react';
+import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Button} from 'react-native';
 import KakaoLogins from '@react-native-seoul/kakao-login';
 import {URL} from '~/@types/Gombang';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage'
+import {useDispatch} from 'react-redux'
 // 토큰 얻기
 import iid from '@react-native-firebase/iid';
+import {loginStateAction } from '~/Store/actions';
+
 
 
 
 // 로그인 페이지
 const LoginPage = () => {
-
+  const dispatch=useDispatch()
   let data;
   let pdata: { id: string; };
   let kakaoId: string;
   
   const navigation=useNavigation();
   
-
+  const storeKakaoId=(inputId:string)=>{
+    dispatch(loginStateAction(inputId))
+  }
   // 아이디 체크
   const checkId=()=>{
     const axios = require('axios')
@@ -29,14 +34,13 @@ const LoginPage = () => {
         .then((res:any)=>{
            // id존재안함
             if(res.status===204){
-            AsyncStorage.setItem('isLogin', JSON.stringify(false))
-            AsyncStorage.setItem('UserId', JSON.stringify(res.data.id))
             navigation.navigate('MailPage')
             }
             // id존재함
             else if(res.status===200){
-            AsyncStorage.setItem('isLogin', JSON.stringify(true))
-            AsyncStorage.setItem('UserId', JSON.stringify(res.data.id))
+              AsyncStorage.setItem('UserId', JSON.stringify(res.data.id))
+              navigation.navigate('MainPage')
+              
           }
         })  
       })();
@@ -49,7 +53,7 @@ const LoginPage = () => {
   async function getFBToken() {
     const fbtoken = await iid().getToken();
     AsyncStorage.setItem('fbToken', fbtoken)
-    console.log(fbtoken)
+    console.log('firebase Token : '+ fbtoken)
   }
   return (
     <View style={styles.LoginContainer}>
@@ -62,7 +66,7 @@ const LoginPage = () => {
                 data = JSON.stringify(profile)
                 pdata = JSON.parse(data)
                 kakaoId=pdata.id;
-                AsyncStorage.setItem('kakaoId', kakaoId)
+                storeKakaoId(kakaoId)
                 console.log("kakao id : " + pdata.id);
               });
               console.log(`Login Finished:${JSON.stringify(result)}`);
@@ -107,3 +111,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+

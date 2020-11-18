@@ -4,21 +4,17 @@ import {
   ScrollView,
   Text,
   View,
-  StyleSheet,
   TouchableOpacity,
   Image,
-  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Styled from 'styled-components/native';
 import {Styles, Color} from '~/@types/basic_style';
-import {useNavigation} from '@react-navigation/native';
 import SearchPopupPage from './SearchPopupPage';
 import SearchQAPage from './SearchPopupPage/SearchQAPage';
 import {ApplicationForm} from './SearchPopupPage/ApplicationForm';
 import {HashTagIcon} from '~/Components/HashTag';
-import AsyncStorage from '@react-native-community/async-storage'
-
+import {useSelector} from 'react-redux';
 import {URL} from '~/@types/Gombang'
 
 
@@ -26,7 +22,7 @@ import {URL} from '~/@types/Gombang'
 // 종류별 동아리 리스트
 export const TestFirst = () => {
   const axios = require('axios')
-  const navigation = useNavigation();
+  const userId = useSelector((state)=>state.login.userId)
   const [clubs, setClubs] = useState<Array<any>>([]);
   const [emptyList, setEmptyList] = useState(false);
   // 모집중
@@ -34,10 +30,7 @@ export const TestFirst = () => {
   const onPressR = () => {
     if (recruitBtn === false) setRecruitBtn(true);
     else setRecruitBtn(false);
-  };
-  // 즐겨찾기 
-  const [userId,setUserId] = useState<string|null>('')
-  
+  }; 
   
   // 동아리 홍보창 띄우기
   const [isPage, setIsPage] = useState(false);
@@ -65,10 +58,10 @@ export const TestFirst = () => {
     setIsPage(true);
   };
   useEffect(() => {
-    AsyncStorage.getItem('UserId').then((val)=>setUserId(val))
+    
     try {
       (async () => {
-        await axios.get(`${URL}/club`)
+        axios.get(`${URL}/club/죽전/중앙동아리/${userId}`)
         .then((response:any)=>{
             setClubs(response.data); 
             if (response.status === 204) {
@@ -79,9 +72,9 @@ export const TestFirst = () => {
     } catch (e) {
       console.log('Failed to fetch the data from storage');
     }
-  }, []);
+  }, [clubs]);
 
-  const isEmpty = emptyList;
+  
 
     return (
       <ScrollView
@@ -92,7 +85,7 @@ export const TestFirst = () => {
         }}>
         <Recruitment onPress={onPressR} isPicked={recruitBtn} />
         {/* 데이터 없을때 */}
-        {isEmpty?(
+        {emptyList?(
           <InfoView>
            <Text style={Styles.m_g_font}>데이터 준비중...</Text>
           </InfoView>
@@ -135,15 +128,15 @@ export const TestFirst = () => {
                           <ItemContainer>
                             <RecruitmentIcon />
                           </ItemContainer>
-                          <FavoriteIcon userId={userId} clubId={club.id}/>
+                          {/* <FavoriteIcon userId={userId} clubId={club.id}/> */}
                         </ListItem>
+                         <HashtagContainer >
                       {club.hashtags.map((tag:any)=>{
                         return(
-                        <HashtagContainer key = {tag.hashtagId.toString()}>
-                          <HashTagIcon text={tag.hashtag} />
-                        </HashtagContainer>
+                          <HashTagIcon key = {tag.hashtagId.toString()} text={tag.hashtag} />
                         )
                       })}
+                      </HashtagContainer>
                     </ListContainer>
                   ):(
                     null
@@ -188,15 +181,15 @@ export const TestFirst = () => {
                         null
                       )}
                     </ItemContainer>
-                    <FavoriteIcon userId={userId} clubId={club.id} />
+                    <FavoriteIcon favState={club.favorite} userId = {userId} clubId={club.id}/>
                   </ListItem>
+                  <HashtagContainer>
                     {club.hashtags.map((tag:any)=>{
                       return(
-                      <HashtagContainer key = {tag.hashtagId.toString()}>
-                        <HashTagIcon text={tag.hashtag} />
-                      </HashtagContainer>
+                        <HashTagIcon key = {tag.hashtagId.toString()} text={tag.hashtag} />
                       )
                     })}
+                    </HashtagContainer>
                 </ListContainer>
                 </View>
               )}
@@ -254,12 +247,11 @@ const RecruitmentIcon = () => {
 
 // 즐겨찾기 선택 아이콘
 interface FavoriteIconProps {
+  favState:number;
   userId:string;
   clubId:string;
-
 }
-const FavoriteIcon = ({userId,clubId}:FavoriteIconProps) => {
-  const [fav, setFav] = useState(false);
+const FavoriteIcon = ({favState,userId,clubId}:FavoriteIconProps) => {
   const axios=require('axios')
   const onPress=()=>{
     axios.patch(`${URL}/user/${userId}/favorite_club_list`,{
@@ -267,10 +259,9 @@ const FavoriteIcon = ({userId,clubId}:FavoriteIconProps) => {
     })
     .then((res: any)=>{
       console.log(res.data)
-      if(res.data===true)  setFav(true)
-      else if(res.data ===false) setFav(false)
     })
   }
+  
   return (
     <View
       style={{
@@ -279,7 +270,7 @@ const FavoriteIcon = ({userId,clubId}:FavoriteIconProps) => {
         justifyContent: 'center',
       }}>
       <TouchableOpacity onPress={onPress}>
-        {fav ? (
+        {favState==1 ? (
           <Icon name="star" size={20} color={'#FCF415'}></Icon>
         ) : (
           <Icon name="star-outline" size={20} color={Color.b_color}></Icon>
@@ -345,7 +336,6 @@ const ListItem = Styled.View`
   flexDirection: row;
 `;
 const HashtagContainer = Styled.View`
-  flex: 1;
   flexDirection: row;
   flexWrap: wrap;
   height:20px;

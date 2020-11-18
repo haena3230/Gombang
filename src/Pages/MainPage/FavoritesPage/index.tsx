@@ -5,16 +5,14 @@ import Styled from 'styled-components/native';
 // 컴포넌트
 import {Styles} from '~/@types/basic_style';
 import {URL} from '~/@types/Gombang';
-import AsyncStorage from '@react-native-community/async-storage'
+import {useSelector} from 'react-redux'
 // 메인 -> 즐겨찾기 동아리 목록 페이지
 const FavoritesPage = () => {
-  const [userId,setUserId]=useState<string|null>('')
   const [clubs, setClubs] = useState<Array<any>>([]);
   const [emptyList, setEmptyList] = useState(false);
-
+  const userId = useSelector((state)=>state.login.userId)
   const axios = require('axios');  
   useEffect(() => {
-    AsyncStorage.getItem('UserId').then((val)=>setUserId(val))
     try {
       (async () => {
           await axios.get(`${URL}/user/${userId}`)
