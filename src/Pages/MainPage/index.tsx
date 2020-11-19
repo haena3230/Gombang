@@ -122,6 +122,7 @@ interface UsersClubListProps {
 }
 
 const UsersClubList = ({onPress}: UsersClubListProps) => {
+  const [empty,setEmpty] = useState(true);
   const[clubs, setClubs] = useState<Array<any>>([]);  
   const dispatch = useDispatch()
   const storeUserId=(inputId:string|null)=>{
@@ -147,8 +148,7 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
          } catch (e) {
         console.log('Failed to fetch the data from storage');
          }
-     }, [clubs])
-  const [empty,setEmpty] = useState(true);
+     }, [empty])
   const axios = require('axios');  
 
   return (

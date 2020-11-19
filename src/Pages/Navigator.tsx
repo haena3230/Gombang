@@ -42,6 +42,10 @@ import CertifiedPage from './MainPage/GenerateClubPage/CertifiedPage';
 
 // search
 import SearchPage from './SearchPage';
+import SearchPopupPage from './SearchPage/SearchClubPage/SearchPopupPage'
+import SearchQAPage from './SearchPage/SearchClubPage/SearchPopupPage/SearchQAPage'
+import {ApplicationForm} from './SearchPage/SearchClubPage/SearchPopupPage/ApplicationForm'
+import SearchQPage from './SearchPage/SearchClubPage/SearchPopupPage/SearchQAPage/SearchQPage'
 // calendar
 import CalendarPage from './CalendarPage';
 import AddSchedulePage from './CalendarPage/CalendarSchedule/AddSchedulePage';
@@ -224,13 +228,7 @@ function MainStackNavi({navigation}: any) {
   // 즐겨찾기페이지 정렬편집 클릭
   const onPressEdit=()=>{
     setModalVisible(false);
-    navigation.navigate('FavEditPage')}
-  // Searchstack검색바
-  const [isBarVisible, setBarVisible] = useState(false);
-  const toggleBar = () => {
-    setBarVisible(!isBarVisible);
-  };
-  
+    navigation.navigate('FavEditPage')}  
   
   return (
     <Stack.Navigator
@@ -255,42 +253,11 @@ function MainStackNavi({navigation}: any) {
         options={{title: ' '}}
       />
       <Stack.Screen
+      options={{
+        headerShown:false,
+      }}
         name="SearchStackNavi"
         component={SearchStackNavi}
-        options={{
-          title: '중앙동아리',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-          },
-          headerRight: () => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                padding: 10,
-                alignItems: 'center',
-              }}>
-              <Icon
-                name="search"
-                onPress={toggleBar}
-                size={25}
-                color="black"
-                style={{margin: 10}}>
-                <SearchBarModal
-                  onPress={toggleBar}
-                  visible={isBarVisible}
-                />
-              </Icon>
-              <Icon
-                name="menu"
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                size={25}
-                color="black"
-              />
-            </View>
-          ),
-        }}
       />
       <Stack.Screen 
         options={{
@@ -388,9 +355,85 @@ function MainStackNavi({navigation}: any) {
 // SearchPage 메인 2번 내부 Stack Navi
 import {SearchBarModal} from '~/Components/SearchBar';
 function SearchStackNavi() {
+  const navigation=useNavigation()
+  // Searchstack검색바
+  const [isBarVisible, setBarVisible] = useState(false);
+  const toggleBar = () => {
+    setBarVisible(!isBarVisible);
+  };
   return (
     <Stack.Navigator initialRouteName="SearchTopTabNavi">
-      <Stack.Screen name="SearchTopTabStack" component={SearchTopTabNavi} />
+      <Stack.Screen 
+      options={{
+          title: '중앙동아리',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 10,
+                alignItems: 'center',
+              }}>
+              <Icon
+                name="search"
+                onPress={toggleBar}
+                size={25}
+                color="black"
+                style={{margin: 10}}>
+                <SearchBarModal
+                  onPress={toggleBar}
+                  visible={isBarVisible}
+                />
+              </Icon>
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={25}
+                color="black"
+              />
+            </View>
+          ),
+        }}
+      name="SearchTopTabNavi" component={SearchTopTabNavi} />
+      <Stack.Screen 
+        options={{
+          headerShown:false,
+        }}
+        name="SearchPopupPage" component={SearchPopupPage} />
+      <Stack.Screen 
+        options={{
+          title: 'Q&A',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: 'center',
+        }}
+        name="SearchQAPage" component={SearchQAPage} />
+        <Stack.Screen 
+        options={{
+          title: '질문하기',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: 'center',
+        }}
+        name="SearchQPage" component={SearchQPage} />
+      <Stack.Screen 
+        options={{
+           title: '가입신청서',
+            headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerTitleAlign: 'center',
+        }}
+        name="ApplicationForm" component={ApplicationForm} />
     </Stack.Navigator>
   );
 }

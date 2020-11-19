@@ -9,38 +9,76 @@ import {
 } from 'react-native';
 import {Styles, Color} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {URL} from '~/@types/Gombang'
 
-export const SearchQA = () => {
+// 답변 완료
+interface SearchQAAnsweredProps{
+  question:string;
+  createdAt:string;
+  userId:string;
+  answerState:Array<any>;
+}
+export const SearchQAAnswered = ({
+  question,
+  createdAt,
+  userId,
+  answerState,
+}:SearchQAAnsweredProps) => {
   const [btn, setBtn] = useState(false);
-  const [answer, setAnswer] = useState(false);
-  const isPressed = btn;
-  const isAnswerd = answer;
-
   const onPress = () => {
     setBtn(!btn);
   };
   return (
-    <View style={isPressed ? pickContainer : preContainer}>
-      <Question text="test 질문 입니다" isPressed={isPressed} />
+    <View style={btn ? pickContainer : preContainer}>
+      <Question text={question} isPressed={btn} />
       <StateButton
-        isAnswered={answer}
+        isAnswered={true}
         isPressed={btn}
-        writer={'testWriter'}
-        date={'2020.x.xx'}
+        writer={userId}
+        date={createdAt}
         onPress={onPress}
       />
-      {isPressed && isAnswerd ? (
-        <Answer text="test 답변 입니다." date="2020.x.xx" />
-      ) : null}
-      {isPressed && !isAnswerd ? (
-        <View style={{alignItems: 'center'}}>
-          <AnswerBar PressAButton={() => setAnswer(true)} />
-        </View>
+      {btn? (
+        <Answer text={answerState.answer} date={answerState.createdAt} />
       ) : null}
     </View>
   );
 };
 
+// 답변 미완
+
+interface SearchQAProps{
+  question:string;
+  createdAt:string;
+  userId:string;
+  qId:string;
+}
+export const SearchQA = ({
+  question,
+  createdAt,
+  userId,
+  qId,
+}:SearchQAProps) => {
+  const [btn, setBtn] = useState(false);
+  const onPress = () => {
+    setBtn(!btn);
+  };
+  return (
+    <View style={btn ? pickContainer : preContainer}>
+      <Question text={question} isPressed={btn} />
+      <StateButton
+        isAnswered={false}
+        isPressed={btn}
+        writer={userId}
+        date={createdAt}
+        onPress={onPress}
+      />
+      {btn? (
+        <AnswerBar qId={qId} userId={userId} />
+      ) : null}
+    </View>
+  );
+};
 // 질문 말풍선
 interface QuestionProps {
   text: string;
@@ -115,17 +153,28 @@ const StateButton = ({
 
 // 답변 입력창
 interface AnswerBarProps {
-  PressAButton: () => void;
+  qId:string,
+  userId:string,
 }
-const AnswerBar = ({PressAButton}: AnswerBarProps) => {
+const AnswerBar = ({qId,userId}: AnswerBarProps) => {
+  const axios= require('axios')
   const [text, setText] = useState('');
-
+  const PressAButton=()=>{
+    axios.post(`${URL}/qna/answer`,{
+      'questionId' : qId,
+      'userId' : userId,
+      'answer' : text
+    })
+    .then((res:any)=>{
+      console.log(res.status)
+    })
+  }
   return (
     <View
       style={{
         backgroundColor: Color.w_color,
         height: 40,
-        width: '90%',
+        marginHorizontal:5,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -160,7 +209,6 @@ const AnswerBar = ({PressAButton}: AnswerBarProps) => {
 // 컨테이너
 const container = StyleSheet.create({
   talkContainer: {
-    borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: Color.g_color,
     paddingVertical: 5,

@@ -10,17 +10,16 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Styled from 'styled-components/native';
 import {Styles, Color} from '~/@types/basic_style';
-import SearchPopupPage from './SearchPopupPage';
-import SearchQAPage from './SearchPopupPage/SearchQAPage';
-import {ApplicationForm} from './SearchPopupPage/ApplicationForm';
 import {HashTagIcon} from '~/Components/HashTag';
 import {useSelector} from 'react-redux';
 import {URL} from '~/@types/Gombang'
+import {useNavigation} from '@react-navigation/native'
 
 
 
 // 종류별 동아리 리스트
 export const TestFirst = () => {
+  const navigation = useNavigation()
   const axios = require('axios')
   const userId = useSelector((state)=>state.login.userId)
   const [clubs, setClubs] = useState<Array<any>>([]);
@@ -32,35 +31,9 @@ export const TestFirst = () => {
     else setRecruitBtn(false);
   }; 
   
-  // 동아리 홍보창 띄우기
-  const [isPage, setIsPage] = useState(false);
-  const popup = () => {
-    setIsPage(!isPage);
-  };
-  // QA창 띄우기
-  const [isQAPage, setIsQAPage] = useState(false);
-  const QApopup = () => {
-    setIsQAPage(true);
-  };
-  // QA창 끄기
-  const QAdown = () => {
-    setIsQAPage(false);
-    setIsPage(true);
-  };
-  // 동아리 신청서 창 띄우기
-  const [isForm, setIsForm] = useState(false);
-  const Formpopup = () => {
-    setIsForm(true);
-  };
-  // 동아리 신청서 창 끄기
-  const Formdown = () => {
-    setIsForm(false);
-    setIsPage(true);
-  };
   useEffect(() => {
     
     try {
-      (async () => {
         axios.get(`${URL}/club/죽전/중앙동아리/${userId}`)
         .then((response:any)=>{
             setClubs(response.data); 
@@ -68,7 +41,6 @@ export const TestFirst = () => {
               setEmptyList(true);
              }
         })
-      })();
     } catch (e) {
       console.log('Failed to fetch the data from storage');
     }
@@ -92,21 +64,14 @@ export const TestFirst = () => {
         ):(
           clubs.map((club) => {
           return (
-            <TouchableOpacity onPress={popup}  key={JSON.stringify(club.id)}>
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate('SearchPopupPage',{
+                clubId:club.id
+              })
+            }}  key={JSON.stringify(club.id)}>
               {/* 모집중 버튼 눌렀을때 */}
               {recruitBtn?(
                 <View>
-                  <SearchPopupPage
-                    BackPress={popup}
-                    visible={isPage}
-                    onPressQA={QApopup}
-                    onPressForm={Formpopup}
-                    clubName={club.name}
-                    clubPostImg={club.image}
-                    clubText={club.text}
-                  />
-                  <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
-                  <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
                   {club.recruitment===1?(
                       <ListContainer>
                         <ListItem>
@@ -128,7 +93,7 @@ export const TestFirst = () => {
                           <ItemContainer>
                             <RecruitmentIcon />
                           </ItemContainer>
-                          {/* <FavoriteIcon userId={userId} clubId={club.id}/> */}
+                          <FavoriteIcon favState={club.favorite} userId = {userId} clubId={club.id}/>
                         </ListItem>
                          <HashtagContainer >
                       {club.hashtags.map((tag:any)=>{
@@ -145,17 +110,6 @@ export const TestFirst = () => {
               ):(
                 // 평상시
                 <View>
-                  <SearchPopupPage
-                    BackPress={popup}
-                    visible={isPage}
-                    onPressQA={QApopup}
-                    onPressForm={Formpopup}
-                    clubName={club.name}
-                    clubPostImg={club.image}
-                    clubText={club.text}
-                  />
-                  <SearchQAPage BackPressQA={QAdown} QAvisible={isQAPage} />
-                  <ApplicationForm BackPressForm={Formdown} Formvisible={isForm} />
                <ListContainer>
                   <ListItem>
                     <ItemContainer>
@@ -324,6 +278,7 @@ const ListContainer = Styled.View`
   borderBottomWidth: 1px;
   borderColor: ${Color.l_color};
   marginHorizontal: 15px;
+  height:100px;
 `;
 const ItemContainer = Styled.View`
 justify-content:center;
