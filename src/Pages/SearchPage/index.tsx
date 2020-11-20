@@ -2,11 +2,9 @@
 // 메인2
 import React, {useState,useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {ScrollView, View, Image, Alert} from 'react-native';
-import Styled from 'styled-components/native';
+import {ScrollView, View, Image, Alert,StyleSheet} from 'react-native';
 import {Color} from '~/@types/basic_style';
 import {Picker} from '@react-native-community/picker';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const SearchPage = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('picker');
@@ -24,11 +22,8 @@ const SearchPage = () => {
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white', padding: 10}}>
       <View style={{margin: 1}}>
-        <BigImg
-          source={{
-            uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
-          }}
-        />
+        <Image style={{height:200, aspectRatio:5/3}}
+          source={require('~/Assets/Jukjeon.png')}  />
       </View>
       <View style={{margin: 5}}>
         <Picker
@@ -51,10 +46,8 @@ const SearchPage = () => {
         </Picker>
       </View>
       <View style={{margin: 1}}>
-        <BigImg
-          source={{
-            uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
-          }}
+        <Image style={{height:200, aspectRatio:5/3}}
+        source={require('~/Assets/Cheonan.png')}
         />
       </View>
       <View style={{margin: 5}}>
@@ -82,7 +75,3 @@ const SearchPage = () => {
 
 export default SearchPage;
 
-const BigImg = Styled.Image`
-  width: 100%;
-  height:150px;
-`;

@@ -2,10 +2,10 @@
 
 // Navigator.tsx 내비게이션 모음
 import React, {useState} from 'react';
-import {Alert, View, Text, Button, Image} from 'react-native';
+import {Alert, View, Text, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-community/async-storage'
+import { useSelector } from 'react-redux';
 
 // 컴포넌트
 import {Styles,Color} from '~/@types/basic_style';
@@ -34,6 +34,7 @@ import ProfileSettingPage from './LoginPage/ProfileSettingPage';
 // import Main pages
 import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
+import EventDetailPage from './MainPage/EventPage/EventDetailPage'
 import FavoritesPage from './MainPage/FavoritesPage';
 import FavEditPage from './MainPage/FavoritesPage/FavEditPage';
 import FavModal, { TwoOpModal } from '../Components/Modal';
@@ -42,6 +43,10 @@ import CertifiedPage from './MainPage/GenerateClubPage/CertifiedPage';
 
 // search
 import SearchPage from './SearchPage';
+import SearchPopupPage from './SearchPage/SearchClubPage/SearchPopupPage'
+import SearchQAPage from './SearchPage/SearchClubPage/SearchPopupPage/SearchQAPage'
+import {ApplicationForm} from './SearchPage/SearchClubPage/SearchPopupPage/ApplicationForm'
+import SearchQPage from './SearchPage/SearchClubPage/SearchPopupPage/SearchQAPage/SearchQPage'
 // calendar
 import CalendarPage from './CalendarPage';
 import AddSchedulePage from './CalendarPage/CalendarSchedule/AddSchedulePage';
@@ -59,6 +64,7 @@ import ClubMainPage from './MainPage/ClubMainPage';
 import MemberListPage from './MainPage/ClubMainPage/MemberListPage';
 import ChattingPage from './MainPage/ClubMainPage/ChattingPage';
 import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
+import ClubManagementPage from './MainPage/ClubMainPage/ClubSettingPage/ClubManagementPage'
 import ClubNoticePage from './MainPage/ClubMainPage/Stack/ClubNoticePage';
 import ClubFeedPage from './MainPage/ClubMainPage/Stack/ClubFeedPage';
 import ClubWritePage from './MainPage/ClubMainPage/Stack/ClubWritePage';
@@ -174,6 +180,7 @@ function ClubMainTabNavi() {
         name="ChattingPage"
         component={ChattingStack}
         options={{
+          
           tabBarIcon: ({focused}) =>
             focused ? (
               <Icon name="chatbox-ellipses" size={25} color="#999" />
@@ -197,8 +204,8 @@ function ClubMainTabNavi() {
       />
       {/* 동아리메인4 */}
       <Tab.Screen
-        name="ClubSettingPage"
-        component={ClubSettingPage}
+        name="ClubSettingStack"
+        component={ClubSettingStack}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -224,13 +231,7 @@ function MainStackNavi({navigation}: any) {
   // 즐겨찾기페이지 정렬편집 클릭
   const onPressEdit=()=>{
     setModalVisible(false);
-    navigation.navigate('FavEditPage')}
-  // Searchstack검색바
-  const [isBarVisible, setBarVisible] = useState(false);
-  const toggleBar = () => {
-    setBarVisible(!isBarVisible);
-  };
-  
+    navigation.navigate('FavEditPage')}  
   
   return (
     <Stack.Navigator
@@ -255,48 +256,18 @@ function MainStackNavi({navigation}: any) {
         options={{title: ' '}}
       />
       <Stack.Screen
+      options={{
+        headerShown:false,
+      }}
         name="SearchStackNavi"
         component={SearchStackNavi}
-        options={{
-          title: '중앙동아리',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: 'bold',
-          },
-          headerRight: () => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                padding: 10,
-                alignItems: 'center',
-              }}>
-              <Icon
-                name="search"
-                onPress={toggleBar}
-                size={25}
-                color="black"
-                style={{margin: 10}}>
-                <SearchBarModal
-                  onPress={toggleBar}
-                  visible={isBarVisible}
-                />
-              </Icon>
-              <Icon
-                name="menu"
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                size={25}
-                color="black"
-              />
-            </View>
-          ),
-        }}
       />
       <Stack.Screen 
         options={{
-         headerShown:false
+          title: ' ',
         }}
-        name="EventPage" component={EventPage} />
+        name="EventDetailPage" component={EventDetailPage} />
+      
       
       <Stack.Screen 
        options={{
@@ -388,9 +359,85 @@ function MainStackNavi({navigation}: any) {
 // SearchPage 메인 2번 내부 Stack Navi
 import {SearchBarModal} from '~/Components/SearchBar';
 function SearchStackNavi() {
+  const navigation=useNavigation()
+  // Searchstack검색바
+  const [isBarVisible, setBarVisible] = useState(false);
+  const toggleBar = () => {
+    setBarVisible(!isBarVisible);
+  };
   return (
     <Stack.Navigator initialRouteName="SearchTopTabNavi">
-      <Stack.Screen name="SearchTopTabStack" component={SearchTopTabNavi} />
+      <Stack.Screen 
+      options={{
+          title: '중앙동아리',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                padding: 10,
+                alignItems: 'center',
+              }}>
+              <Icon
+                name="search"
+                onPress={toggleBar}
+                size={25}
+                color="black"
+                style={{margin: 10}}>
+                <SearchBarModal
+                  onPress={toggleBar}
+                  visible={isBarVisible}
+                />
+              </Icon>
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={25}
+                color="black"
+              />
+            </View>
+          ),
+        }}
+      name="SearchTopTabNavi" component={SearchTopTabNavi} />
+      <Stack.Screen 
+        options={{
+          headerShown:false,
+        }}
+        name="SearchPopupPage" component={SearchPopupPage} />
+      <Stack.Screen 
+        options={{
+          title: 'Q&A',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: 'center',
+        }}
+        name="SearchQAPage" component={SearchQAPage} />
+        <Stack.Screen 
+        options={{
+          title: '질문하기',
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: 'center',
+        }}
+        name="SearchQPage" component={SearchQPage} />
+      <Stack.Screen 
+        options={{
+           title: '가입신청서',
+            headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+            headerTitleAlign: 'center',
+        }}
+        name="ApplicationForm" component={ApplicationForm} />
     </Stack.Navigator>
   );
 }
@@ -483,7 +530,7 @@ function PortfolioStackNavi(){
       <Stack.Screen 
         options={{
             headerStyle:{
-              backgroundColor:Color.g_color
+              backgroundColor:Color.l_color
             },
             headerTitleStyle: {
               fontSize: 18,
@@ -765,6 +812,41 @@ function ChattingStack(){
     </Stack.Navigator>
   )
 }
+
+// 동아리 설정 stack
+function ClubSettingStack(){
+  const navigation=useNavigation()
+  return(
+   <Stack.Navigator>
+      <Stack.Screen 
+      options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '내 설정',
+          headerTitleAlign: 'left',
+           headerLeft: () => (
+             <TouchableOpacity style={{margin:10}} onPress={()=>navigation.navigate('ClubMainPage')}>
+              <Icon name="home-outline" size={25}/>
+            </TouchableOpacity>
+          ),
+        }}
+        name="ClubSettingPage" component={ClubSettingPage} />
+        <Stack.Screen 
+          options={{
+              headerTitleStyle: {
+                fontSize: 18,
+                fontWeight: 'bold',
+              },
+              title: '관리자 설정',
+              headerTitleAlign: 'left',
+            }}
+            name="ClubManagementPage" component={ClubManagementPage} />
+    </Stack.Navigator>
+  )
+}
+
 //Drawer 페이지
 function DrawerNavi() {
   return (
@@ -844,11 +926,12 @@ function DrawerNavi() {
 // Drawer 컨텐츠
 
 const  CustomDrawerContent=(props) => {  
+  const nickname=useSelector((state)=>state.login.nickname)
   return (
     <DrawerContentScrollView {...props}>
           <View style = {{alignItems:'center', margin:30}}>
             <View style= {{width:80, height:80, backgroundColor:Color.l_color,borderRadius:50}} />
-            <Text style={Styles.m_b_font}>XX님</Text>
+            <Text style={Styles.m_b_font}>{nickname}님</Text>
           </View>
           <DrawerItem
             style ={{borderBottomWidth:1,borderColor:Color.l_color}}
@@ -983,6 +1066,7 @@ export function LoginStackNavi() {
       <Stack.Screen name="LoginPage" component={LoginPage} />
       <Stack.Screen name="MailPage" component={MailPage} />
       <Stack.Screen name="ProfileSettingPage" component={ProfileSettingPage} />
+      <Stack.Screen name="MainPage" component={DrawerNavi} />
     </Stack.Navigator>
   );
 }

@@ -1,6 +1,6 @@
 // PortfolioPage index.tsx
 // 메인4
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {Styles,Color} from '~/@types/basic_style';
@@ -10,9 +10,22 @@ import Plusbutton from '~/Assets/Plusbutton.svg';
 import {TwoOpModal} from '~/Components/Modal';
 import {useNavigation } from '@react-navigation/native';
 import ConfirmModal from '~/Components/Modal/ConfirmModal';
+import {URL} from '~/@types/Gombang'
+import {useSelector,useDispatch} from 'react-redux'
+import { folderIdAction } from '~/Store/actions';
 
 // 포트폴리오 페이지
 const PortfolioPage = () => {
+  const axios = require('axios')
+  const userId = useSelector((state)=>state.login.userId)
+  const[port,setPort] = useState<Array<any>>([])
+  useEffect(()=>{
+    axios.get(`${URL}/portfolio/${userId}`)
+    .then((res:any)=>{
+      console.log(res.data)
+      setPort(res.data)
+    })
+  },[])
   // 추가모달
   const [modalVisible,setModalVisible] = useState(false);
   const onPressModal=()=>{
@@ -20,11 +33,14 @@ const PortfolioPage = () => {
   }
   return (
     <View style={{flex:1,backgroundColor:Color.w_color, paddingHorizontal:20}}>
+      
     <ScrollView>
       <View style={{flexDirection:'row', flexWrap: 'wrap', justifyContent:'space-between'}}>
-        <Folder/>
-        <Folder/>
-        <Folder/>
+        {port.map((folder)=>{
+          return(
+          <Folder key = {folder.id.toString()} folderName={folder.name} isFav = {folder.isFavorite} folderId={folder.id}/>
+          )
+        })}
       </View>
     </ScrollView>
     <TouchableOpacity onPress={onPressModal} style={{position:'absolute', right:20, bottom:20}}>
@@ -35,18 +51,35 @@ const PortfolioPage = () => {
   );
 };
 
-// 폴더
-const Folder =()=>{
-  const navigation = useNavigation();
-  // 폴더 이름
-  const[folderId,setFolderId] = useState('');
 
+
+// 폴더
+interface FolderProps{
+  folderName:string;
+  isFav:boolean;
+  folderId:string;
+}
+const Folder =({folderName,isFav,folderId}:FolderProps)=>{
+  const dispatch = useDispatch()
+  const storeFolderId=(inputId:string|null)=>{
+    dispatch(folderIdAction(inputId))
+  }
+  const axios = require('axios')
+  const navigation = useNavigation();
+  useEffect(()=>{
+    setFav(isFav)
+    storeFolderId(folderId)
+  },[isFav])
   // 즐겨찾기
   const [fav,setFav]=useState(false);
   const onPressFav=()=>{
+    axios.patch(`${URL}/portfolio/folder/favorite/${folderId}`)
+    .then((res)=>{
+      console.log(res.status)
+    })
     setFav(!fav);
   }
-  const isfav=fav;
+ 
   // 폴더 이름 수정 모달
   const[modify,setModify]=useState(false);
   const onPressModify=()=>{
@@ -61,17 +94,17 @@ const Folder =()=>{
     <TouchableOpacity onPress = {()=>navigation.navigate('PortfolioStackNavi')}>
     <View style={{marginTop:20}}>
       <View style={styles.container}>
-        <TouchableOpacity style={{padding:10}} onPress={onPressFav}>
-          {isfav?
-          (<Icon name="star" size={20} />):
-          (<Icon name="star-outline" size={20} />)}
+        <TouchableOpacity style={{padding:10, height:30}} onPress={onPressFav}>
+          {fav?
+          (<Icon name="star" size={20} color={'yellow'}/>):
+          (<Icon name="star-outline" size={20} color={Color.g_color}/>)}
         </TouchableOpacity>
         <TwoOpModal fst_op='수정하기' snd_op='삭제하기' onPressMenuM={onPressModify} onPressMenuD={onPressDelete}/>
         <ModifyTitle modifyVisible={modify} onBackMT={onPressModify}/>
         <ConfirmModal isVisible={deleteF} onBack={onPressDelete} onConfirm={onPressDelete} text1={'폴더이름 폴더를'} text2 ={'삭제하시겠습니까?'}/>
       </View>
       <View style={{margin:1}}>
-        <Text style={Styles.s_b_font}>test</Text>
+          <Text style={Styles.s_b_font}>{folderName}</Text>
       </View>
     </View>
     </TouchableOpacity>

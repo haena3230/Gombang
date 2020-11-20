@@ -1,18 +1,17 @@
 // 큐앤에이 페이지
 
-import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
-import {SearchQA} from './SearchQA';
-import {Styles, Color} from '~/@types/basic_style';
-import Modal from 'react-native-modal';
+import React, {useEffect, useState} from 'react';
+import {Text, View, TouchableOpacity, ScrollView, Button} from 'react-native';
+import {SearchQAAnswered,SearchQA} from './SearchQA';
+import {Styles, Color,Page} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ONButton,OFFButton} from '~/Components/Button/OnOffButton';
 import { WriteBtn } from '~/Components/Button/WriteBtn';
-interface SearchQAPageProps {
-  BackPressQA: () => void;
-  QAvisible: boolean;
-}
-const SearchQAPage = ({BackPressQA, QAvisible}: SearchQAPageProps) => {
+import {URL} from '~/@types/Gombang'
+import  {useSelector} from 'react-redux'
+import { useNavigation } from '@react-navigation/native';
+const SearchQAPage = ({route}:any) => {
+  // 정렬
   const [isListFirst, setIsListFirst] = useState(true);
   const [isListSecond, setIsListSecond] = useState(false);
   const [isListThird, setIsListThird] = useState(false);
@@ -31,41 +30,29 @@ const SearchQAPage = ({BackPressQA, QAvisible}: SearchQAPageProps) => {
     setIsListSecond(false);
     setIsListThird(true);
   };
+  // 데이터 연결
+  const userId = useSelector((state)=>state.login.userId)
+  const {clubId} = route.params
+  const axios=require('axios')
+  const[empty,setEmpty] = useState(true)
+  const[list,setList] = useState<Array<any>>([])
+  useEffect(()=>{
+    try{
+      axios.get(`${URL}/qna/${clubId}`)
+      .then((res:any)=>{
+        if(res.status===200) {
+          setEmpty(false) 
+          setList(res.data)
+        }
+      })
+    }catch(e){
+     console.log('Failed to fetch the data from storage'); 
+    }
+  },[list])
 
+  const navigation =useNavigation()
   return (
-    <Modal
-      onBackdropPress={BackPressQA}
-      isVisible={QAvisible}
-      backdropOpacity={1}
-      animationIn={'slideInLeft'}
-      animationOut={'slideOutLeft'}
-      hasBackdrop={true}
-      backdropColor={Color.w_color}
-      // 안드로이드 백버튼
-      // onBackButtonPress={() => null}
-    >
-      {/* 헤더 */}
-      <View
-        style={{
-          height: 40,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          borderBottomWidth: 1,
-          borderColor: Color.l_color,
-        }}>
-        <View style={{justifyContent: 'center'}}>
-          <Text style={Styles.b_b_font}>Q&A</Text>
-        </View>
-        <TouchableOpacity
-          style={{position: 'absolute', left: 0}}
-          onPress={BackPressQA}>
-          <Icon
-            name="arrow-back-outline"
-            size={30}
-            color={Color.g_color}></Icon>
-        </TouchableOpacity>
-      </View>
+    <View style={{backgroundColor:Color.w_color,flex:1,padding:10}}>
       {/* 정렬 */}
       <Listalign
         onPressF={onPressF}
@@ -75,27 +62,55 @@ const SearchQAPage = ({BackPressQA, QAvisible}: SearchQAPageProps) => {
         onPressT={onPressT}
         isPickedT={isListThird}
       />
+      {/* <Button title={'test'} onPress={onPress} /> */}
       {/* 몸통 */}
-      <View style={{flex: 1, backgroundColor: Color.w_color}}>
+      {empty?(null):(
         <ScrollView>
-          <View>
-            <SearchQA />
-            <SearchQA />
-            <SearchQA />
-            <SearchQA />
-            <SearchQA />
-          </View>
+          {list.map((qna)=>{
+            return(
+              <View>
+                {qna.Answer===null?(
+                  // 답변없는거
+                  <SearchQA key = {qna.id.toString()} 
+                    question={qna.question} 
+                    userId={qna.User.name} 
+                    createdAt={qna.createdAt}
+                    qId={qna.id}
+                   />
+                ):(
+                  // 답변 있는거
+                  <SearchQAAnswered key = {qna.id.toString()} 
+                    question={qna.question} 
+                    userId={qna.User.name} 
+                    createdAt={qna.createdAt}
+                    answerState={qna.Answer}
+                    />
+                )}
+              
+              </View>
+            ) 
+          })}
         </ScrollView>
+      )}
         {/* 질문하기 */}
-        <View
+        <TouchableOpacity
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            flex:1,
+            position:'absolute',
+            bottom:10,
+            left:130,
+
+          }}
+          onPress={()=>{
+            navigation.navigate('SearchQPage',{
+              clubId:clubId,
+              userId:userId
+            })
           }}>
           <WriteBtn text={'질문하기'} />
-        </View>
+        </TouchableOpacity>
+      
       </View>
-    </Modal>
   );
 };
 // List정렬

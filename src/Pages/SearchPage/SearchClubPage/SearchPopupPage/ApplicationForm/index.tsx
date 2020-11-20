@@ -7,10 +7,9 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import Modal from 'react-native-modal';
+
 import {Styles, Color} from '~/@types/basic_style';
 import Styled from 'styled-components/native';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {LongButton} from '~/Components/Button';
 import {useNavigation} from '@react-navigation/native';
 import {Picker} from '@react-native-community/picker';
@@ -23,14 +22,8 @@ import {
   DropMenuMajor,
 } from '~/Pages/LoginPage/ProfileSettingPage';
 
-interface ApplicationFormProps {
-  BackPressForm: () => void;
-  Formvisible: boolean;
-}
-export const ApplicationForm = ({
-  BackPressForm,
-  Formvisible,
-}: ApplicationFormProps) => {
+
+export const ApplicationForm = () => {
   // 이름
   const [name, setName] = useState('');
   // 학번
@@ -46,41 +39,9 @@ export const ApplicationForm = ({
   const onPress = () => {
     null;
   };
-  return (
-    <Modal
-      onBackdropPress={BackPressForm}
-      isVisible={Formvisible}
-      backdropOpacity={1}
-      animationIn={'slideInRight'}
-      animationOut={'slideOutRight'}
-      hasBackdrop={true}
-      backdropColor={Color.w_color}>
-      {/* 헤더 */}
-      <View
-        style={{
-          height: 40,
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          borderBottomWidth: 1,
-          borderColor: Color.l_color,
-        }}>
-        <View style={{justifyContent: 'center'}}>
-          <Text style={Styles.b_b_font}>가입 신청서 </Text>
-        </View>
-        <TouchableOpacity
-          style={{position: 'absolute', left: 0}}
-          onPress={BackPressForm}>
-          <Icon
-            name="arrow-back-outline"
-            size={30}
-            color={Color.g_color}></Icon>
-        </TouchableOpacity>
-      </View>
-      {/* 몸통 */}
-
+  return (    
       <ScrollView
-        style={{backgroundColor: Color.w_color, flex: 1, marginVertical: 10}}>
+        style={{backgroundColor: Color.w_color, flex: 1, padding:10}}>
         <KeyboardAvoidingView behavior={'padding'}>
           <View>
             <Text style={Styles.s_b_font}>기본 정보</Text>
@@ -160,7 +121,6 @@ export const ApplicationForm = ({
           <LongButton buttonTitle={'신청하기'} onPress={onPress} />
         </View>
       </ScrollView>
-    </Modal>
   );
 };
 

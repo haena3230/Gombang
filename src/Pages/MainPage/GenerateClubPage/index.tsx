@@ -12,10 +12,12 @@ import {useNavigation} from '@react-navigation/native';
 import {URL} from '~/@types/Gombang';
 import AsyncStorage from '@react-native-community/async-storage'
 import Modal from 'react-native-modal';
+import {useSelector} from 'react-redux'
 const GenerateClubPage=()=>{
+    const imgUri = useSelector((state)=>state.login.imageUri)
+    const imgName= useSelector((state)=>state.login.imageName)
+    
     const navigation =useNavigation();
-    const [img,setImg] = useState<string|null>('');
-    const [imgName,setImgName] = useState<string|null>('');
     const [name,setName] = useState('');
     const [campus,setCampus] = useState<string | number>('');
     const [type,setType] = useState<string | number>('');
@@ -45,10 +47,13 @@ const GenerateClubPage=()=>{
    
     const onPress=()=>{
          (async () => {
-            await AsyncStorage.getItem('userImgUri').then(async (value) => {await setImg(value)});
-            await AsyncStorage.getItem('userImgName').then(async (value) => {await setImgName(value)});
             
             const formData = new FormData();
+            // formData.append('image',{
+            //     uri:imgUri,
+            //     type:'image/jpeg',
+            //     name:imgName,
+            // })
             formData.append('name',name)
             formData.append('presidentUserId',id)
             formData.append('campus',campus)
