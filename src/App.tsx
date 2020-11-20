@@ -17,6 +17,10 @@ const rootReducer:Reducer = combineReducers({
 })
 const store:Store = createStore(rootReducer)
 
+import { Alert } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+
+
 // 화면 구성
 export default function App() {
   setTimeout(()=>{
@@ -28,6 +32,15 @@ export default function App() {
         if(value==null) setIsToken(false)
         else setIsToken(true)
         })
+  },[])
+
+    //FCM
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      //remoteMessage에 서버에서 보낸 데이터 존재
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    console.log('e')
   },[])
   
 
