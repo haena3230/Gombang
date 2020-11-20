@@ -4,10 +4,12 @@ import {View, Text, Button, ScrollView, TouchableOpacity} from 'react-native';
 import { Color, Page, Styles } from '~/@types/basic_style';
 import { SelectStar } from '~/Components/Button';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux'
 
 
 // 동아리 채팅 동아리메인2
 const ChattingPage = () => {
+  const clubId=useSelector((state)=>state.login.clubId)
   return (
     <ScrollView style={Page.page_container}>
       <ChattingRoom />

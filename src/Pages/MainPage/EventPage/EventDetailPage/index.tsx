@@ -14,7 +14,7 @@ const EventDetailPage =()=>{
              await setEvent(res.data)
              await setFile(res.data.Files)
              console.log(res.data)
-             console.log(res.data.Files.data)
+             console.log(res.data.Files)
         })
     },[])
     return(
