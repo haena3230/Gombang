@@ -10,23 +10,20 @@ import {
   Image,
   Text,
   Alert,
-  Button,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Styled from 'styled-components/native';
 import Swiper from 'react-native-swiper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage'
-import {useSelector,useDispatch} from 'react-redux'
-
-// interface
+import {useDispatch} from 'react-redux'
 import {URL} from '~/@types/Gombang';
 
 
 // 컴포넌트
 import FavoritesPage from './FavoritesPage';
 import {Styles, Color} from '~/@types/basic_style';
-import { userIdAction } from '~/Store/actions';
+import { clubIdAction, userIdAction,nicknameAction } from '~/Store/actions';
 
 // main 페이지
 export default function MainPage() {
@@ -82,17 +79,17 @@ const EventSlide = () => {
       {/* 이벤트 슬라이드 */}
       <Swiper style={styles.wrapper}>
         <View style={styles.slide}>
-          <TouchableOpacity onPress={() => navigation.navigate('ClubStackNavi')}>
+          <TouchableOpacity onPress={() => navigation.navigate('EventDetailPage')}>
             <Image
               source={{
-                uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
+                uri: `${URL}/image/banner1605688464246.png`,
               }}
               style={styles.bannerImg}
             />
           </TouchableOpacity>
         </View>
         <View style={styles.slide}>
-          <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+          <TouchableOpacity onPress={() => null}>
             <Image
               source={{
                 uri: 'https://via.placeholder.com/100/69ADF1/69ADF1.png',
@@ -102,7 +99,7 @@ const EventSlide = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.slide}>
-          <TouchableOpacity onPress={() => navigation.navigate('EventPage')}>
+          <TouchableOpacity onPress={() =>null}>
             <Image
               source={{
                 uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
@@ -122,12 +119,20 @@ interface UsersClubListProps {
 }
 
 const UsersClubList = ({onPress}: UsersClubListProps) => {
+  const navigation = useNavigation()
   const [empty,setEmpty] = useState(true);
   const[clubs, setClubs] = useState<Array<any>>([]);  
   const dispatch = useDispatch()
   const storeUserId=(inputId:string|null)=>{
     dispatch(userIdAction(inputId))
   }
+  const storeClubId=(inputId:string|null)=>{
+    dispatch(clubIdAction(inputId))
+  }
+  const storeNickname=(inputId:string|null)=>{
+    dispatch(nicknameAction(inputId))
+  }
+
   useEffect(()=>{
         try { 
         (async () => {
@@ -138,6 +143,7 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
               if(res.status==200) {
                 setEmpty(false)
                 setClubs(res.data.signedClub)
+                storeNickname(res.data.name)
               }
               else {
                 setEmpty(true)
@@ -171,13 +177,18 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
             return (
               // 동아리 이미지, 이름 불러오기 
               <ClubListContainer key={club.id.toString()}>
-                <ClubList>
-                  <Image
-                    style={{width: 90, height: 90}}
-                    source={{
-                      uri: `${URL}/image/${club.image}`,
-                    }}></Image>
-                </ClubList>
+                <TouchableOpacity onPress={()=>{
+                  storeClubId(club.id)
+                  navigation.navigate('ClubStackNavi')
+                }}>
+                  <ClubList>
+                    <Image
+                      style={{width: 90, height: 90}}
+                      source={{
+                        uri: `${URL}/image/${club.image}`,
+                      }}></Image>
+                  </ClubList>
+                </TouchableOpacity>
                 <Text style={Styles.s_b_font}>{club.name}</Text>
               </ClubListContainer>
             );
@@ -218,7 +229,7 @@ const CalendarSchedule = ({onPress}: CalendarScheduleProps) => {
   return (
     <View style={{padding: 5}}>
       <ScheduleBox>
-        <Text style={Styles.m_b_font}>OO동아리 OT</Text>
+        <Text style={Styles.m_b_font}>이지스 OT</Text>
         <Text style={Styles.m_b_font}>D-5</Text>
       </ScheduleBox>
       <ScheduleBox onPress={onPress}>

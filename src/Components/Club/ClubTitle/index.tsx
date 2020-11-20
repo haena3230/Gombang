@@ -2,19 +2,29 @@
 import React from 'react';
 import {View,Image,Text,TouchableOpacity} from 'react-native'
 import { Color,Styles } from '~/@types/basic_style';
-
-const ClubTitle=()=>{
+import {URL} from '~/@types/Gombang'
+interface ClubTitleProps{
+    clubName:(name:any)=>void;
+    clubUserNum:(memberCount: any)=>void;
+    clubImg:(image:any)=>void;
+}
+const ClubTitle=({clubName,clubUserNum,clubImg}:ClubTitleProps)=>{
     return(
         <View style={{width:'100%', aspectRatio:5/1, backgroundColor:Color.w_color, flexDirection:'row'}}>
             <TouchableOpacity onPress={()=>null} style={{width:'30%', bottom:20}}>
-                <Image 
-                    source={{  uri: 'https://via.placeholder.com/100/ABB000/ABB2B9.png',}}
+                {clubImg!==null?(
+                    <Image 
+                    source={{  uri: `${URL}/image/${clubImg}`,}}
                     style={{width:'70%',aspectRatio:1, borderRadius:200, marginLeft:20}}
                     />
+                ):(
+                    <View style={{width:'70%',aspectRatio:1, borderRadius:200, marginLeft:20}}/>
+                )}
+                
             </TouchableOpacity>
             <View style={{margin:10}}>
-                <Text style={Styles.m_b_font}>떙떙동아리</Text>
-                <Text style={Styles.ss_b_font}>회원수 99명</Text>
+                <Text style={Styles.b_b_font}>{clubName}</Text>
+                <Text style={Styles.s_b_font}>회원수 {clubUserNum}명</Text>
             </View>
             
         </View>

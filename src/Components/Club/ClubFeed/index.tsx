@@ -9,42 +9,61 @@ import {
   MenuOption,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import AlignPhoto from '~/Components/FeedPhoto'
 import { useNavigation } from '@react-navigation/native';
+import {URL} from '~/@types/Gombang'
+import {useDispatch} from 'react-redux'
+import { stateAction } from '~/Store/actions';
 
-const ClubFeed=()=>{
+interface ClubFeedProps{
+    text:string
+    writerName:string;
+    writerImg:string;
+    createdAt:string;
+}
+
+const ClubFeed=({text,writerName,writerImg,createdAt}:ClubFeedProps)=>{
     return(
         <View style={{width:DWidth, backgroundColor:Color.w_color}}>
             <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                <ClubFeedUser />
+                <ClubFeedUser writerName={writerName} writerImg={writerImg} createdAt={createdAt}/>
                 <ClubFeedMenu />
             </View>
             {/* textzone */}
-            <View style={{padding:20}}>
-                <Text style={Styles.m_b_font}>test입니다</Text>
-            </View>
-            <AlignPhoto />
-            <LikeCommentsBtn />
-            
-
+            {text!==null?(
+                <View style={{padding:20}}>
+                    <Text style={Styles.m_b_font}>{text}</Text>
+                </View>
+            ):(
+                null
+            )}
         </View>
     )
 }
 
 
 // 작성자 정보
-export const ClubFeedUser=()=>{
+interface ClubFeedUserProps{
+    writerName:string;
+    writerImg:string;
+    createdAt:string;
+}
+export const ClubFeedUser=({writerName,writerImg,createdAt}:ClubFeedUserProps)=>{
     return(
         <View style={{flexDirection:'row', alignItems:'center', margin:10}}>
-          <Image
-            style={{borderRadius:50, width:'20%',aspectRatio:1}}
-            source={{
-              uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-            }}
-          />
+            {writerImg!==null?(
+                <Image
+                    style={{borderRadius:50, width:'25%',aspectRatio:1}}
+                    source={{
+                    uri: `${URL}/image/${writerImg}`,
+                    }}
+                />
+            ):(
+                <View style={{borderRadius:50, width:'25%',aspectRatio:1}}/>
+            )}
+          
           <View style={{marginLeft:10}}>
-            <Text style = {Styles.m_b_font}>oo 동아리 회장</Text>  
-            <Text style ={Styles.ss_b_font}>2020년 0월 0일</Text>
+            <Text style = {Styles.m_b_font}>{writerName}</Text>  
+            <Text style ={Styles.ss_b_font}>{createdAt}</Text>
           </View>  
         </View>
     )
@@ -82,14 +101,34 @@ export const ClubFeedMenu=()=>{
 }
 
 // 좋아요
-const LikeCommentsBtn =()=>{
+interface LikeCommentsBtnProps{
+    likeCount:string;
+    commentCount:string;
+    like:boolean;
+    postId:string;
+    userId:string;
+}
+export const LikeCommentsBtn =({likeCount,commentCount,like,postId,userId}:LikeCommentsBtnProps)=>{
+    const dispatch = useDispatch()
+    const changeState=()=>{
+        dispatch(stateAction())
+    }
+    const axios=require('axios')
+    const onPressLike=()=>{
+        axios.patch(`${URL}/post/${postId}/like`,{
+            'userId':userId
+        })
+        .then((res:any)=>{
+            console.log(res.status)
+            changeState()
+
+        })
+    }
     const navigation = useNavigation();
-    const[like,setLike] = useState(false);
-    const onPressLike=()=>{setLike(!like)}
     return(
-        <View >
+        <View style={{backgroundColor:Color.w_color}}>
             <View style={{flexDirection:'row', padding:20}}>
-                <Text style={Styles.s_b_font}>좋아요 44개     댓글 43개</Text>
+                <Text style={Styles.s_b_font}>좋아요 {likeCount}개     댓글 {commentCount}개</Text>
             </View>
             <View style={{flexDirection:'row', width:DWidth, marginBottom:20}}>
                 <TouchableOpacity style={{width:DWidth/2, alignItems:'center'}} onPress={onPressLike}>

@@ -2,10 +2,10 @@
 
 // Navigator.tsx 내비게이션 모음
 import React, {useState} from 'react';
-import {Alert, View, Text, Button, Image} from 'react-native';
+import {Alert, View, Text, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import AsyncStorage from '@react-native-community/async-storage'
+import { useSelector } from 'react-redux';
 
 // 컴포넌트
 import {Styles,Color} from '~/@types/basic_style';
@@ -34,6 +34,7 @@ import ProfileSettingPage from './LoginPage/ProfileSettingPage';
 // import Main pages
 import MainPage from './MainPage';
 import EventPage from './MainPage/EventPage';
+import EventDetailPage from './MainPage/EventPage/EventDetailPage'
 import FavoritesPage from './MainPage/FavoritesPage';
 import FavEditPage from './MainPage/FavoritesPage/FavEditPage';
 import FavModal, { TwoOpModal } from '../Components/Modal';
@@ -63,6 +64,7 @@ import ClubMainPage from './MainPage/ClubMainPage';
 import MemberListPage from './MainPage/ClubMainPage/MemberListPage';
 import ChattingPage from './MainPage/ClubMainPage/ChattingPage';
 import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
+import ClubManagementPage from './MainPage/ClubMainPage/ClubSettingPage/ClubManagementPage'
 import ClubNoticePage from './MainPage/ClubMainPage/Stack/ClubNoticePage';
 import ClubFeedPage from './MainPage/ClubMainPage/Stack/ClubFeedPage';
 import ClubWritePage from './MainPage/ClubMainPage/Stack/ClubWritePage';
@@ -178,6 +180,7 @@ function ClubMainTabNavi() {
         name="ChattingPage"
         component={ChattingStack}
         options={{
+          
           tabBarIcon: ({focused}) =>
             focused ? (
               <Icon name="chatbox-ellipses" size={25} color="#999" />
@@ -201,8 +204,8 @@ function ClubMainTabNavi() {
       />
       {/* 동아리메인4 */}
       <Tab.Screen
-        name="ClubSettingPage"
-        component={ClubSettingPage}
+        name="ClubSettingStack"
+        component={ClubSettingStack}
         options={{
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -261,9 +264,10 @@ function MainStackNavi({navigation}: any) {
       />
       <Stack.Screen 
         options={{
-         headerShown:false
+          title: ' ',
         }}
-        name="EventPage" component={EventPage} />
+        name="EventDetailPage" component={EventDetailPage} />
+      
       
       <Stack.Screen 
        options={{
@@ -526,7 +530,7 @@ function PortfolioStackNavi(){
       <Stack.Screen 
         options={{
             headerStyle:{
-              backgroundColor:Color.g_color
+              backgroundColor:Color.l_color
             },
             headerTitleStyle: {
               fontSize: 18,
@@ -808,6 +812,41 @@ function ChattingStack(){
     </Stack.Navigator>
   )
 }
+
+// 동아리 설정 stack
+function ClubSettingStack(){
+  const navigation=useNavigation()
+  return(
+   <Stack.Navigator>
+      <Stack.Screen 
+      options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: 'bold',
+          },
+          title: '내 설정',
+          headerTitleAlign: 'left',
+           headerLeft: () => (
+             <TouchableOpacity style={{margin:10}} onPress={()=>navigation.navigate('ClubMainPage')}>
+              <Icon name="home-outline" size={25}/>
+            </TouchableOpacity>
+          ),
+        }}
+        name="ClubSettingPage" component={ClubSettingPage} />
+        <Stack.Screen 
+          options={{
+              headerTitleStyle: {
+                fontSize: 18,
+                fontWeight: 'bold',
+              },
+              title: '관리자 설정',
+              headerTitleAlign: 'left',
+            }}
+            name="ClubManagementPage" component={ClubManagementPage} />
+    </Stack.Navigator>
+  )
+}
+
 //Drawer 페이지
 function DrawerNavi() {
   return (
@@ -887,11 +926,12 @@ function DrawerNavi() {
 // Drawer 컨텐츠
 
 const  CustomDrawerContent=(props) => {  
+  const nickname=useSelector((state)=>state.login.nickname)
   return (
     <DrawerContentScrollView {...props}>
           <View style = {{alignItems:'center', margin:30}}>
             <View style= {{width:80, height:80, backgroundColor:Color.l_color,borderRadius:50}} />
-            <Text style={Styles.m_b_font}>XX님</Text>
+            <Text style={Styles.m_b_font}>{nickname}님</Text>
           </View>
           <DrawerItem
             style ={{borderBottomWidth:1,borderColor:Color.l_color}}

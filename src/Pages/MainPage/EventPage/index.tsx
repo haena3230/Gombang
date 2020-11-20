@@ -1,5 +1,5 @@
 // 이벤트 페이지
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,18 +8,29 @@ import {
   Image,
   TouchableOpacity,
   Alert,
-  Button,
-  TextInput
 } from 'react-native';
 import {Styles,Color} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
-
+import {URL} from '~/@types/Gombang'
 
 const EventPage = () => {
+  const axios = require('axios')
+  const [eventList ,setEventList] = useState<Array<any>>([])
+  useEffect(()=>{
+    try{
+      axios.get(`${URL}/post/event`)
+      .then((res:any)=>{
+        console.log(res.data) 
+        setEventList(res.data)
+      })
+    }catch(e){  
+      console.log('err')
+    }
+  },[])
   const navigation=useNavigation()
   return (
-    <View>
+    <View style={{flex:1,backgroundColor:Color.w_color}}>
       {/* 상단바 */}
       <View style={{backgroundColor:Color.w_color ,flexDirection:'row', height:60,alignItems:'center', justifyContent:'space-between', borderBottomWidth:1, borderBottomColor:Color.l_color}}>
         <View style={{flexDirection:'row'}}>
@@ -38,19 +49,21 @@ const EventPage = () => {
       </View>
       {/* 진행중 리스트 */}
       <View style={styles.List}>
-        <Image source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png'}} style={{aspectRatio:40/9}}/>
+        {eventList.map((event)=>{
+          return(
+            <TouchableOpacity onPress={()=>navigation.navigate('EventDetailPage')} key = {event.id.toString()}>
+              <Image source={{uri:`${URL}/image/${event.banner}`}} style={{aspectRatio:40/9}}/>
+            </TouchableOpacity>
+          )
+        })}  
       </View>
        <View style={styles.bar}>
         <Text style={Styles.m_b_font}>종료된 이벤트</Text>
       </View>
       {/* 끝난리스트 */}
       <View>
-        <View style={styles.List}>
-          <Image source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png'}} style={{aspectRatio:40/9}}/>
-        </View>
-        <View style={styles.List}>
-          <Image source={{uri:'https://via.placeholder.com/100/F169B4/F169B4.png'}} style={{aspectRatio:40/9}}/>
-        </View>
+        
+      
       </View>
     </ScrollView>
     </View>

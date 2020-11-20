@@ -1,23 +1,26 @@
 // 피드 사진 정렬
 import React from 'react';
 import {View,Image, StyleSheet} from 'react-native';
+import {URL} from '~/@types/Gombang'
 
 {/* api 연결 + 사진 있으면 보여주고 없으면 안보여주기*/}
-const AlignPhoto = ()=>{
+interface AlignPhotoProps{
+  image:string;
+}
+export const AlignPhotoOne = ({image}:AlignPhotoProps)=>{
     return(
-         <View style ={{flexDirection:'row', flexWrap:'wrap'}}>
-          <Image
-              style={Style.image}
-              source={{
-                uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-              }}
-            />
-              <Image
-              style={Style.image}
-              source={{
-                uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-              }}
-            />
+        <View style ={{flexDirection:'row', flexWrap:'wrap'}}>
+          {image!==null?(
+             <Image
+                style={Style.imageOne}
+                source={{
+                  uri: `${URL}/image/${image}`,
+                }}
+              />
+          ):(
+            <View style={Style.imageOne}/>
+          )}
+       
       </View>
     );
 }
@@ -25,12 +28,10 @@ const AlignPhoto = ()=>{
 
 const Style = StyleSheet.create({
  
-  image:{
-    width:150,
-    height:150,
-    marginLeft:10
+  imageOne:{
+    width:'100%',
+    height:50,
+    aspectRatio:1,
   },
 
 })
-
-export default AlignPhoto;

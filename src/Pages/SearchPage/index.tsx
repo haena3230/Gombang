@@ -5,7 +5,6 @@ import {useNavigation} from '@react-navigation/native';
 import {ScrollView, View, Image, Alert,StyleSheet} from 'react-native';
 import {Color} from '~/@types/basic_style';
 import {Picker} from '@react-native-community/picker';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const SearchPage = () => {
   const [selectedValue, setSelectedValue] = useState<string | number>('picker');
