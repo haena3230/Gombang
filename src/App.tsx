@@ -28,20 +28,18 @@ export default function App() {
   },1000)
   const [isToken,setIsToken] = useState(false)
   useEffect(()=>{
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+          console.log('e')
+          Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        });
         AsyncStorage.getItem('fbToken').then((value) => {
         if(value==null) setIsToken(false)
         else setIsToken(true)
         })
+        return unsubscribe;
+        
   },[])
-
-    //FCM
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      //remoteMessage에 서버에서 보낸 데이터 존재
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
-
-    console.log('e')
-  },[])
+    
   
 
  
