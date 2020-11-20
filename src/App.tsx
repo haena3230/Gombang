@@ -10,7 +10,8 @@ import {useState,useEffect} from 'react'
 import DrawerNavi from './Pages/Navigator';
 import {LoginStackNavi} from './Pages/Navigator';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { Alert } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 
 
 // 화면 구성
@@ -19,6 +20,13 @@ export default function App() {
   const[isLogged,setIsLogged] = useState(false);
   useEffect(()=>{
     //  AsyncStorage.setItem('isLogin', JSON.stringify(false))
+
+    //FCM
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      //remoteMessage에 서버에서 보낸 데이터 존재
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
     console.log('e')
     AsyncStorage.getItem('isLogin').then((value) => {
         setStatus(value);
