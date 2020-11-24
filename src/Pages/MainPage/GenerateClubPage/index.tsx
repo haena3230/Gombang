@@ -9,26 +9,20 @@ import { LongButton } from '~/Components/Button';
 import { HashTagIcon, AddHashTagButton } from '~/Components/HashTag';
 import {Styles, Color } from '~/@types/basic_style';
 import {useNavigation} from '@react-navigation/native';
-import {URL} from '~/@types/Gombang';
-import AsyncStorage from '@react-native-community/async-storage'
+
 import Modal from 'react-native-modal';
-import {useSelector} from 'react-redux'
-const GenerateClubPage=()=>{
-    const imgUri = useSelector((state)=>state.login.imageUri)
-    const imgName= useSelector((state)=>state.login.imageName)
-    
+
+const GenerateClubPage=()=>{  
+
     const navigation =useNavigation();
+    
     const [name,setName] = useState('');
     const [campus,setCampus] = useState<string | number>('');
     const [type,setType] = useState<string | number>('');
     const [classi,setClassi] = useState<string | number>('');
-    const [id,setId] = useState<string|null>('')
     const[tagArr,setTagArr] = useState<Array<string>>([]);
-    const axios = require('axios')
-    // 유저 아이디 
-    useEffect(()=>{
-        AsyncStorage.getItem('UserId').then((value) => {setId(value)})
-    },[])
+    
+
     // 해시태그 추가
     const[isVisible,setIsVisible] = useState(false);
     const toggle=()=>{
@@ -46,36 +40,13 @@ const GenerateClubPage=()=>{
     // 등록
    
     const onPress=()=>{
-         (async () => {
-            
-            const formData = new FormData();
-            // formData.append('image',{
-            //     uri:imgUri,
-            //     type:'image/jpeg',
-            //     name:imgName,
-            // })
-            formData.append('name',name)
-            formData.append('presidentUserId',id)
-            formData.append('campus',campus)
-            formData.append('type',type)
-            formData.append('classification',classi)
-            formData.append('hashtags',tagArr.toString())
-            await axios.post(`${URL}/club`,formData
-            // ,{
-            //     headers: { 'content-type': 'multipart/form-data' }
-            // }
-            )
-            .then((res: any) => {
-                console.log(res.data);
-            })
-                .catch((err: any) => {
-                console.log(err);
-                });
-                
-            })();
-        navigation.navigate('CertifiedPage')
-         
-
+        navigation.navigate('CertifiedPage',{
+            name:name,
+            campus:campus,
+            type:type,
+            classification:classi,
+            hashtags:tagArr.toString(),
+        })
     }
     return(
         <View style={{backgroundColor:Color.w_color, flex:1,padding:20}}>

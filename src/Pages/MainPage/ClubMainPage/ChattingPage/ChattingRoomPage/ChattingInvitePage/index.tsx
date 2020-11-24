@@ -3,6 +3,7 @@ import React from 'react'
 import {Image,Text,View} from 'react-native'
 import{Styles,Page, Color} from '~/@types/basic_style'
 import {SelectButton} from '~/Components/Button'
+import {URL} from '~/@types/Gombang'
 
 const ChattingInvitePage=()=>{
     return(
@@ -14,24 +15,33 @@ const ChattingInvitePage=()=>{
                 flexDirection:'row',
                 justifyContent:'space-between',
                 alignItems:'center'}}>
-                <User />
+                <User name={'김길동'} image={''}/>
                 <SelectButton />
             </View>      
         </View>
     )
 }
+interface UserProps{
+    name:string;
+    image:string;
+}
+export const User = ({name,image}:UserProps)=>{
 
-export const User = ()=>{
+
     return(
         <View style={{flexDirection:'row', alignItems:'center'}}>
             <View style={{marginHorizontal:10}}>
-                <Image 
-                style={{width:40, height:40,borderRadius:20}}
-                source={{
-                uri: 'https://via.placeholder.com/100/ABB2B9/ABB2B9.png',
+                {image===''?(
+                    <View  style={{width:40, height:40,borderRadius:20, backgroundColor:Color.l_color}}/>
+                ):(
+                    <Image 
+                    style={{width:40, height:40,borderRadius:20}}
+                    source={{
+                    uri: `${URL}/image/${image}`,
                  }}/>
+                )}
             </View>
-            <Text style={Styles.m_b_font}>양해나</Text>
+                <Text style={Styles.m_b_font}>{name}</Text>
         </View>
     )
 }

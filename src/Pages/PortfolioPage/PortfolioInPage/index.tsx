@@ -52,7 +52,7 @@ const PortfolioInPage = () => {
         )
       })}
        <View style = {Style.feedContainer}>
-        <PSFeed />
+        {/* <PSFeed /> */}
       </View>
     </ScrollView>
   );

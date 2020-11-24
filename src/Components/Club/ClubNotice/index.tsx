@@ -27,7 +27,7 @@ const ClubNotice =()=>{
 const Box=()=>{
     return(
         <View style={styles.box}>
-            <Text style={Styles.s_g_font}>공지사항test</Text>
+            <Text style={Styles.s_g_font}>11월 21일 저녁 7시 학교근처 회식 참여하실 분 모집합니다.</Text>
         </View>
     )
 }
@@ -67,7 +67,7 @@ export const Party=()=>{
 
 const styles= StyleSheet.create({
     box:{
-        width:DWidth*0.8, 
+        width:DWidth*0.9, 
         aspectRatio:9/2,
         borderWidth:1, 
         borderColor:Color.l_color,

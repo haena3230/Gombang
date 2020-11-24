@@ -3,22 +3,23 @@ import React from 'react';
 import {View,Image,Text,TouchableOpacity} from 'react-native'
 import { Color,Styles } from '~/@types/basic_style';
 import {URL} from '~/@types/Gombang'
+import Clubbasic from '~/Assets/Clubbasic.svg'
 interface ClubTitleProps{
     clubName:(name:any)=>void;
     clubUserNum:(memberCount: any)=>void;
-    clubImg:(image:any)=>void;
+    clubImg:string
 }
 const ClubTitle=({clubName,clubUserNum,clubImg}:ClubTitleProps)=>{
     return(
         <View style={{width:'100%', aspectRatio:5/1, backgroundColor:Color.w_color, flexDirection:'row'}}>
             <TouchableOpacity onPress={()=>null} style={{width:'30%', bottom:20}}>
-                {clubImg!==null?(
+                {clubImg!==''?(
                     <Image 
                     source={{  uri: `${URL}/image/${clubImg}`,}}
                     style={{width:'70%',aspectRatio:1, borderRadius:200, marginLeft:20}}
                     />
                 ):(
-                    <View style={{width:'70%',aspectRatio:1, borderRadius:200, marginLeft:20}}/>
+                    <Clubbasic style={{width:'70%',aspectRatio:1,marginLeft:20}}/>
                 )}
                 
             </TouchableOpacity>

@@ -43,6 +43,7 @@ export const Styles = StyleSheet.create({
      page_container:{
         flex:1,
         backgroundColor:Color.w_color,
+        padding:5
         
     },
 });

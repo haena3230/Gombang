@@ -10,6 +10,7 @@ import {
   Image,
   Text,
   Alert,
+  Button,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Styled from 'styled-components/native';
@@ -22,12 +23,15 @@ import {URL} from '~/@types/Gombang';
 
 // 컴포넌트
 import FavoritesPage from './FavoritesPage';
-import {Styles, Color} from '~/@types/basic_style';
-import { clubIdAction, userIdAction,nicknameAction } from '~/Store/actions';
+import {Styles, Color, DWidth} from '~/@types/basic_style';
+import { clubIdAction, userIdAction,nicknameAction, userImgAction, userDataAction } from '~/Store/actions';
+import Clubbasic from '~/Assets/Clubbasic.svg'
+
 
 // main 페이지
 export default function MainPage() {
    const navigation = useNavigation();
+ 
      return (
     <ScrollView style={{backgroundColor: 'white'}}>
       {/* 이벤트 슬라이드 */}
@@ -74,41 +78,46 @@ export default function MainPage() {
 // 컴포넌트 1 이벤트 슬라이드
 const EventSlide = () => {
   const navigation = useNavigation();
+  const axios = require('axios')
+  const[event,setEvent] = useState<Array<any>>([])
+  const [empty,setEmpty] = useState(true)
+  useEffect(()=>{
+    try{
+      axios.get(`${URL}/post/event`)
+    .then(async (res:any)=>{
+      await setEvent(res.data)
+      if(res.status===200) setEmpty(false)
+    })
+    }catch(e){
+      console.log(e)
+    }
+  },[])
   return (
     <View>
-      {/* 이벤트 슬라이드 */}
+      {empty?(
+        <View style={styles.wrapper}>
+          <Image source={require('~/Assets/banner.png')} style={styles.bannerImg} />
+        </View>
+      ):(
       <Swiper style={styles.wrapper}>
-        <View style={styles.slide}>
-          <TouchableOpacity onPress={() => navigation.navigate('EventDetailPage')}>
-            <Image
-              source={{
-                uri: `${URL}/image/banner1605688464246.png`,
-              }}
-              style={styles.bannerImg}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.slide}>
-          <TouchableOpacity onPress={() => null}>
-            <Image
-              source={{
-                uri: 'https://via.placeholder.com/100/69ADF1/69ADF1.png',
-              }}
-              style={styles.bannerImg}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.slide}>
-          <TouchableOpacity onPress={() =>null}>
-            <Image
-              source={{
-                uri: 'https://via.placeholder.com/100/F169B4/F169B4.png',
-              }}
-              style={styles.bannerImg}
-            />
-          </TouchableOpacity>
-        </View>
+        {event.map((banner)=>{
+          return(
+            <View style={styles.slide} key ={banner.id}>
+              <TouchableOpacity onPress={() => navigation.navigate('EventDetailPage',{
+                postId:banner.id
+              })}>
+                <Image
+                  source={{
+                    uri: `${URL}/image/${banner.banner}`,
+                  }}
+                  style={styles.bannerImg}
+                />
+              </TouchableOpacity>
+            </View>
+          )
+        })}
       </Swiper>
+      )}
     </View>
   );
 };
@@ -120,6 +129,7 @@ interface UsersClubListProps {
 
 const UsersClubList = ({onPress}: UsersClubListProps) => {
   const navigation = useNavigation()
+  const axios = require('axios');  
   const [empty,setEmpty] = useState(true);
   const[clubs, setClubs] = useState<Array<any>>([]);  
   const dispatch = useDispatch()
@@ -132,30 +142,38 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
   const storeNickname=(inputId:string|null)=>{
     dispatch(nicknameAction(inputId))
   }
+  const storeUserImg=(inputId:string|null)=>{
+    dispatch(userImgAction(inputId))
+  }
+  const storeUserData=(email:string|null,number:string|null,birth:string|null)=>{
+    dispatch(userDataAction(email,number,birth))
+  }
 
   useEffect(()=>{
-        try { 
-        (async () => {
-          const userId = await AsyncStorage.getItem('UserId')
-          storeUserId(userId)
-          axios.get(`${URL}/user/${userId}`)
-          .then((res:any)=>{
-              if(res.status==200) {
-                setEmpty(false)
-                setClubs(res.data.signedClub)
-                storeNickname(res.data.name)
-              }
-              else {
-                setEmpty(true)
-              } 
-              
-          })
-        })();
-         } catch (e) {
-        console.log('Failed to fetch the data from storage');
-         }
-     }, [empty])
-  const axios = require('axios');  
+      try { 
+      (async () => {
+        const userId = await AsyncStorage.getItem('UserId')
+        storeUserId(userId)
+        axios.get(`${URL}/user/${userId}`)
+        .then((res:any)=>{
+          if(res.status==200) {
+            setEmpty(false)
+            setClubs(res.data.signedClub)
+            storeNickname(res.data.name)
+            storeUserImg(res.data.image)
+            storeUserData(res.data.email,res.data.phone,res.data.birth)
+          }
+          else {
+            setEmpty(true)
+          } 
+            
+        })
+      })();
+        } catch (e) {
+      console.log('Failed to fetch the data from storage');
+        }
+    }, [])
+  
 
   return (
     <View>
@@ -182,11 +200,15 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
                   navigation.navigate('ClubStackNavi')
                 }}>
                   <ClubList>
-                    <Image
-                      style={{width: 90, height: 90}}
+                    {club.image!==''?(
+                      <Image
+                      style={{width: 100, height: 100}}
                       source={{
                         uri: `${URL}/image/${club.image}`,
-                      }}></Image>
+                      }} />
+                    ):(
+                      <Clubbasic style={{width: 100, height: 100}}/>
+                    )}
                   </ClubList>
                 </TouchableOpacity>
                 <Text style={Styles.s_b_font}>{club.name}</Text>
@@ -285,8 +307,8 @@ const styles = StyleSheet.create({
   },
   // 배너이미지
   bannerImg:{
-    width:'100%',
-    aspectRatio:40/9
+    width:DWidth,
+    height:DWidth*9/40,
   },
   // 알림일정
   scheduleListTop: {

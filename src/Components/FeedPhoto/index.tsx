@@ -10,17 +10,12 @@ interface AlignPhotoProps{
 export const AlignPhotoOne = ({image}:AlignPhotoProps)=>{
     return(
         <View style ={{flexDirection:'row', flexWrap:'wrap'}}>
-          {image!==null?(
              <Image
                 style={Style.imageOne}
                 source={{
                   uri: `${URL}/image/${image}`,
                 }}
               />
-          ):(
-            <View style={Style.imageOne}/>
-          )}
-       
       </View>
     );
 }

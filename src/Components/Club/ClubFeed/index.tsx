@@ -11,8 +11,6 @@ import {
 } from 'react-native-popup-menu';
 import { useNavigation } from '@react-navigation/native';
 import {URL} from '~/@types/Gombang'
-import {useDispatch} from 'react-redux'
-import { stateAction } from '~/Store/actions';
 
 interface ClubFeedProps{
     text:string
@@ -105,26 +103,10 @@ interface LikeCommentsBtnProps{
     likeCount:string;
     commentCount:string;
     like:boolean;
-    postId:string;
-    userId:string;
+    onPressLike:()=>void;
+    onPressComment:()=>void;
 }
-export const LikeCommentsBtn =({likeCount,commentCount,like,postId,userId}:LikeCommentsBtnProps)=>{
-    const dispatch = useDispatch()
-    const changeState=()=>{
-        dispatch(stateAction())
-    }
-    const axios=require('axios')
-    const onPressLike=()=>{
-        axios.patch(`${URL}/post/${postId}/like`,{
-            'userId':userId
-        })
-        .then((res:any)=>{
-            console.log(res.status)
-            changeState()
-
-        })
-    }
-    const navigation = useNavigation();
+export const LikeCommentsBtn =({likeCount,commentCount,like,onPressLike,onPressComment}:LikeCommentsBtnProps)=>{
     return(
         <View style={{backgroundColor:Color.w_color}}>
             <View style={{flexDirection:'row', padding:20}}>
@@ -137,7 +119,7 @@ export const LikeCommentsBtn =({likeCount,commentCount,like,postId,userId}:LikeC
                     )}
                     
                 </TouchableOpacity>
-                <TouchableOpacity style={{width:DWidth/2, alignItems:'center'}} onPress= {()=>navigation.navigate('ClubFeedPage')}>
+                <TouchableOpacity style={{width:DWidth/2, alignItems:'center'}} onPress= {onPressComment}>
                     <Text style={Styles.m_b_font}>댓글쓰기</Text>
                 </TouchableOpacity>
             </View>
@@ -167,9 +149,9 @@ export const FeedSchedule = ({onPressSD}:FeedScheduleProps)=>{
                 </View>
                 <View style={{borderWidth:1,borderColor:Color.l_color}}/>
                 <View style={{marginHorizontal:10}}>
-                     <Text style={Styles.s_g_font}>oo동아리 OT</Text>
-                    <Text style={Styles.s_g_font}>2020년 1월1일 19:00</Text>
-                    <Text style={Styles.s_g_font}>2020년 1월1일 19:00</Text>
+                     <Text style={Styles.s_g_font}>회식에 참여하실분 참가하기를 눌러주세요</Text>
+                    <Text style={Styles.s_g_font}>2020년 11월21일 19:00</Text>
+                    <Text style={Styles.s_g_font}>2020년 11월21일 19:00</Text>
                     <Text style={Styles.s_g_font}>소프트웨어ICT관</Text>
                     <Text style={Styles.s_g_font}>-</Text>
                 </View>

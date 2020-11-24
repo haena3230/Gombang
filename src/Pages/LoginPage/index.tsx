@@ -6,9 +6,13 @@ import {URL} from '~/@types/Gombang';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage'
 import {useDispatch} from 'react-redux'
+import Logoimage from '~/Assets/Logoimage.svg';
+import Logotext from '~/Assets/Logotext.svg';
 // 토큰 얻기
 import iid from '@react-native-firebase/iid';
 import {loginStateAction } from '~/Store/actions';
+import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
+import { Color,Styles } from '~/@types/basic_style';
 
 
 
@@ -57,6 +61,11 @@ const LoginPage = () => {
   }
   return (
     <View style={styles.LoginContainer}>
+      
+        <Logoimage width={100} height={100}/>
+        <Logotext width={130} height={80}/>
+        <Text style={Styles.s_b_font}>환영합니다! 로그인해주세요</Text>
+      
       <TouchableOpacity
         onPress={() =>
           // 로그인, 카카오아이디얻기
@@ -86,7 +95,7 @@ const LoginPage = () => {
         style={styles.LoginButton}>
         <Text style={styles.text}>카카오 계정으로 로그인</Text>
       
-      </TouchableOpacity>
+      </TouchableOpacity> 
     </View>
   );
 };
@@ -96,7 +105,10 @@ export default LoginPage;
 const styles = StyleSheet.create({
   LoginContainer: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor:Color.w_color,
+    justifyContent:'center',
+    alignItems:'center', 
+    
   },
 
   LoginButton: {
@@ -105,6 +117,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FEE500',
     padding: 15,
     borderRadius: 12,
+    width:300,
+    
   },
   text: {
     color: 'rgba(0,0,0,0.85)',

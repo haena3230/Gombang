@@ -5,7 +5,8 @@ export const USER_ID = 'USER_ID'
 export const CLUB_ID = 'CLUB_ID'
 export const FOLDER_ID ='FOLDER_ID' 
 export const NICKNAME='NICKNAME'
-export const STATE='STATE'
+export const USERIMG='USERIMG'
+export const USER_DATA='USER_DATA'
 
 export const loginStateAction= (text:string)=>{
     return{
@@ -14,7 +15,7 @@ export const loginStateAction= (text:string)=>{
     }
 }
 
-export const imageAction= (uri:string,name:string)=>{
+export const imageAction= (uri:string,name:string|undefined)=>{
     return{
         type:IMG_URI,
         imageUri:uri,
@@ -46,9 +47,18 @@ export const nicknameAction= (text:string|null)=>{
         nickname:text,        
     }
 }
-export const stateAction= ()=>{
+export const userImgAction= (text:string|null)=>{
     return{
-        type:STATE,
+        type:USERIMG,
+        image:text,        
+    }
+}
+export const userDataAction= (mail:string|null,number:string|null,birth:string|null)=>{
+    return{
+        type:USER_DATA,
+        email:mail,        
+        number:number,
+        birth:birth,
     }
 }
   

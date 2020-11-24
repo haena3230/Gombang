@@ -44,7 +44,9 @@ export const ApplicationForm = () => {
         style={{backgroundColor: Color.w_color, flex: 1, padding:10}}>
         <KeyboardAvoidingView behavior={'padding'}>
           <View>
-            <Text style={Styles.s_b_font}>기본 정보</Text>
+            <View style={{marginTop:10}}>
+              <Text style={Styles.s_b_font}>기본 정보</Text>
+            </View>
             <RowContainer>
               <TxtInput
                 placeholder="이름"
@@ -103,13 +105,15 @@ export const ApplicationForm = () => {
               multiline={true}
               maxLength={50}
             />
-            <Text style={Styles.s_b_font}>동아리 활동 경험</Text>
+            <View style={{marginTop:20}}>
+              <Text style={Styles.s_b_font}>동아리 활동 경험</Text>
+            </View>
             <TxtInput
               placeholder={'자유롭게 작성해주세요!\n\n\n\n\n'}
               onChangeText={(text) => setEx(text)}
               value={ex}
               width={'100%'}
-              height={100}
+              height={160}
               multiline={true}
               numberOfLines={4}
               maxLength={300}
@@ -135,7 +139,7 @@ const Gender = () => {
       }
       mode={'dropdown'}
       style={{
-        width: 100,
+        width: 130,
         height: 40,
       }}>
       <Picker.Item color="#808B96" label="성별" value="성별" />

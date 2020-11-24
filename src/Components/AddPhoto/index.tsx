@@ -7,24 +7,25 @@ import Styled from 'styled-components/native';
 import ImagePicker from 'react-native-image-picker';
 import Modal from 'react-native-modal';
 import {useDispatch} from 'react-redux'
-import {imageAction} from '~/Store/actions'
-import {URL} from '~/@types/Gombang'
+import { imageAction } from '~/Store/actions';
 // 이미지 비율 구하는 함수
 
 // 사진 업로드 메뉴
 const AddPhoto = () => {
-  const dispatch = useDispatch()
-  const storeUri=(uri:string,name:string|undefined)=>{
-    dispatch(imageAction(uri,name))
-  }
   const[uri, setUri] = useState('');
   const[photo,setPhoto]=useState(false);
+  const dispatch = useDispatch()
+  
   useEffect(()=>{
     if(uri===''){
       setPhoto(false);
     }
     else setPhoto(true);
   })
+  
+  const storeImg=(inputUri:string,inputName:string|undefined)=>{
+    dispatch(imageAction(inputUri,inputName))
+  }
 
   const options = {
     title: 'Load Photo',
@@ -40,52 +41,21 @@ const AddPhoto = () => {
       if (response.error) {
         console.log('LaunchCamera Error: ', response.error);
       } else {
-        setUri(String(response.uri));
-        storeUri(response.uri,response.fileName)
-        // AsyncStorage.setItem('userImgName', JSON.stringify(response.fileName))    
-        // AsyncStorage.setItem('userImgBase', response.data)  
-        
+        setUri(String(response.uri)); 
+        storeImg(response.uri,response.fileName)
+
       }
     });
   };
   // 사진보관함
   const showCameraRoll = (): void => {
-    const axios = require('axios')
 
-    ImagePicker.launchImageLibrary(options, (response) => {
+    ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.error) {
         console.log('LaunchImageLibrary Error: ', response.error);
       } else {
-        setUri(String(response.uri));
-        storeUri(response.uri,response.fileName)
-        
-        console.log(response.uri)
-        console.log(response.type)
-        console.log(response.fileName)
-        
-      // const formData = new FormData();
-      // formData.append('image',{
-      //   uri:response.uri,
-      //   type:response.type,
-      //   name:response.fileName,
-      // })
-      // formData.append('name','test2')
-      // formData.append('presidentUserId','12')
-      // formData.append('campus','죽전')
-      // formData.append('type','중앙동아리')
-      // formData.append('classification','교양')
-      
-      // axios.post(`${URL}/club`,formData,{
-      //     headers: { 'content-type': 'multipart/form-data' },
-      // })
-      // .then((res: any) => {
-      //     console.log(res.data);
-      // })
-      //     .catch((err: any) => {
-      //     console.log(err);
-      //     });
-                
-            
+        setUri(String(response.uri)); 
+        storeImg(response.uri,response.fileName)
       }
     });
   };

@@ -3,7 +3,7 @@
 import React, {useState,useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, View, Image, Alert,StyleSheet} from 'react-native';
-import {Color} from '~/@types/basic_style';
+import {Color,DWidth, Page} from '~/@types/basic_style';
 import {Picker} from '@react-native-community/picker';
 
 const SearchPage = () => {
@@ -20,9 +20,9 @@ const SearchPage = () => {
   
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white', padding: 10}}>
+    <ScrollView style={Page.page_container}>
       <View style={{margin: 1}}>
-        <Image style={{height:200, aspectRatio:5/3}}
+        <Image style={{height:(DWidth-10)*3/5,width:DWidth-10}}
           source={require('~/Assets/Jukjeon.png')}  />
       </View>
       <View style={{margin: 5}}>
@@ -46,7 +46,7 @@ const SearchPage = () => {
         </Picker>
       </View>
       <View style={{margin: 1}}>
-        <Image style={{height:200, aspectRatio:5/3}}
+        <Image style={{height:(DWidth-10)*3/5,width:DWidth-10}}
         source={require('~/Assets/Cheonan.png')}
         />
       </View>

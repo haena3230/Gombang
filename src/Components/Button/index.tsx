@@ -33,15 +33,12 @@ export const SelectButton =()=>{
     setSelect(!select)
   }
   return(
-    <TouchableOpacity onPress={isSelect}>
+    <TouchableOpacity onPress={isSelect} >
       {select?
       (<Select color={Color.l_color}/>):
       (<Select color={Color.w_color}/>)}
     </TouchableOpacity>
   );
-}
-interface SelectProps{
-  color:string;
 }
 
 // 즐겨찾기 별
@@ -57,9 +54,6 @@ export const SelectStar =()=>{
       (<Icon name="star-outline" size={25}/>)}
     </TouchableOpacity>
   );
-}
-interface SelectProps{
-  color:string;
 }
 
 // 채팅 추가버튼
@@ -99,6 +93,10 @@ export const ChattingAddBtn=({pick,onPressAddBtn}:ChattingAddBtnProps)=>{
     )}
     </View>
   )
+}
+
+interface SelectProps{
+  color:string;
 }
 
 const Select = Styled.View`

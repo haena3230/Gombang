@@ -9,33 +9,26 @@ import {useSelector} from 'react-redux'
 // 메인 -> 즐겨찾기 동아리 목록 페이지
 const FavoritesPage = () => {
   const [clubs, setClubs] = useState<Array<any>>([]);
-  const [emptyList, setEmptyList] = useState(false);
-  const userId = useSelector((state)=>state.login.userId)
+  const [emptyList, setEmptyList] = useState(true);
   const axios = require('axios');  
-  useEffect(() => {
+  const userId =useSelector((state)=>state.login.userId)
+  useEffect(()=>{
     try {
-      (async () => {
-          await axios.get(`${URL}/user/${userId}`)
-          .then((res:any)=>{
-            console.log(res.data.favoriteClub)
-            if(res.data.favoriteClub===undefined) setEmptyList(true)
-            else{
-              setEmptyList(false)
-              setClubs(res.data.favoriteClub)
-            }
-          })
-
-      })()
-
-        
-    } catch (e) {
-      console.log('Failed to fetch the data from storage');
+        console.log('fav')
+        axios.get(`${URL}/user/${userId}`)
+        .then((res:any)=>{
+        if(res.data.favoriteClub===undefined) setEmptyList(true)
+        else{
+          setEmptyList(false)
+          setClubs(res.data.favoriteClub)
+        }
+    })
+  } catch (e) {
+    console.log('Failed to fetch the data from storage');
     }
-  }, [userId]);
-
-  const isEmpty = emptyList;
-
-  if (isEmpty === false) {
+  },[])
+  
+  if (emptyList === false) {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
         {clubs.map((club) => {
@@ -76,11 +69,9 @@ const FavoritesPage = () => {
 
 const ListContainer = Styled.View`
   height: 65px;
-  borderBottomWidth: 2px;
+  borderBottomWidth: 1px;
   borderColor: #D5D8DC;
-  marginHorizontal: 15px;
   flexDirection: row;
-  width: 330px;
   justify-content:space-between;
 `;
 const Section = Styled.View`

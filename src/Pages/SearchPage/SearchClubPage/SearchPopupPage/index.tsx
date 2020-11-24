@@ -6,25 +6,32 @@ import {Styles, Color} from '~/@types/basic_style';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {URL} from '~/@types/Gombang'
 import {useNavigation} from '@react-navigation/native'
+import {useDispatch} from 'react-redux'
+import { clubIdAction } from '~/Store/actions';
 
 const SearchPopupPage = ({route}:any) => {
   const navigation = useNavigation()
   const {clubId} = route.params
+  const[empty,setEmpty] = useState(true)
   const[club,setClub] = useState<Array<any>>([])
   const axios = require('axios')
+  const dispatch =useDispatch()
+ const storeClubId=(inputId:string|null)=>{
+    dispatch(clubIdAction(inputId))
+  }
   useEffect(()=>{
     try{
       axios.get(`${URL}/club/${clubId}`)
       .then(async (res:any)=>{
         await setClub(res.data)
         console.log(res.data)
-        
+        setEmpty(false)
       })
     }catch(e){
         console.log('Failed to fetch the data from storage');
     }
     
-  },[clubId])
+  },[])
   return(
     <View  style={{flex: 1, backgroundColor: Color.w_color, padding:10}}>
       {/* 헤더 */}
@@ -39,28 +46,38 @@ const SearchPopupPage = ({route}:any) => {
             <Text style={Styles.b_b_font}>{club.name}</Text>
           </View>
           <TouchableOpacity
-            onPress={()=>navigation.goBack()}
+            onPress={()=>{
+              navigation.goBack()
+              setEmpty(true)
+            }}
             style={{position: 'absolute', right: 0}}>
             <Icon name="close" size={30} color={Color.g_color}></Icon>
           </TouchableOpacity>
         </View>
-        <ScrollView>
-          {/* 인사말 */}
-          <View style={{marginVertical: 30}}>
-        <Text style={Styles.m_b_font}>{club.text}</Text>
-          </View>
-          {/* 동아리 홍보사진 */}
-          <View>
-            <Image
-              style={{width: '100%', height: undefined, aspectRatio: 1 / 1}}
-              source={{
-                uri: `${URL}/image/${club.poster}`,
-              }} />
-          </View>
-        </ScrollView>
+          {empty?(
+            <View>
+              <Text style={Styles.m_g_font}>준비중...</Text>
+            </View>
+          ):(
+            <ScrollView>
+              <View style={{marginVertical: 30}}>
+                <Text style={Styles.m_b_font}>{club.text}</Text>
+              </View>
+              <View>
+                  <Image
+                  style={{width: '100%', height: undefined, aspectRatio: 1 / 1}}
+                  source={{
+                    uri: `${URL}/image/${club.poster}`,
+                  }} />
+              </View>
+            </ScrollView>
+          )}
         <View>
           <BoardButton
-            onPressClub={() => null}
+            onPressClub={() => {
+              navigation.navigate('ClubStackNavi')
+              storeClubId(clubId)
+            }}
             onPressQA={() => navigation.navigate('SearchQAPage',{
               clubId:clubId
             })}

@@ -1,17 +1,19 @@
 
 
 // Navigator.tsx 내비게이션 모음
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Alert, View, Text, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
+import {URL} from '~/@types/Gombang';
+import Profilebasic from '~/Assets/Profilebasic.svg'
 
 // 컴포넌트
 import {Styles,Color} from '~/@types/basic_style';
 import Plusbutton from '~/Assets/Plusbutton.svg';
 import {KakaoLogout} from '~/Components/Login';
-
+import Logotext from '~/Assets/Logotext.svg';
 
 // for navigator
 import {createStackNavigator} from '@react-navigation/stack';
@@ -37,7 +39,7 @@ import EventPage from './MainPage/EventPage';
 import EventDetailPage from './MainPage/EventPage/EventDetailPage'
 import FavoritesPage from './MainPage/FavoritesPage';
 import FavEditPage from './MainPage/FavoritesPage/FavEditPage';
-import FavModal, { TwoOpModal } from '../Components/Modal';
+import { TwoOpModal } from '../Components/Modal';
 import GenerateClubPage from './MainPage/GenerateClubPage';
 import CertifiedPage from './MainPage/GenerateClubPage/CertifiedPage';
 
@@ -223,15 +225,14 @@ function ClubMainTabNavi() {
 
 // MainPage 메인 1번 내부 Stack Navi
 function MainStackNavi({navigation}: any) {
-  // favoratepage 모달메뉴
-  const [isModalVisible, setModalVisible] = useState(false);
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-  // 즐겨찾기페이지 정렬편집 클릭
-  const onPressEdit=()=>{
-    setModalVisible(false);
-    navigation.navigate('FavEditPage')}  
+  const Navigation = useNavigation()
+  const onPressFavM=()=>{
+    Alert.alert('준비중입니다.')
+  }
+  const onPressFavD=()=>{
+    navigation.navigate('FavEditPage')
+  }
+
   
   return (
     <Stack.Navigator
@@ -246,6 +247,15 @@ function MainStackNavi({navigation}: any) {
             style={{marginRight: 10}}
           />
         ),
+        headerLeft: () => (
+          <Logotext 
+            style={{width:100,height:25}} 
+            onPress={()=>Navigation.reset({
+              index: 0,
+              routes: [{ name: 'MainStackNavi' }],
+            })
+            }
+            />),        
       }}>
       <Stack.Screen 
         options={{headerShown:false}}
@@ -280,7 +290,6 @@ function MainStackNavi({navigation}: any) {
           headerRight: () => (
             <Icon
               name="checkmark-outline"
-              onPress={toggleModal}
               size={25}
               color={Color.b_color} 
               style={{margin:10}}/>
@@ -296,18 +305,16 @@ function MainStackNavi({navigation}: any) {
           title: '즐겨 찾기',
           headerTitleAlign: 'center',
           headerRight: () => (
-            <Icon
-              name="ellipsis-vertical"
-              onPress={toggleModal}
-              size={25}
-              color="black">
-              <FavModal
-                BackPress={toggleModal}
-                visible={isModalVisible}
-                onPressEdit={onPressEdit}
-              />
-            </Icon>
+              <TwoOpModal fst_op={'정렬편집'} snd_op={'삭제하기'} onPressMenuM={onPressFavM} onPressMenuD={onPressFavD} />
           ),
+          headerLeft: () => (
+              <Icon
+              name="arrow-back-outline"
+              onPress={()=>navigation.goBack()}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
         }}
         name="FavoritesPage"
         component={FavoritesPage}
@@ -321,10 +328,16 @@ function MainStackNavi({navigation}: any) {
           title: '즐겨 찾기',
           headerTitleAlign: 'center',
           headerRight: () => (
-            <TouchableOpacity style={{margin:10}} onPress={()=>navigation.goBack()}>
-              <Text style={Styles.m_b_font}>완료</Text>
-            </TouchableOpacity>
+            null
           ),
+          headerLeft: () => (
+              <Icon
+              name="arrow-back-outline"
+              onPress={()=>navigation.goBack()}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
         }}
         name="FavEditPage"
         component={FavEditPage}
@@ -340,6 +353,14 @@ function MainStackNavi({navigation}: any) {
           headerRight: () => (
             null
           ),
+          headerLeft: () => (
+              <Icon
+              name="arrow-back-outline"
+              onPress={()=>navigation.goBack()}
+              size={25}
+              color={Color.b_color} 
+              style={{margin:10}}/>
+            ),
         }}
         name="GenerateClubStackNavi"
         component={GenerateClubStackNavi}
@@ -868,16 +889,6 @@ function DrawerNavi() {
         name="MyPage"
         component={MyPage}
       /> 
-{/*          
-      <Drawer.Screen
-        options={{
-          title:'내 채팅방 목록',
-          drawerIcon: () =>
-            <Icon name="chatbox-ellipses-outline" size={25} color="#999" />
-        }}
-        name="EventPage"
-        component={EventPage}
-      />   */}
       <Drawer.Screen
         options={{
           title:'이벤트',
@@ -927,12 +938,17 @@ function DrawerNavi() {
 
 const  CustomDrawerContent=(props) => {  
   const nickname=useSelector((state)=>state.login.nickname)
+  const image = useSelector((state)=>state.login.image)
   return (
     <DrawerContentScrollView {...props}>
-          <View style = {{alignItems:'center', margin:30}}>
-            <View style= {{width:80, height:80, backgroundColor:Color.l_color,borderRadius:50}} />
+          <TouchableOpacity style = {{alignItems:'center', margin:30}}>
+            {image===''?(
+              <Profilebasic style= {{width:80, height:80,borderRadius:50, margin:5}} />
+            ):(
+              <Image source={{uri:`${URL}/image/${image}`}} style={{width:80, height:80,borderRadius:50}}/>
+            )}
             <Text style={Styles.m_b_font}>{nickname}님</Text>
-          </View>
+          </TouchableOpacity>
           <DrawerItem
             style ={{borderBottomWidth:1,borderColor:Color.l_color}}
             icon={()=><Icon name ="exit-outline" size={25} color="#999" />}

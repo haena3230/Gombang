@@ -1,55 +1,62 @@
 // FavEditPage index.tsx
 import React, {useState, useEffect} from 'react';
 import {Image, View, Text} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Styled from 'styled-components/native';
-import {ClubInterface} from '~/@types/Gombang';
+import { useSelector } from 'react-redux';
+
 // 컴포넌트
 import {Styles} from '~/@types/basic_style';
-import {SelectButton} from '~/Components/Button';
-const URL = 'http://133.186.159.137:3000';
+import {URL} from '~/@types/Gombang'
+import ConfirmModal from '~/Components/Modal/ConfirmModal'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // 메인 -> 즐겨찾기 동아리 목록 페이지
 const FavEditPage = () => {
-  const [clubs, setClubs] = useState<ClubInterface[]>([]);
-  const [emptyList, setEmptyList] = useState(false);
-
+  const [clubs, setClubs] = useState<Array<any>>([]);
+  const [emptyList, setEmptyList] = useState(true);
+  const axios = require('axios'); 
+  const userId = useSelector((state)=>state.login.userId) 
+  // 삭제
+  const [id,setId] = useState('')
+  const[del,setDel] = useState(false)
+  const onDel=()=>{
+    axios.patch(`${URL}/user/${userId}/favorite_club_list`,{
+      clubId:id
+    })
+    .then(()=>{
+      setDel(!del)
+    })
+  }
   useEffect(() => {
     try {
       (async () => {
-        const response = await fetch(`${URL}/club`, {
-          method: 'GET',
-          headers: {
-            'Content-type': 'application/json',
-          },
-        });
-
-        const fav_clubs = await response.json();
-        setClubs(fav_clubs);
-        if (fav_clubs === null) {
-          setEmptyList(true);
-        }
-      })();
+          await axios.get(`${URL}/user/${userId}`)
+          .then((res:any)=>{
+            if(res.data.favoriteClub===undefined) setEmptyList(true)
+            else{
+              setEmptyList(false)
+              setClubs(res.data.favoriteClub)
+            }
+          })
+      })()
     } catch (e) {
       console.log('Failed to fetch the data from storage');
     }
-  }, []);
+  }, [del]);
 
-  const isEmpty = emptyList;
 
-  if (isEmpty === false) {
+  if (emptyList === false) {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        {clubs.map((club) => {
+        {clubs.map((fav) => {
           return (
-            <ListContainer>
+            <ListContainer key={fav.id}>
               <Section>
                 <ItemContainer>
                   <Image
                     source={{
-                      uri: `${URL}/image/${club.image}`,
+                      uri: `${URL}/image/${fav.image}`,
                     }}
-                    key={club._id}
                     style={{
                       width: 50,
                       height: 50,
@@ -58,15 +65,27 @@ const FavEditPage = () => {
                   />
                 </ItemContainer>
                 <ItemContainer>
-                  <Text style={Styles.b_b_font}>{club.name}</Text>
+                  <Text style={Styles.b_b_font}>{fav.name}</Text>
                 </ItemContainer>
                 </Section>
                 <Section>
-                  <SelectButton />
+                  <ItemContainer>
+                    <TouchableOpacity onPress={()=>{
+                      setId(fav.id)
+                      setDel(!del)
+                    }}>
+                      <Text style={Styles.m_g_font}>삭제</Text>
+                    </TouchableOpacity>
+                  </ItemContainer>
                 </Section>
             </ListContainer>
           );
         })}
+        {del?(
+          <ConfirmModal isVisible={del} onBack={()=>setDel(!del)} onConfirm={onDel} text1={'삭제하시겠습니까?'} text2={''}/>
+        ):(
+          null
+        )}
       </View>
     );
   } else
@@ -82,11 +101,10 @@ const FavEditPage = () => {
 
 const ListContainer = Styled.View`
   height: 65px;
-  borderBottomWidth: 2px;
+  borderBottomWidth: 1px;
   borderColor: #D5D8DC;
-  marginHorizontal: 15px;
   flexDirection: row;
-  width: 330px;
+  width: 100%;
   justify-content:space-between;
 `;
 const Section = Styled.View`

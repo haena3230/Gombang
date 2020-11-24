@@ -14,6 +14,7 @@ import {HashTagIcon} from '~/Components/HashTag';
 import {useSelector} from 'react-redux';
 import {URL} from '~/@types/Gombang'
 import {useNavigation} from '@react-navigation/native'
+import Clubbasic from '~/Assets/Clubbasic.svg'
 
 
 
@@ -23,7 +24,7 @@ export const TestFirst = () => {
   const axios = require('axios')
   const userId = useSelector((state)=>state.login.userId)
   const [clubs, setClubs] = useState<Array<any>>([]);
-  const [emptyList, setEmptyList] = useState(false);
+  const [emptyList, setEmptyList] = useState(true);
   // 모집중
   const [recruitBtn, setRecruitBtn] = useState(false);
   const onPressR = () => {
@@ -32,22 +33,18 @@ export const TestFirst = () => {
   }; 
   
   useEffect(() => {
-    
     try {
         axios.get(`${URL}/club/죽전/중앙동아리/${userId}`)
         .then((response:any)=>{
             setClubs(response.data); 
-            if (response.status === 204) {
-              setEmptyList(true);
+            if (response.status === 200) {
+              setEmptyList(false);
              }
         })
     } catch (e) {
       console.log('Failed to fetch the data from storage');
     }
-  }, [clubs]);
-
-  
-
+  }, []);
     return (
       <ScrollView
         style={{
@@ -76,7 +73,10 @@ export const TestFirst = () => {
                       <ListContainer>
                         <ListItem>
                           <ItemContainer>
-                            <Image
+                            {club.image===''?(
+                              <Clubbasic width={50} height={50}/>
+                            ):(
+                              <Image
                               source={{
                                 uri: `${URL}/image/${club.image}`,
                               }}
@@ -86,6 +86,8 @@ export const TestFirst = () => {
                                 borderRadius: 30,
                               }}
                             />
+                            )}
+                            
                           </ItemContainer>
                           <ItemContainer>
                             <Text style={Styles.b_b_font}>{club.name}</Text>
@@ -113,16 +115,20 @@ export const TestFirst = () => {
                <ListContainer>
                   <ListItem>
                     <ItemContainer>
-                      <Image
-                        source={{
-                          uri: `${URL}/image/${club.image}`,
-                        }}
-                        style={{
-                          width: 50,
-                          height: 50,
-                          borderRadius: 30,
-                        }}
-                      />
+                      {club.image===''?(
+                          <Clubbasic width={50} height={50}/>
+                        ):(
+                          <Image
+                          source={{
+                            uri: `${URL}/image/${club.image}`,
+                          }}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 30,
+                          }}
+                        />
+                      )}
                     </ItemContainer>
                     <ItemContainer>
                       <Text style={Styles.b_b_font}>{club.name}</Text>

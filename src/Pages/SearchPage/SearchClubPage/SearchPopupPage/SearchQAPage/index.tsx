@@ -68,10 +68,10 @@ const SearchQAPage = ({route}:any) => {
         <ScrollView>
           {list.map((qna)=>{
             return(
-              <View>
+              <View key = {qna.id.toString()} >
                 {qna.Answer===null?(
                   // 답변없는거
-                  <SearchQA key = {qna.id.toString()} 
+                  <SearchQA 
                     question={qna.question} 
                     userId={qna.User.name} 
                     createdAt={qna.createdAt}
@@ -79,7 +79,7 @@ const SearchQAPage = ({route}:any) => {
                    />
                 ):(
                   // 답변 있는거
-                  <SearchQAAnswered key = {qna.id.toString()} 
+                  <SearchQAAnswered
                     question={qna.question} 
                     userId={qna.User.name} 
                     createdAt={qna.createdAt}

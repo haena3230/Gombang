@@ -25,7 +25,7 @@ import messaging from '@react-native-firebase/messaging';
 export default function App() {
   setTimeout(()=>{
        SplashScreen.hide()
-  },1000)
+  },1500)
   const [isToken,setIsToken] = useState(false)
   useEffect(()=>{
         const unsubscribe = messaging().onMessage(async remoteMessage => {

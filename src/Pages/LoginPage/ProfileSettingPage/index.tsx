@@ -7,10 +7,10 @@ import {
   Text,
   TextInput,
   ScrollView,
-  Button,
+  Alert,
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 // 컴포넌트
 import {Styles, Color} from '~/@types/basic_style';
 import {LongButton} from '~/Components/Button';
@@ -18,6 +18,7 @@ import AddPhoto from '~/Components/AddPhoto';
 import AsyncStorage from '@react-native-community/async-storage';
 import {URL} from '~/@types/Gombang'
 import {useNavigation} from '@react-navigation/native';
+import { imageAction } from '~/Store/actions';
 
 
 let campus: string | number;
@@ -28,6 +29,10 @@ let month: string | number;
 let date: string | number;
 
 const ProfileSettingPage = () => {
+  const dispatch = useDispatch()
+  const setImg=(inputUri:string,inputName:string)=>{
+      dispatch(imageAction(inputUri,inputName))
+  }
   const navigation = useNavigation()
   const axios = require('axios')
   useEffect(()=>{
@@ -43,40 +48,47 @@ const ProfileSettingPage = () => {
       setMail(value+'@dankook.ac.kr');
     });    
   }
+  // 보낼 데이터
+  const imageUri = useSelector((state)=>state.login.imageUri)
+  const imageName = useSelector((state)=>state.login.imageName)
   const [fbToken,setFbToken] = useState<null|string>('');
   const [mail,setMail] = useState<string|null>('');
-  const [photo,setPhoto] = useState<null|string>('');
   const [name, setName] = useState<string>();
   const [studentNum, setStudentNum] = useState<string>();
   const [phone, setPhone] = useState<string>();
   const [birth, setBirth] = useState<string>();
-
   const kakaoId =useSelector((state)=>state.login.kakaoId)
 
   const onPress = () => {
-    
+    // post 
     (async () => {
-      AsyncStorage.getItem('userImg').then((value) => {
-            setPhoto(value);
-      });
-      await axios.post(`${URL}/user`,{
-        
-        'kakaoId': kakaoId,
-        'token': fbToken,
-        'name': name,
-        'email': mail,
-        'phone': phone,
-        'birth': birth,
-        'campus': campus,
-        'college':college,
-        'department' :department,
-        'studentNumber': studentNum,
-        })
+      const formData = new FormData();
+      formData.append('image',{
+          uri:imageUri,
+          type:'image/jpeg',
+          name:imageName,
+      })
+      formData.append('kakaoId',kakaoId)
+      formData.append('token',fbToken)
+      formData.append('name',name)
+      formData.append('email',mail)
+      formData.append('phone',phone)
+      formData.append('birth',birth)
+      formData.append('campus',campus)
+      formData.append('college',college)
+      formData.append('departmen',department)
+      formData.append('studentNumber',studentNum)
+
+      await axios.post(`${URL}/user`,formData,{
+         headers: { 'content-type': 'multipart/form-data' }
+      })
        .then((response: any) => {
            AsyncStorage.setItem('UserId', JSON.stringify(response.data.id))
+           setImg('','')
        })
         .catch((err: any) => {
           console.log(err);
+          setImg('','')
         });
         navigation.navigate('MainPage')
     })();    
@@ -174,7 +186,7 @@ export const DropMenuCampus = () => {
         setSelectedValue(itemValue)
       }
       mode={'dropdown'}
-      style={{width: 150, height: 40}}>
+      style={{width: 170, height: 40}}>
       <Picker.Item color="#808B96" label="캠퍼스" value="캠퍼스" />
       <Picker.Item color="#808B96" label="죽전" value="죽전" />
       <Picker.Item color="#808B96" label="천안" value="천안" />
@@ -192,7 +204,7 @@ export const DropMenuCol = () => {
         setSelectedValue(itemValue)
       }
       mode={'dropdown'}
-      style={{width: 150, height: 40, fontSize: 16}}>
+      style={{width: 170, height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="대학" value="대학" />
       <Picker.Item
         color="#808B96"
@@ -236,7 +248,7 @@ export const DropMenuBirthY = () => {
         setSelectedValue(itemValue)
       }
       mode={'dropdown'}
-      style={{width: 100, height: 40, fontSize: 16}}>
+      style={{width: 120, height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="연도" value="연도" />
       <Picker.Item color="#808B96" label="1990" value="1990" />
       <Picker.Item color="#808B96" label="1991" value="1991" />
@@ -262,7 +274,7 @@ export const DropMenuBirthD = () => {
         setSelectedValue(itemValue)
       }
       mode={'dropdown'}
-      style={{width: 90, height: 40, fontSize: 16}}>
+      style={{width: 100, height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="월" value="월" />
       <Picker.Item color="#808B96" label="1" value="1" />
       <Picker.Item color="#808B96" label="2" value="2" />
@@ -289,7 +301,7 @@ export const DropMenuBirthDD = () => {
         setSelectedValue(itemValue)
       }
       mode={'dropdown'}
-      style={{width: 90, height: 40, fontSize: 16}}>
+      style={{width: 100, height: 40, fontSize: 16}}>
       <Picker.Item color="#808B96" label="일" value="일" />
       <Picker.Item color="#808B96" label="1" value="1" />
       <Picker.Item color="#808B96" label="2" value="2" />

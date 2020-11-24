@@ -8,6 +8,7 @@ import Plusbutton from '~/Assets/Plusbutton.svg';
 import { useNavigation} from '@react-navigation/native';
 import ImagePicker from 'react-native-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
+import { LongButton } from '~/Components/Button';
 
 
 const PortfolioWritePage = ()=>{
@@ -85,10 +86,9 @@ const PortfolioWritePage = ()=>{
                 uri.map(
                   (data)=>{
                     return(
-                      <View style= {{marginVertical:5}}>
+                      <View style= {{marginVertical:5}} key = {data?.toString()}>
                         <Image
-                          key = {data}
-                          style={{aspectRatio:1}}
+                          style={{aspectRatio:1,height:400,width:'100%'}}
                           source={{
                           uri: data
                           }}
@@ -97,10 +97,10 @@ const PortfolioWritePage = ()=>{
                     )
                   }
                 )):(null)}
-                
-                  
-                
             </ScrollView>
+            <View style={{margin:20,position:'absolute',bottom:0}}>
+                  <LongButton buttonTitle='추가하기'/>
+                </View>
             <TouchableOpacity   onPress= {onPress} style = {{position:'absolute', right:20, bottom:20}}>
                 <Plusbutton width={45} height ={45} />
                 <MenuModal isVisible={isVisible} onBack={onPress} onPressCamera={()=>showCamera()} onPressStorage={()=>showCameraRoll()} onPressScrap={()=>navigation.navigate('ScrapPage')}/>

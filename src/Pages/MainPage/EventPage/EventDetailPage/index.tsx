@@ -4,12 +4,13 @@ import {View,Text, ScrollView, Image} from 'react-native'
 import {Color, Styles} from '~/@types/basic_style'
 import {URL} from '~/@types/Gombang'
 
-const EventDetailPage =()=>{
+const EventDetailPage =({route}:any)=>{
+    const {postId} = route.params
     const axios=require('axios')
     const [event,setEvent] = useState<Array<any>>([])
     const [file,setFile] = useState<Array<any>>([])
     useEffect(()=>{
-        axios.get(`${URL}/post/2/detail`)
+        axios.get(`${URL}/post/${postId}/detail`)
         .then(async (res)=>{
              await setEvent(res.data)
              await setFile(res.data.Files)
