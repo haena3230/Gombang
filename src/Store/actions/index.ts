@@ -7,6 +7,7 @@ export const FOLDER_ID ='FOLDER_ID'
 export const NICKNAME='NICKNAME'
 export const USERIMG='USERIMG'
 export const USER_DATA='USER_DATA'
+export const TEXT_DATA ='TEXT_DATA'
 
 export const loginStateAction= (text:string)=>{
     return{
@@ -53,12 +54,20 @@ export const userImgAction= (text:string|null)=>{
         image:text,        
     }
 }
-export const userDataAction= (mail:string|null,number:string|null,birth:string|null)=>{
+export const userDataAction= (mail:string|null,number:string|null,birth:string|null,college:string|null,department:string|null)=>{
     return{
         type:USER_DATA,
         email:mail,        
         number:number,
         birth:birth,
+        college:college,
+        department:department,
+    }
+}
+export const textAction= (text:string|null)=>{
+    return{
+        type:TEXT_DATA,
+        text:text,        
     }
 }
   

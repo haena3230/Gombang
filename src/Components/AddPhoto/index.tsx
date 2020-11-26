@@ -8,6 +8,7 @@ import ImagePicker from 'react-native-image-picker';
 import Modal from 'react-native-modal';
 import {useDispatch} from 'react-redux'
 import { imageAction } from '~/Store/actions';
+import {URL} from '~/@types/Gombang'
 // 이미지 비율 구하는 함수
 
 // 사진 업로드 메뉴
@@ -49,14 +50,31 @@ const AddPhoto = () => {
   };
   // 사진보관함
   const showCameraRoll = (): void => {
-
+    // const axios = require('axios')
     ImagePicker.launchImageLibrary(options, async (response) => {
       if (response.error) {
         console.log('LaunchImageLibrary Error: ', response.error);
       } else {
         setUri(String(response.uri)); 
         storeImg(response.uri,response.fileName)
-      }
+        // const formData = new FormData();
+        // formData.append('image',{
+        //     uri:response.uri,
+        //     type:'image/jpeg',
+        //     name:response.fileName,
+        // })
+        // formData.append('userId','12')
+        // formData.append('clubId','5')
+        // formData.append('text','xptmxm')
+
+        // console.log(response.uri)
+        // console.log(response.fileName)
+        // axios.post(`${URL}/post`,formData,{
+        //     headers: { 'content-type': 'multipart/form-data' }
+        // })
+        // .then((res:any)=>console.log(res.data))
+        
+          }
     });
   };
     

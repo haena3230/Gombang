@@ -130,15 +130,19 @@ export const LikeCommentsBtn =({likeCount,commentCount,like,onPressLike,onPressC
 // 일정 작성
 
 interface FeedScheduleProps{
-    onPressSD:()=>void;
+    title:string,
+    startDate:string,
+    endDate:string,
+    place:string,
+    memo:string,    
 }
-export const FeedSchedule = ({onPressSD}:FeedScheduleProps)=>{
+export const FeedSchedule = ({title,startDate,endDate,place,memo}:FeedScheduleProps)=>{
     return(
         <View style={{borderWidth:1,borderColor:Color.l_color, padding:10, margin:10}}>
-            <TouchableOpacity style={{position:'absolute', right:10,top:10}}
+            {/* <TouchableOpacity style={{position:'absolute', right:10,top:10}}
                 onPress={onPressSD}>
                 <Icon name="close-circle-outline" size={15}/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <View style={{flexDirection:'row'}}>
                 <View>
                     <Text style={Styles.s_g_font}>일정 제목    </Text>
@@ -149,11 +153,11 @@ export const FeedSchedule = ({onPressSD}:FeedScheduleProps)=>{
                 </View>
                 <View style={{borderWidth:1,borderColor:Color.l_color}}/>
                 <View style={{marginHorizontal:10}}>
-                     <Text style={Styles.s_g_font}>회식에 참여하실분 참가하기를 눌러주세요</Text>
-                    <Text style={Styles.s_g_font}>2020년 11월21일 19:00</Text>
-                    <Text style={Styles.s_g_font}>2020년 11월21일 19:00</Text>
-                    <Text style={Styles.s_g_font}>소프트웨어ICT관</Text>
-                    <Text style={Styles.s_g_font}>-</Text>
+                     <Text style={Styles.s_g_font}>{title}</Text>
+                    <Text style={Styles.s_g_font}>{startDate}</Text>
+                    <Text style={Styles.s_g_font}>{endDate}</Text>
+                    <Text style={Styles.s_g_font}>{place}</Text>
+                    <Text style={Styles.s_g_font}>{memo}</Text>
                 </View>
             </View>
             

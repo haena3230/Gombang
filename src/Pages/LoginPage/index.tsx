@@ -9,9 +9,7 @@ import {useDispatch} from 'react-redux'
 import Logoimage from '~/Assets/Logoimage.svg';
 import Logotext from '~/Assets/Logotext.svg';
 // 토큰 얻기
-import iid from '@react-native-firebase/iid';
 import {loginStateAction } from '~/Store/actions';
-import symbolicateStackTrace from 'react-native/Libraries/Core/Devtools/symbolicateStackTrace';
 import { Color,Styles } from '~/@types/basic_style';
 
 
@@ -53,12 +51,6 @@ const LoginPage = () => {
     }
   }
 
-  // 토큰획득
-  async function getFBToken() {
-    const fbtoken = await iid().getToken();
-    AsyncStorage.setItem('fbToken', fbtoken)
-    console.log('firebase Token : '+ fbtoken)
-  }
   return (
     <View style={styles.LoginContainer}>
       
@@ -76,11 +68,11 @@ const LoginPage = () => {
                 pdata = JSON.parse(data)
                 kakaoId=pdata.id;
                 storeKakaoId(kakaoId)
+                AsyncStorage.setItem('kakaoId', kakaoId)
                 console.log("kakao id : " + pdata.id);
               });
               console.log(`Login Finished:${JSON.stringify(result)}`);
               checkId()
-              getFBToken()
             })
             .catch((err) => {
               if (err.code === 'E_CANCELLED_OPERATION') {

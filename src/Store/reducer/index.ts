@@ -1,5 +1,5 @@
 // 리듀서
-import {LOGINSTATE,IMG_URI, USER_ID,CLUB_ID,FOLDER_ID,NICKNAME,USERIMG,USER_DATA} from '../actions'
+import {LOGINSTATE,IMG_URI, USER_ID,CLUB_ID,FOLDER_ID,NICKNAME,USERIMG,USER_DATA,TEXT_DATA} from '../actions'
 
 
 const initState={
@@ -14,6 +14,9 @@ const initState={
     email:null,
     number:null,
     birth:null,
+    college:null,
+    department:null,
+    text:null,
 }
 
 
@@ -62,6 +65,13 @@ export const loginReducers = (state=initState,action: any)=>{
                 email:action.email,
                 number:action.number,
                 birth:action.birth,
+                college:action.college,
+                department:action.department,
+            }
+         case TEXT_DATA:
+            return {
+                ...state,
+                text:action.text,
             }
     
     

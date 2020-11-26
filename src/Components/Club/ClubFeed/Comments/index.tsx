@@ -5,14 +5,16 @@ import { Color, DWidth, Styles } from '~/@types/basic_style'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {URL} from '~/@types/Gombang'
 import Profilebasic from '~/Assets/Profilebasic.svg'
+
 // 댓글 작성
 interface CommentsProps{
     holder:string
     img:string;
-
+    onPressCB:()=>void;
 }
-export const Comments=({holder,img}:CommentsProps)=>{
+export const Comments=({holder,img,onPressCB}:CommentsProps)=>{
     const [text, setText] = useState('')
+   
     return(
         <View style={{width:'100%', flexDirection:'row', alignItems:'center', padding:10, backgroundColor:Color.w_color,borderColor:Color.l_color,borderWidth:1,position:'absolute', bottom:0}}>
             {img!==''?(
@@ -26,15 +28,15 @@ export const Comments=({holder,img}:CommentsProps)=>{
                 <Profilebasic style={{borderRadius:50, width:'12%',aspectRatio:1}}/>
             )}
            
-          <View style={{width:'75%', marginHorizontal:10, flexDirection:'row',alignItems:'center'}}>
+          <View style={{width:'87%', marginHorizontal:10, flexDirection:'row',alignItems:'center'}}>
             <TextInput
-                style={{ height: 40, width:'100%', backgroundColor: Color.l_color ,borderRadius:15, fontSize:13}}
+                style={{ height: 40, width:'100%', backgroundColor: Color.l_color ,borderRadius:20, fontSize:13}}
                 placeholder={holder}
                 onChangeText={text => setText(text)}
                 value={text}
                 maxLength={100}
                 />
-            < CommentBtn onPressBtn={()=>null}/>
+            < CommentBtn onPressBtn={onPressCB}/>
           </View>
         </View>
     )
@@ -45,8 +47,14 @@ interface CommentBtnProps{
 }
 export const CommentBtn=({onPressBtn}:CommentBtnProps)=>{
     return(
-        <TouchableOpacity onPress={onPressBtn}>
-            <View style={{width:35, height:35,borderRadius:20,backgroundColor:Color.p_color, justifyContent:'center', alignItems:'center'}}>
+        <TouchableOpacity onPress={onPressBtn} style={{zIndex:2,position:'absolute',right:5}}>
+            <View style={{
+                width:35, height:35,
+                borderRadius:20,
+                backgroundColor:Color.p_color, 
+                justifyContent:'center', 
+                alignItems:'center',
+                }}>
                 <Icon name="chatbubbles" size={25} color={Color.w_color}/>
             </View>
         </TouchableOpacity>
@@ -62,7 +70,7 @@ interface CommentListProps{
 export const CommentList=({userImg,userName,text}:CommentListProps)=>{
     return(
         <View style={{flexDirection:'row', alignItems:'center', width:DWidth, backgroundColor:Color.w_color, borderWidth:1,borderColor:Color.l_color}}>
-            <View style={{padding:10,width:'15%'}}>
+            <View style={{padding:10,width:'15%', alignItems:'center'}}>
                 {userImg!==''?(
                     <Image
                     style={{borderRadius:50, width:'100%',aspectRatio:1}}

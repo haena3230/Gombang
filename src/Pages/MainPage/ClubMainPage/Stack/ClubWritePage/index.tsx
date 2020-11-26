@@ -73,8 +73,6 @@ const ClubWritePage = ()=>{
     });
   };
 
-  // 사진 크기 얻기
-//   const img = Image.resolveAssetSource(require(uri));
 
     return(
         <View style = {Page.page_container}>
@@ -100,9 +98,8 @@ const ClubWritePage = ()=>{
                 uri.map(
                   (data)=>{
                     return(
-                      <View style= {{marginVertical:5}}>
+                      <View style= {{marginVertical:5}} key = {data}>
                         <Image
-                          key = {data}
                           style={{aspectRatio:1}}
                           source={{
                           uri: data

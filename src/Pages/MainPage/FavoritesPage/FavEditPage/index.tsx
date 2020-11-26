@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 // 컴포넌트
 import {Styles} from '~/@types/basic_style';
 import {URL} from '~/@types/Gombang'
-import ConfirmModal from '~/Components/Modal/ConfirmModal'
+import {ConfirmModal} from '~/Components/Modal/ConfirmModal'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // 메인 -> 즐겨찾기 동아리 목록 페이지

@@ -68,6 +68,7 @@ import ChattingPage from './MainPage/ClubMainPage/ChattingPage';
 import ClubSettingPage from './MainPage/ClubMainPage/ClubSettingPage';
 import ClubManagementPage from './MainPage/ClubMainPage/ClubSettingPage/ClubManagementPage'
 import ClubNoticePage from './MainPage/ClubMainPage/Stack/ClubNoticePage';
+import NoticeParty from './MainPage/ClubMainPage/Stack/ClubNoticePage/NoticeParty'
 import ClubFeedPage from './MainPage/ClubMainPage/Stack/ClubFeedPage';
 import ClubWritePage from './MainPage/ClubMainPage/Stack/ClubWritePage';
 import ClubAddSchedulePage from './MainPage/ClubMainPage/Stack/ClubAddSchedulePage';
@@ -681,6 +682,16 @@ function ClubStackNavi(){
             },
           }}
         name="ClubNoticePage" component={ClubNoticePage} />
+        <Stack.Screen 
+       options={{
+            title:'참가명단',
+            headerTitleAlign: 'center',
+              headerTitleStyle: {
+              fontSize: 18,
+              fontWeight: 'bold',
+            },
+          }}
+        name="NoticeParty" component={NoticeParty} />
       <Stack.Screen 
         options={{title:'',}}
         name="ClubFeedPage" component={ClubFeedPage} />

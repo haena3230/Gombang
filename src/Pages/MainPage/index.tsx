@@ -19,24 +19,33 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-community/async-storage'
 import {useDispatch} from 'react-redux'
 import {URL} from '~/@types/Gombang';
-
+import messaging from '@react-native-firebase/messaging';
 
 // 컴포넌트
 import FavoritesPage from './FavoritesPage';
 import {Styles, Color, DWidth} from '~/@types/basic_style';
-import { clubIdAction, userIdAction,nicknameAction, userImgAction, userDataAction } from '~/Store/actions';
+import { clubIdAction, userIdAction,nicknameAction, userImgAction} from '~/Store/actions';
 import Clubbasic from '~/Assets/Clubbasic.svg'
-
 
 // main 페이지
 export default function MainPage() {
    const navigation = useNavigation();
- 
+   const axios = require('axios')
+   useEffect(()=>{
+      const unsubscribe = messaging().onMessage(async remoteMessage => {
+          console.log('e')
+          Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      });
+      return unsubscribe;
+   },[])
      return (
     <ScrollView style={{backgroundColor: 'white'}}>
       {/* 이벤트 슬라이드 */}
       <EventSlide />
-      
+      {/* <Button title='r' onPress={()=>{
+          axios.delete(`${URL}/post/35`)
+          .then((res:any)=>console.log(res.status))
+      }} /> */}
       <View style={{margin: 5}}>
         {/* 동아리 리스트 */}
         <View>
@@ -145,9 +154,6 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
   const storeUserImg=(inputId:string|null)=>{
     dispatch(userImgAction(inputId))
   }
-  const storeUserData=(email:string|null,number:string|null,birth:string|null)=>{
-    dispatch(userDataAction(email,number,birth))
-  }
 
   useEffect(()=>{
       try { 
@@ -161,7 +167,6 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
             setClubs(res.data.signedClub)
             storeNickname(res.data.name)
             storeUserImg(res.data.image)
-            storeUserData(res.data.email,res.data.phone,res.data.birth)
           }
           else {
             setEmpty(true)
@@ -202,7 +207,7 @@ const UsersClubList = ({onPress}: UsersClubListProps) => {
                   <ClubList>
                     {club.image!==''?(
                       <Image
-                      style={{width: 100, height: 100}}
+                      style={{width: 100, height: 100,borderRadius:50}}
                       source={{
                         uri: `${URL}/image/${club.image}`,
                       }} />
@@ -278,8 +283,6 @@ const ClubListContainer = Styled.View`
 const ClubList = Styled.View`
   width: 100px;
   height: 100px;
-  borderWidth: 1px;
-  borderColor: #D5D8DC;
   justifyContent: center;
  alignItems: center;
 

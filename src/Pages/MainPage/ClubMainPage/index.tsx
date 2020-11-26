@@ -1,9 +1,8 @@
 // ClubMainPage index.tsx
 import React, { useEffect,useState } from 'react';
-import {ScrollView,View, Text, Image, TouchableOpacity} from 'react-native';
-import { Color, DWidth } from '~/@types/basic_style';
+import {ScrollView,View, Text, Image, TouchableOpacity,StyleSheet, Button} from 'react-native';
+import { Color, DWidth,Styles } from '~/@types/basic_style';
 import ClubTitle from '~/Components/Club/ClubTitle';
-import ClubNotice from '~/Components/Club/ClubNotice';
 import ClubFeed, { LikeCommentsBtn } from '~/Components/Club/ClubFeed';
 import { WriteBtn } from '~/Components/Button/WriteBtn';
 import { useNavigation } from '@react-navigation/native';
@@ -19,7 +18,7 @@ import Clubbackgroundbasic from '~/Assets/Clubbackgroundbasic.svg'
 const ClubMainPage = () => {
   const[em,setEm] = useState(true)
   const [empty,setEmpty] = useState(true)
-  const [club,setClub] = useState<Array<any>>([])
+  const [club,setClub] = useState<any>('')
   const [feed,setFeed] = useState<Array<any>>([])
   const [img,setImg] = useState('')
   const [state,setState] = useState(false)
@@ -51,7 +50,9 @@ const ClubMainPage = () => {
        <Icon name = "home-outline" size={25} onPress={()=>navigation.navigate('MainPage')} style={{zIndex:2,position:'absolute',top:10,left:10}} />
       <ScrollView>
         {em?(
-          <Text>...</Text>
+          <View style={{width:'100%',aspectRatio:5/3,justifyContent:'center', alignItems:'center'}}>
+            <Text>....</Text>
+          </View>
         ):(
            <View>
             {club.backgroundImage!==''?(
@@ -66,9 +67,36 @@ const ClubMainPage = () => {
           </View>
         )}
        
-        <View style={{marginTop:8}}>
-          <ClubNotice />
-        </View>
+        {empty?(
+          null
+        ):(
+           <View style ={{backgroundColor:Color.w_color, width:'100%', aspectRatio:7/2, padding:5,marginTop:8}}>
+              
+              <Text style={Styles.s_b_font}>공지사항</Text>
+              <ScrollView style={{width:DWidth}} horizontal={true}> 
+              {feed.map((notice)=>{
+                return(
+                  <TouchableOpacity  key = {notice.id.toString()} onPress={()=>navigation.navigate('ClubNoticePage',{
+                    postId:notice.id,
+                    userId:notice.userId,
+                    userName:notice.name,
+                    userImg:notice.image,
+                    createdAt:notice.createdAt
+
+                  })}>
+                  {notice.isNotice===1?(
+                    <View style={styles.box}>
+                      <Text style={Styles.s_g_font}>{notice.text}</Text>
+                    </View>
+                  ):(
+                    null
+                  )}
+                  </TouchableOpacity>
+                )
+              })}
+              </ScrollView>
+          </View>
+        )}
         {/* 피드들 */}
         {empty?(
           null
@@ -127,7 +155,19 @@ const ClubMainPage = () => {
         <WriteBtn text={'글쓰기'} />
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
+
+
+
+const styles= StyleSheet.create({
+    box:{
+        width:DWidth*0.9, 
+        aspectRatio:9/2,
+        borderWidth:1, 
+        borderColor:Color.l_color,
+        marginHorizontal:5,
+    },
+})
 
 export default ClubMainPage;

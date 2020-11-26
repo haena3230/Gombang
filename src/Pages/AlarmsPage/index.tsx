@@ -1,21 +1,23 @@
 // AlarmsPage index.tsx
 // 메인4
-import React,{useState, useRef} from 'react';
+import React,{useEffect, useState} from 'react';
 import {Text, View, Button} from 'react-native';
 import {TwoOpModal} from '~/Components/Modal';
-import iid from '@react-native-firebase/iid';
-import { TestFirst } from '../SearchPage/SearchClubPage';
+import {URL} from '~/@types/Gombang';
 
 
-async function getFBToken() {
-  const fbtoken = await iid().getToken();
-  console.log(fbtoken)
-}
 
 
 
   
 const AlarmsPage = () => {
+  useEffect(()=>{
+    axios.get(`${URL}/alarm/12`)
+    .then((res:any)=>{
+      console.log(res.data)
+    })
+  },)
+  const axios = require('axios')
   const[array,setArray] = useState<Array<string|undefined>>([])
   const onPress = ()=>{
     console.log('test')
@@ -25,7 +27,6 @@ const AlarmsPage = () => {
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>AlarmsPage 메인4</Text>
       
-      <Button title="get token" onPress={()=>getFBToken()} />
       <Button title="arraytest" onPress={onPress} />
       <Text>{array}</Text>
       <TwoOpModal fst_op="수정하기" snd_op="삭제하기" onPressMenuM={()=>null} onPressMenuD={()=>null}/>

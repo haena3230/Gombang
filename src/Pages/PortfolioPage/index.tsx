@@ -9,7 +9,7 @@ import Modal from 'react-native-modal';
 import Plusbutton from '~/Assets/Plusbutton.svg';
 import {TwoOpModal} from '~/Components/Modal';
 import {useNavigation } from '@react-navigation/native';
-import ConfirmModal from '~/Components/Modal/ConfirmModal';
+import {ConfirmModal} from '~/Components/Modal/ConfirmModal';
 import {URL} from '~/@types/Gombang'
 import {useSelector,useDispatch} from 'react-redux'
 import { folderIdAction } from '~/Store/actions';
