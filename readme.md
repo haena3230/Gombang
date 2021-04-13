@@ -19,7 +19,7 @@ React Native 기반 Android Client
 ![6](https://user-images.githubusercontent.com/57908055/114488459-5f954e00-9c4c-11eb-8a8d-dc2ed5ae1704.png)
 
 ### 포스터
-![Uploading poster.png…]()
+![poster](https://user-images.githubusercontent.com/57908055/114488759-e21e0d80-9c4c-11eb-99c8-7671dd02e2e2.png)
 
 
 ### Quick Start
